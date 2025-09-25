@@ -1,0 +1,97 @@
+{
+  "template": "app",
+  "imports": {
+    "Volo.Abp.LeptonXLiteTheme": {
+      "version": "4.3.2",
+      "isInstalled": true
+    },
+    "Volo.Abp.Account": {
+      "version": "9.3.2",
+      "isInstalled": true
+    },
+    "Volo.Abp.OpenIddict": {
+      "version": "9.3.2",
+      "isInstalled": true
+    },
+    "Volo.Abp.Identity": {
+      "version": "9.3.2",
+      "isInstalled": true
+    },
+    "Volo.Abp.SettingManagement": {
+      "version": "9.3.2",
+      "isInstalled": true
+    },
+    "Volo.Abp.PermissionManagement": {
+      "version": "9.3.2",
+      "isInstalled": true
+    },
+    "Volo.Abp.FeatureManagement": {
+      "version": "9.3.2",
+      "isInstalled": true
+    }
+  },
+  "folders": {
+    "items": {
+      "src": {},
+      "test": {}
+    }
+  },
+  "packages": {
+    "GoPlaces.Application": {
+      "path": "src/GoPlaces.Application/GoPlaces.Application.abppkg",
+      "folder": "src"
+    },
+    "GoPlaces.Application.Tests": {
+      "path": "test/GoPlaces.Application.Tests/GoPlaces.Application.Tests.abppkg",
+      "folder": "test"
+    },
+    "GoPlaces.Domain.Shared": {
+      "path": "src/GoPlaces.Domain.Shared/GoPlaces.Domain.Shared.abppkg",
+      "folder": "src"
+    },
+    "GoPlaces.Application.Contracts": {
+      "path": "src/GoPlaces.Application.Contracts/GoPlaces.Application.Contracts.abppkg",
+      "folder": "src"
+    },
+    "GoPlaces.HttpApi": {
+      "path": "src/GoPlaces.HttpApi/GoPlaces.HttpApi.abppkg",
+      "folder": "src"
+    },
+    "GoPlaces.HttpApi.Client": {
+      "path": "src/GoPlaces.HttpApi.Client/GoPlaces.HttpApi.Client.abppkg",
+      "folder": "src"
+    },
+    "GoPlaces.EntityFrameworkCore.Tests": {
+      "path": "test/GoPlaces.EntityFrameworkCore.Tests/GoPlaces.EntityFrameworkCore.Tests.abppkg",
+      "folder": "test"
+    },
+    "GoPlaces.EntityFrameworkCore": {
+      "path": "src/GoPlaces.EntityFrameworkCore/GoPlaces.EntityFrameworkCore.abppkg",
+      "folder": "src"
+    },
+    "GoPlaces.TestBase": {
+      "path": "test/GoPlaces.TestBase/GoPlaces.TestBase.abppkg",
+      "folder": "test"
+    },
+    "GoPlaces.Domain.Tests": {
+      "path": "test/GoPlaces.Domain.Tests/GoPlaces.Domain.Tests.abppkg",
+      "folder": "test"
+    },
+    "GoPlaces.HttpApi.Client.ConsoleTestApp": {
+      "path": "test/GoPlaces.HttpApi.Client.ConsoleTestApp/GoPlaces.HttpApi.Client.ConsoleTestApp.abppkg",
+      "folder": "test"
+    },
+    "GoPlaces.DbMigrator": {
+      "path": "src/GoPlaces.DbMigrator/GoPlaces.DbMigrator.abppkg",
+      "folder": "src"
+    },
+    "GoPlaces.HttpApi.Host": {
+      "path": "src/GoPlaces.HttpApi.Host/GoPlaces.HttpApi.Host.abppkg",
+      "folder": "src"
+    },
+    "GoPlaces.Domain": {
+      "path": "src/GoPlaces.Domain/GoPlaces.Domain.abppkg",
+      "folder": "src"
+    }
+  }
+}
