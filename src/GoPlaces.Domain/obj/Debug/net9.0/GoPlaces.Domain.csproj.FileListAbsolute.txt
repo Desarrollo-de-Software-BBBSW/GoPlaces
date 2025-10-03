@@ -1,0 +1,16 @@
+C:\Users\Agustin\Documents\Facultad\Desarrollo de software\Project\src\GoPlaces.Domain\bin\Debug\net9.0\GoPlaces.Domain.deps.json
+C:\Users\Agustin\Documents\Facultad\Desarrollo de software\Project\src\GoPlaces.Domain\bin\Debug\net9.0\GoPlaces.Domain.dll
+C:\Users\Agustin\Documents\Facultad\Desarrollo de software\Project\src\GoPlaces.Domain\bin\Debug\net9.0\GoPlaces.Domain.pdb
+C:\Users\Agustin\Documents\Facultad\Desarrollo de software\Project\src\GoPlaces.Domain\bin\Debug\net9.0\GoPlaces.Domain.Shared.dll
+C:\Users\Agustin\Documents\Facultad\Desarrollo de software\Project\src\GoPlaces.Domain\bin\Debug\net9.0\GoPlaces.Domain.Shared.pdb
+C:\Users\Agustin\Documents\Facultad\Desarrollo de software\Project\src\GoPlaces.Domain\obj\Debug\net9.0\GoPlaces.Domain.csproj.AssemblyReference.cache
+C:\Users\Agustin\Documents\Facultad\Desarrollo de software\Project\src\GoPlaces.Domain\obj\Debug\net9.0\GoPlaces.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Agustin\Documents\Facultad\Desarrollo de software\Project\src\GoPlaces.Domain\obj\Debug\net9.0\GoPlaces.Domain.AssemblyInfoInputs.cache
+C:\Users\Agustin\Documents\Facultad\Desarrollo de software\Project\src\GoPlaces.Domain\obj\Debug\net9.0\GoPlaces.Domain.AssemblyInfo.cs
+C:\Users\Agustin\Documents\Facultad\Desarrollo de software\Project\src\GoPlaces.Domain\obj\Debug\net9.0\GoPlaces.Domain.csproj.CoreCompileInputs.cache
+C:\Users\Agustin\Documents\Facultad\Desarrollo de software\Project\src\GoPlaces.Domain\obj\Debug\net9.0\GoPlaces.Domain.sourcelink.json
+C:\Users\Agustin\Documents\Facultad\Desarrollo de software\Project\src\GoPlaces.Domain\obj\Debug\net9.0\GoPlaces.089BEDD8.Up2Date
+C:\Users\Agustin\Documents\Facultad\Desarrollo de software\Project\src\GoPlaces.Domain\obj\Debug\net9.0\GoPlaces.Domain.dll
+C:\Users\Agustin\Documents\Facultad\Desarrollo de software\Project\src\GoPlaces.Domain\obj\Debug\net9.0\refint\GoPlaces.Domain.dll
+C:\Users\Agustin\Documents\Facultad\Desarrollo de software\Project\src\GoPlaces.Domain\obj\Debug\net9.0\GoPlaces.Domain.pdb
+C:\Users\Agustin\Documents\Facultad\Desarrollo de software\Project\src\GoPlaces.Domain\obj\Debug\net9.0\ref\GoPlaces.Domain.dll

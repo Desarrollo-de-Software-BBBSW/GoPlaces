@@ -1,0 +1,346 @@
+{
+  "format": 1,
+  "restore": {
+    "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\src\\GoPlaces.EntityFrameworkCore\\GoPlaces.EntityFrameworkCore.csproj": {}
+  },
+  "projects": {
+    "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\src\\GoPlaces.Domain.Shared\\GoPlaces.Domain.Shared.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\src\\GoPlaces.Domain.Shared\\GoPlaces.Domain.Shared.csproj",
+        "projectName": "GoPlaces.Domain.Shared",
+        "projectPath": "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\src\\GoPlaces.Domain.Shared\\GoPlaces.Domain.Shared.csproj",
+        "packagesPath": "C:\\Users\\Agustin\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\src\\GoPlaces.Domain.Shared\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\NuGet.Config",
+          "C:\\Users\\Agustin\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0": {
+            "targetAlias": "net9.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.300"
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "dependencies": {
+            "Microsoft.Extensions.FileProviders.Embedded": {
+              "target": "Package",
+              "version": "[9.0.5, )"
+            },
+            "Volo.Abp.AuditLogging.Domain.Shared": {
+              "target": "Package",
+              "version": "[9.3.2, )"
+            },
+            "Volo.Abp.BackgroundJobs.Domain.Shared": {
+              "target": "Package",
+              "version": "[9.3.2, )"
+            },
+            "Volo.Abp.BlobStoring.Database.Domain.Shared": {
+              "target": "Package",
+              "version": "[9.3.2, )"
+            },
+            "Volo.Abp.FeatureManagement.Domain.Shared": {
+              "target": "Package",
+              "version": "[9.3.2, )"
+            },
+            "Volo.Abp.GlobalFeatures": {
+              "target": "Package",
+              "version": "[9.3.2, )"
+            },
+            "Volo.Abp.Identity.Domain.Shared": {
+              "target": "Package",
+              "version": "[9.3.2, )"
+            },
+            "Volo.Abp.OpenIddict.Domain.Shared": {
+              "target": "Package",
+              "version": "[9.3.2, )"
+            },
+            "Volo.Abp.PermissionManagement.Domain.Shared": {
+              "target": "Package",
+              "version": "[9.3.2, )"
+            },
+            "Volo.Abp.SettingManagement.Domain.Shared": {
+              "target": "Package",
+              "version": "[9.3.2, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.304/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\src\\GoPlaces.Domain\\GoPlaces.Domain.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\src\\GoPlaces.Domain\\GoPlaces.Domain.csproj",
+        "projectName": "GoPlaces.Domain",
+        "projectPath": "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\src\\GoPlaces.Domain\\GoPlaces.Domain.csproj",
+        "packagesPath": "C:\\Users\\Agustin\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\src\\GoPlaces.Domain\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\NuGet.Config",
+          "C:\\Users\\Agustin\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0": {
+            "targetAlias": "net9.0",
+            "projectReferences": {
+              "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\src\\GoPlaces.Domain.Shared\\GoPlaces.Domain.Shared.csproj": {
+                "projectPath": "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\src\\GoPlaces.Domain.Shared\\GoPlaces.Domain.Shared.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.300"
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "dependencies": {
+            "Volo.Abp.AuditLogging.Domain": {
+              "target": "Package",
+              "version": "[9.3.2, )"
+            },
+            "Volo.Abp.BackgroundJobs.Domain": {
+              "target": "Package",
+              "version": "[9.3.2, )"
+            },
+            "Volo.Abp.BlobStoring.Database.Domain": {
+              "target": "Package",
+              "version": "[9.3.2, )"
+            },
+            "Volo.Abp.Caching": {
+              "target": "Package",
+              "version": "[9.3.2, )"
+            },
+            "Volo.Abp.Emailing": {
+              "target": "Package",
+              "version": "[9.3.2, )"
+            },
+            "Volo.Abp.FeatureManagement.Domain": {
+              "target": "Package",
+              "version": "[9.3.2, )"
+            },
+            "Volo.Abp.Identity.Domain": {
+              "target": "Package",
+              "version": "[9.3.2, )"
+            },
+            "Volo.Abp.OpenIddict.Domain": {
+              "target": "Package",
+              "version": "[9.3.2, )"
+            },
+            "Volo.Abp.PermissionManagement.Domain.Identity": {
+              "target": "Package",
+              "version": "[9.3.2, )"
+            },
+            "Volo.Abp.PermissionManagement.Domain.OpenIddict": {
+              "target": "Package",
+              "version": "[9.3.2, )"
+            },
+            "Volo.Abp.SettingManagement.Domain": {
+              "target": "Package",
+              "version": "[9.3.2, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.304/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\src\\GoPlaces.EntityFrameworkCore\\GoPlaces.EntityFrameworkCore.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\src\\GoPlaces.EntityFrameworkCore\\GoPlaces.EntityFrameworkCore.csproj",
+        "projectName": "GoPlaces.EntityFrameworkCore",
+        "projectPath": "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\src\\GoPlaces.EntityFrameworkCore\\GoPlaces.EntityFrameworkCore.csproj",
+        "packagesPath": "C:\\Users\\Agustin\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\src\\GoPlaces.EntityFrameworkCore\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\NuGet.Config",
+          "C:\\Users\\Agustin\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0": {
+            "targetAlias": "net9.0",
+            "projectReferences": {
+              "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\src\\GoPlaces.Domain\\GoPlaces.Domain.csproj": {
+                "projectPath": "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\src\\GoPlaces.Domain\\GoPlaces.Domain.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.300"
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "dependencies": {
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers",
+              "suppressParent": "Compile, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "target": "Package",
+              "version": "[9.0.5, )"
+            },
+            "Volo.Abp.AuditLogging.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[9.3.2, )"
+            },
+            "Volo.Abp.BackgroundJobs.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[9.3.2, )"
+            },
+            "Volo.Abp.BlobStoring.Database.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[9.3.2, )"
+            },
+            "Volo.Abp.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[9.3.2, )"
+            },
+            "Volo.Abp.FeatureManagement.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[9.3.2, )"
+            },
+            "Volo.Abp.Identity.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[9.3.2, )"
+            },
+            "Volo.Abp.OpenIddict.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[9.3.2, )"
+            },
+            "Volo.Abp.PermissionManagement.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[9.3.2, )"
+            },
+            "Volo.Abp.SettingManagement.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[9.3.2, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.304/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}
