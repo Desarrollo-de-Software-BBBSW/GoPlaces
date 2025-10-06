@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <Import Project="..\..\common.props" />
 
@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\GoPlaces.Application\GoPlaces.Application.csproj" />
+    <ProjectReference Include="..\..\src\GoPlaces.EntityFrameworkCore\GoPlaces.EntityFrameworkCore.csproj" />
     <ProjectReference Include="..\GoPlaces.Domain.Tests\GoPlaces.Domain.Tests.csproj" />
   </ItemGroup>
 

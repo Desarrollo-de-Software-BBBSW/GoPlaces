@@ -1,4 +1,5 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
 using Volo.Abp.BackgroundJobs.EntityFrameworkCore;
 using Volo.Abp.BlobStoring.Database.EntityFrameworkCore;
@@ -9,9 +10,9 @@ using Volo.Abp.EntityFrameworkCore.Modeling;
 using Volo.Abp.FeatureManagement.EntityFrameworkCore;
 using Volo.Abp.Identity;
 using Volo.Abp.Identity.EntityFrameworkCore;
+using Volo.Abp.OpenIddict.EntityFrameworkCore;
 using Volo.Abp.PermissionManagement.EntityFrameworkCore;
 using Volo.Abp.SettingManagement.EntityFrameworkCore;
-using Volo.Abp.OpenIddict.EntityFrameworkCore;
 
 namespace GoPlaces.EntityFrameworkCore;
 
@@ -21,7 +22,11 @@ public class GoPlacesDbContext :
     AbpDbContext<GoPlacesDbContext>,
     IIdentityDbContext
 {
-    /* Add DbSet properties for your Aggregate Roots / Entities here. */
+    // 👇 Tus agregados de dominio
+    public DbSet<GoPlaces.Destinations.Destination> Destinations { get; set; }
+    public DbSet<GoPlaces.Follows.FollowList> FollowLists { get; set; }
+    public DbSet<GoPlaces.Follows.FollowListItem> FollowListItems { get; set; }
+
 
 
     #region Entities from the modules
@@ -69,8 +74,76 @@ public class GoPlacesDbContext :
         builder.ConfigureIdentity();
         builder.ConfigureOpenIddict();
         builder.ConfigureBlobStoring();
-        
+
         /* Configure your own tables/entities inside here */
+
+        // Destination + Coordinates (owned)
+        builder.Entity<GoPlaces.Destinations.Destination>(b =>
+        {
+            b.ToTable(GoPlacesConsts.DbTablePrefix + "Destinations", GoPlacesConsts.DbSchema);
+            b.ConfigureByConvention();
+
+            b.Property(x => x.Name).IsRequired().HasMaxLength(GoPlaces.Destinations.Destination.NameMaxLength);
+            b.Property(x => x.Country).IsRequired().HasMaxLength(GoPlaces.Destinations.Destination.CountryMaxLength);
+            b.Property(x => x.Population).IsRequired();
+
+            // Column names as you requested
+            b.Property(x => x.ImageUrl)
+                .HasColumnName("Url_Image")
+                .HasMaxLength(GoPlaces.Destinations.Destination.ImageUrlMaxLength);
+
+            b.Property(x => x.LastUpdatedDate)
+                .HasColumnName("last_updated_date")
+                .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                .IsRequired();
+
+
+            b.OwnsOne(x => x.Coordinates, o =>
+            {
+                o.Property(p => p.Latitude).HasColumnName("Latitude");
+                o.Property(p => p.Longitude).HasColumnName("Longitude");
+            });
+
+            b.HasIndex(x => x.Name);
+            b.HasIndex(x => x.Country);
+        });
+
+
+        // FollowList
+        builder.Entity<GoPlaces.Follows.FollowList>(b =>
+        {
+            b.ToTable(GoPlacesConsts.DbTablePrefix + "FollowLists", GoPlacesConsts.DbSchema);
+            b.ConfigureByConvention();
+
+            b.Property(x => x.Name).IsRequired().HasMaxLength(GoPlaces.Follows.FollowList.NameMaxLength);
+            b.Property(x => x.Description).HasMaxLength(GoPlaces.Follows.FollowList.DescriptionMaxLength);
+            b.Property(x => x.LastUpdatedDate)
+             .HasColumnName("last_updated_date")
+             .HasDefaultValueSql("CURRENT_TIMESTAMP")
+             .IsRequired();
+
+
+            // índices que ya tenías
+            b.HasIndex(x => new { x.OwnerUserId, x.IsDefault });
+            b.HasIndex(x => x.OwnerUserId).IsUnique(); // si seguís con una sola lista por usuario (MVP)
+        });
+
+
+        // FollowListItem
+        builder.Entity<GoPlaces.Follows.FollowListItem>(b =>
+        {
+            b.ToTable(GoPlacesConsts.DbTablePrefix + "FollowListItems", GoPlacesConsts.DbSchema);
+            b.ConfigureByConvention();
+
+            // evita duplicados del mismo destino en la misma lista
+            b.HasIndex(x => new { x.FollowListId, x.DestinationId }).IsUnique();
+
+            b.HasOne<GoPlaces.Follows.FollowList>()
+                .WithMany(x => (ICollection<GoPlaces.Follows.FollowListItem>)x.Items)
+                .HasForeignKey(x => x.FollowListId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
 
         //builder.Entity<YourEntity>(b =>
         //{
