@@ -9,14 +9,9 @@ public class GoPlacesPermissionDefinitionProvider : PermissionDefinitionProvider
 {
     public override void Define(IPermissionDefinitionContext context)
     {
-        var myGroup = context.AddGroup(GoPlacesPermissions.GroupName);
-
-        //Define your own permissions here. Example:
-        //myGroup.AddPermission(GoPlacesPermissions.MyPermission1, L("Permission:MyPermission1"));
+        var group = context.AddGroup(GoPlacesPermissions.GroupName, L("Permission:GoPlaces"));
+        var destinations = group.AddPermission(GoPlacesPermissions.Destinations.Default, L("Permission:Destinations"));
+        destinations.AddChild(GoPlacesPermissions.Destinations.Save, L("Permission:Destinations.Save"));
     }
-
-    private static LocalizableString L(string name)
-    {
-        return LocalizableString.Create<GoPlacesResource>(name);
-    }
+    private static LocalizableString L(string name) => LocalizableString.Create<GoPlacesResource>(name);
 }

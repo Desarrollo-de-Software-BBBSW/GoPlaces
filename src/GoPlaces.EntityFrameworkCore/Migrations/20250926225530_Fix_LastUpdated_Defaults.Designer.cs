@@ -4,6 +4,7 @@ using GoPlaces.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Volo.Abp.EntityFrameworkCore;
 
@@ -12,9 +13,11 @@ using Volo.Abp.EntityFrameworkCore;
 namespace GoPlaces.Migrations
 {
     [DbContext(typeof(GoPlacesDbContext))]
-    partial class GoPlacesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250926225530_Fix_LastUpdated_Defaults")]
+    partial class Fix_LastUpdated_Defaults
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -85,7 +88,7 @@ namespace GoPlaces.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
                         .HasColumnName("last_updated_date")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                        .HasDefaultValueSql("GETUTCDATE()");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -162,7 +165,7 @@ namespace GoPlaces.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
                         .HasColumnName("last_updated_date")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                        .HasDefaultValueSql("GETUTCDATE()");
 
                     b.Property<string>("Name")
                         .IsRequired()

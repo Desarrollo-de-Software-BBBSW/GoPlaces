@@ -4,6 +4,7 @@ using GoPlaces.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Volo.Abp.EntityFrameworkCore;
 
@@ -12,9 +13,11 @@ using Volo.Abp.EntityFrameworkCore;
 namespace GoPlaces.Migrations
 {
     [DbContext(typeof(GoPlacesDbContext))]
-    partial class GoPlacesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250926224737_DestinationsAndFollowList_Update")]
+    partial class DestinationsAndFollowList_Update
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -82,10 +85,8 @@ namespace GoPlaces.Migrations
                         .HasColumnName("LastModifierId");
 
                     b.Property<DateTime>("LastUpdatedDate")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasColumnName("last_updated_date")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                        .HasColumnName("last_updated_date");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -159,10 +160,8 @@ namespace GoPlaces.Migrations
                         .HasColumnName("LastModifierId");
 
                     b.Property<DateTime>("LastUpdatedDate")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasColumnName("last_updated_date")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                        .HasColumnName("last_updated_date");
 
                     b.Property<string>("Name")
                         .IsRequired()
