@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "XgwstpVvQQE=",
+  "dgSpecHash": "/nhrEm3cRgo=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\test\\GoPlaces.Domain.Tests\\GoPlaces.Domain.Tests.csproj",
+  "projectFilePath": "C:\\Users\\Agustin\\Source\\Repos\\GoPlaces\\test\\GoPlaces.Domain.Tests\\GoPlaces.Domain.Tests.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Agustin\\.nuget\\packages\\asynckeyedlock\\7.1.6\\asynckeyedlock.7.1.6.nupkg.sha512",
     "C:\\Users\\Agustin\\.nuget\\packages\\autofac\\8.2.1\\autofac.8.2.1.nupkg.sha512",

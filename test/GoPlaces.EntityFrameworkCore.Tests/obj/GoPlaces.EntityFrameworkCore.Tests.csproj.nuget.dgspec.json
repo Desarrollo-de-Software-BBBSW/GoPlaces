@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\test\\GoPlaces.EntityFrameworkCore.Tests\\GoPlaces.EntityFrameworkCore.Tests.csproj": {}
+    "C:\\Users\\Agustin\\Source\\Repos\\GoPlaces\\test\\GoPlaces.EntityFrameworkCore.Tests\\GoPlaces.EntityFrameworkCore.Tests.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\src\\GoPlaces.Application.Contracts\\GoPlaces.Application.Contracts.csproj": {
+    "C:\\Users\\Agustin\\Source\\Repos\\GoPlaces\\src\\GoPlaces.Application.Contracts\\GoPlaces.Application.Contracts.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\src\\GoPlaces.Application.Contracts\\GoPlaces.Application.Contracts.csproj",
+        "projectUniqueName": "C:\\Users\\Agustin\\Source\\Repos\\GoPlaces\\src\\GoPlaces.Application.Contracts\\GoPlaces.Application.Contracts.csproj",
         "projectName": "GoPlaces.Application.Contracts",
-        "projectPath": "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\src\\GoPlaces.Application.Contracts\\GoPlaces.Application.Contracts.csproj",
+        "projectPath": "C:\\Users\\Agustin\\Source\\Repos\\GoPlaces\\src\\GoPlaces.Application.Contracts\\GoPlaces.Application.Contracts.csproj",
         "packagesPath": "C:\\Users\\Agustin\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\src\\GoPlaces.Application.Contracts\\obj\\",
+        "outputPath": "C:\\Users\\Agustin\\Source\\Repos\\GoPlaces\\src\\GoPlaces.Application.Contracts\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\NuGet.Config",
+          "C:\\Users\\Agustin\\source\\repos\\GoPlaces\\NuGet.Config",
           "C:\\Users\\Agustin\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
@@ -33,8 +33,8 @@
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
-              "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\src\\GoPlaces.Domain.Shared\\GoPlaces.Domain.Shared.csproj": {
-                "projectPath": "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\src\\GoPlaces.Domain.Shared\\GoPlaces.Domain.Shared.csproj"
+              "C:\\Users\\Agustin\\Source\\Repos\\GoPlaces\\src\\GoPlaces.Domain.Shared\\GoPlaces.Domain.Shared.csproj": {
+                "projectPath": "C:\\Users\\Agustin\\Source\\Repos\\GoPlaces\\src\\GoPlaces.Domain.Shared\\GoPlaces.Domain.Shared.csproj"
               }
             }
           }
@@ -96,20 +96,20 @@
         }
       }
     },
-    "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\src\\GoPlaces.Application\\GoPlaces.Application.csproj": {
+    "C:\\Users\\Agustin\\Source\\Repos\\GoPlaces\\src\\GoPlaces.Application\\GoPlaces.Application.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\src\\GoPlaces.Application\\GoPlaces.Application.csproj",
+        "projectUniqueName": "C:\\Users\\Agustin\\Source\\Repos\\GoPlaces\\src\\GoPlaces.Application\\GoPlaces.Application.csproj",
         "projectName": "GoPlaces.Application",
-        "projectPath": "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\src\\GoPlaces.Application\\GoPlaces.Application.csproj",
+        "projectPath": "C:\\Users\\Agustin\\Source\\Repos\\GoPlaces\\src\\GoPlaces.Application\\GoPlaces.Application.csproj",
         "packagesPath": "C:\\Users\\Agustin\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\src\\GoPlaces.Application\\obj\\",
+        "outputPath": "C:\\Users\\Agustin\\Source\\Repos\\GoPlaces\\src\\GoPlaces.Application\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\NuGet.Config",
+          "C:\\Users\\Agustin\\source\\repos\\GoPlaces\\NuGet.Config",
           "C:\\Users\\Agustin\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
@@ -125,11 +125,11 @@
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
-              "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\src\\GoPlaces.Application.Contracts\\GoPlaces.Application.Contracts.csproj": {
-                "projectPath": "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\src\\GoPlaces.Application.Contracts\\GoPlaces.Application.Contracts.csproj"
+              "C:\\Users\\Agustin\\Source\\Repos\\GoPlaces\\src\\GoPlaces.Application.Contracts\\GoPlaces.Application.Contracts.csproj": {
+                "projectPath": "C:\\Users\\Agustin\\Source\\Repos\\GoPlaces\\src\\GoPlaces.Application.Contracts\\GoPlaces.Application.Contracts.csproj"
               },
-              "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\src\\GoPlaces.Domain\\GoPlaces.Domain.csproj": {
-                "projectPath": "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\src\\GoPlaces.Domain\\GoPlaces.Domain.csproj"
+              "C:\\Users\\Agustin\\Source\\Repos\\GoPlaces\\src\\GoPlaces.Domain\\GoPlaces.Domain.csproj": {
+                "projectPath": "C:\\Users\\Agustin\\Source\\Repos\\GoPlaces\\src\\GoPlaces.Domain\\GoPlaces.Domain.csproj"
               }
             }
           }
@@ -150,6 +150,10 @@
         "net9.0": {
           "targetAlias": "net9.0",
           "dependencies": {
+            "Microsoft.Extensions.Http": {
+              "target": "Package",
+              "version": "[9.0.10, )"
+            },
             "Volo.Abp.Account.Application": {
               "target": "Package",
               "version": "[9.3.2, )"
@@ -191,20 +195,20 @@
         }
       }
     },
-    "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\src\\GoPlaces.Domain.Shared\\GoPlaces.Domain.Shared.csproj": {
+    "C:\\Users\\Agustin\\Source\\Repos\\GoPlaces\\src\\GoPlaces.Domain.Shared\\GoPlaces.Domain.Shared.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\src\\GoPlaces.Domain.Shared\\GoPlaces.Domain.Shared.csproj",
+        "projectUniqueName": "C:\\Users\\Agustin\\Source\\Repos\\GoPlaces\\src\\GoPlaces.Domain.Shared\\GoPlaces.Domain.Shared.csproj",
         "projectName": "GoPlaces.Domain.Shared",
-        "projectPath": "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\src\\GoPlaces.Domain.Shared\\GoPlaces.Domain.Shared.csproj",
+        "projectPath": "C:\\Users\\Agustin\\Source\\Repos\\GoPlaces\\src\\GoPlaces.Domain.Shared\\GoPlaces.Domain.Shared.csproj",
         "packagesPath": "C:\\Users\\Agustin\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\src\\GoPlaces.Domain.Shared\\obj\\",
+        "outputPath": "C:\\Users\\Agustin\\Source\\Repos\\GoPlaces\\src\\GoPlaces.Domain.Shared\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\NuGet.Config",
+          "C:\\Users\\Agustin\\source\\repos\\GoPlaces\\NuGet.Config",
           "C:\\Users\\Agustin\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
@@ -299,20 +303,20 @@
         }
       }
     },
-    "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\src\\GoPlaces.Domain\\GoPlaces.Domain.csproj": {
+    "C:\\Users\\Agustin\\Source\\Repos\\GoPlaces\\src\\GoPlaces.Domain\\GoPlaces.Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\src\\GoPlaces.Domain\\GoPlaces.Domain.csproj",
+        "projectUniqueName": "C:\\Users\\Agustin\\Source\\Repos\\GoPlaces\\src\\GoPlaces.Domain\\GoPlaces.Domain.csproj",
         "projectName": "GoPlaces.Domain",
-        "projectPath": "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\src\\GoPlaces.Domain\\GoPlaces.Domain.csproj",
+        "projectPath": "C:\\Users\\Agustin\\Source\\Repos\\GoPlaces\\src\\GoPlaces.Domain\\GoPlaces.Domain.csproj",
         "packagesPath": "C:\\Users\\Agustin\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\src\\GoPlaces.Domain\\obj\\",
+        "outputPath": "C:\\Users\\Agustin\\Source\\Repos\\GoPlaces\\src\\GoPlaces.Domain\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\NuGet.Config",
+          "C:\\Users\\Agustin\\source\\repos\\GoPlaces\\NuGet.Config",
           "C:\\Users\\Agustin\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
@@ -328,8 +332,8 @@
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
-              "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\src\\GoPlaces.Domain.Shared\\GoPlaces.Domain.Shared.csproj": {
-                "projectPath": "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\src\\GoPlaces.Domain.Shared\\GoPlaces.Domain.Shared.csproj"
+              "C:\\Users\\Agustin\\Source\\Repos\\GoPlaces\\src\\GoPlaces.Domain.Shared\\GoPlaces.Domain.Shared.csproj": {
+                "projectPath": "C:\\Users\\Agustin\\Source\\Repos\\GoPlaces\\src\\GoPlaces.Domain.Shared\\GoPlaces.Domain.Shared.csproj"
               }
             }
           }
@@ -415,20 +419,20 @@
         }
       }
     },
-    "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\src\\GoPlaces.EntityFrameworkCore\\GoPlaces.EntityFrameworkCore.csproj": {
+    "C:\\Users\\Agustin\\Source\\Repos\\GoPlaces\\src\\GoPlaces.EntityFrameworkCore\\GoPlaces.EntityFrameworkCore.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\src\\GoPlaces.EntityFrameworkCore\\GoPlaces.EntityFrameworkCore.csproj",
+        "projectUniqueName": "C:\\Users\\Agustin\\Source\\Repos\\GoPlaces\\src\\GoPlaces.EntityFrameworkCore\\GoPlaces.EntityFrameworkCore.csproj",
         "projectName": "GoPlaces.EntityFrameworkCore",
-        "projectPath": "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\src\\GoPlaces.EntityFrameworkCore\\GoPlaces.EntityFrameworkCore.csproj",
+        "projectPath": "C:\\Users\\Agustin\\Source\\Repos\\GoPlaces\\src\\GoPlaces.EntityFrameworkCore\\GoPlaces.EntityFrameworkCore.csproj",
         "packagesPath": "C:\\Users\\Agustin\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\src\\GoPlaces.EntityFrameworkCore\\obj\\",
+        "outputPath": "C:\\Users\\Agustin\\Source\\Repos\\GoPlaces\\src\\GoPlaces.EntityFrameworkCore\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\NuGet.Config",
+          "C:\\Users\\Agustin\\source\\repos\\GoPlaces\\NuGet.Config",
           "C:\\Users\\Agustin\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
@@ -444,8 +448,8 @@
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
-              "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\src\\GoPlaces.Domain\\GoPlaces.Domain.csproj": {
-                "projectPath": "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\src\\GoPlaces.Domain\\GoPlaces.Domain.csproj"
+              "C:\\Users\\Agustin\\Source\\Repos\\GoPlaces\\src\\GoPlaces.Domain\\GoPlaces.Domain.csproj": {
+                "projectPath": "C:\\Users\\Agustin\\Source\\Repos\\GoPlaces\\src\\GoPlaces.Domain\\GoPlaces.Domain.csproj"
               }
             }
           }
@@ -529,20 +533,20 @@
         }
       }
     },
-    "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\test\\GoPlaces.Application.Tests\\GoPlaces.Application.Tests.csproj": {
+    "C:\\Users\\Agustin\\Source\\Repos\\GoPlaces\\test\\GoPlaces.Application.Tests\\GoPlaces.Application.Tests.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\test\\GoPlaces.Application.Tests\\GoPlaces.Application.Tests.csproj",
+        "projectUniqueName": "C:\\Users\\Agustin\\Source\\Repos\\GoPlaces\\test\\GoPlaces.Application.Tests\\GoPlaces.Application.Tests.csproj",
         "projectName": "GoPlaces.Application.Tests",
-        "projectPath": "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\test\\GoPlaces.Application.Tests\\GoPlaces.Application.Tests.csproj",
+        "projectPath": "C:\\Users\\Agustin\\Source\\Repos\\GoPlaces\\test\\GoPlaces.Application.Tests\\GoPlaces.Application.Tests.csproj",
         "packagesPath": "C:\\Users\\Agustin\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\test\\GoPlaces.Application.Tests\\obj\\",
+        "outputPath": "C:\\Users\\Agustin\\Source\\Repos\\GoPlaces\\test\\GoPlaces.Application.Tests\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\NuGet.Config",
+          "C:\\Users\\Agustin\\source\\repos\\GoPlaces\\NuGet.Config",
           "C:\\Users\\Agustin\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
@@ -558,11 +562,14 @@
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
-              "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\src\\GoPlaces.Application\\GoPlaces.Application.csproj": {
-                "projectPath": "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\src\\GoPlaces.Application\\GoPlaces.Application.csproj"
+              "C:\\Users\\Agustin\\Source\\Repos\\GoPlaces\\src\\GoPlaces.Application\\GoPlaces.Application.csproj": {
+                "projectPath": "C:\\Users\\Agustin\\Source\\Repos\\GoPlaces\\src\\GoPlaces.Application\\GoPlaces.Application.csproj"
               },
-              "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\test\\GoPlaces.Domain.Tests\\GoPlaces.Domain.Tests.csproj": {
-                "projectPath": "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\test\\GoPlaces.Domain.Tests\\GoPlaces.Domain.Tests.csproj"
+              "C:\\Users\\Agustin\\Source\\Repos\\GoPlaces\\src\\GoPlaces.EntityFrameworkCore\\GoPlaces.EntityFrameworkCore.csproj": {
+                "projectPath": "C:\\Users\\Agustin\\Source\\Repos\\GoPlaces\\src\\GoPlaces.EntityFrameworkCore\\GoPlaces.EntityFrameworkCore.csproj"
+              },
+              "C:\\Users\\Agustin\\Source\\Repos\\GoPlaces\\test\\GoPlaces.Domain.Tests\\GoPlaces.Domain.Tests.csproj": {
+                "projectPath": "C:\\Users\\Agustin\\Source\\Repos\\GoPlaces\\test\\GoPlaces.Domain.Tests\\GoPlaces.Domain.Tests.csproj"
               }
             }
           }
@@ -608,20 +615,20 @@
         }
       }
     },
-    "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\test\\GoPlaces.Domain.Tests\\GoPlaces.Domain.Tests.csproj": {
+    "C:\\Users\\Agustin\\Source\\Repos\\GoPlaces\\test\\GoPlaces.Domain.Tests\\GoPlaces.Domain.Tests.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\test\\GoPlaces.Domain.Tests\\GoPlaces.Domain.Tests.csproj",
+        "projectUniqueName": "C:\\Users\\Agustin\\Source\\Repos\\GoPlaces\\test\\GoPlaces.Domain.Tests\\GoPlaces.Domain.Tests.csproj",
         "projectName": "GoPlaces.Domain.Tests",
-        "projectPath": "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\test\\GoPlaces.Domain.Tests\\GoPlaces.Domain.Tests.csproj",
+        "projectPath": "C:\\Users\\Agustin\\Source\\Repos\\GoPlaces\\test\\GoPlaces.Domain.Tests\\GoPlaces.Domain.Tests.csproj",
         "packagesPath": "C:\\Users\\Agustin\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\test\\GoPlaces.Domain.Tests\\obj\\",
+        "outputPath": "C:\\Users\\Agustin\\Source\\Repos\\GoPlaces\\test\\GoPlaces.Domain.Tests\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\NuGet.Config",
+          "C:\\Users\\Agustin\\source\\repos\\GoPlaces\\NuGet.Config",
           "C:\\Users\\Agustin\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
@@ -637,11 +644,11 @@
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
-              "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\src\\GoPlaces.Domain\\GoPlaces.Domain.csproj": {
-                "projectPath": "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\src\\GoPlaces.Domain\\GoPlaces.Domain.csproj"
+              "C:\\Users\\Agustin\\Source\\Repos\\GoPlaces\\src\\GoPlaces.Domain\\GoPlaces.Domain.csproj": {
+                "projectPath": "C:\\Users\\Agustin\\Source\\Repos\\GoPlaces\\src\\GoPlaces.Domain\\GoPlaces.Domain.csproj"
               },
-              "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\test\\GoPlaces.TestBase\\GoPlaces.TestBase.csproj": {
-                "projectPath": "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\test\\GoPlaces.TestBase\\GoPlaces.TestBase.csproj"
+              "C:\\Users\\Agustin\\Source\\Repos\\GoPlaces\\test\\GoPlaces.TestBase\\GoPlaces.TestBase.csproj": {
+                "projectPath": "C:\\Users\\Agustin\\Source\\Repos\\GoPlaces\\test\\GoPlaces.TestBase\\GoPlaces.TestBase.csproj"
               }
             }
           }
@@ -687,20 +694,20 @@
         }
       }
     },
-    "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\test\\GoPlaces.EntityFrameworkCore.Tests\\GoPlaces.EntityFrameworkCore.Tests.csproj": {
+    "C:\\Users\\Agustin\\Source\\Repos\\GoPlaces\\test\\GoPlaces.EntityFrameworkCore.Tests\\GoPlaces.EntityFrameworkCore.Tests.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\test\\GoPlaces.EntityFrameworkCore.Tests\\GoPlaces.EntityFrameworkCore.Tests.csproj",
+        "projectUniqueName": "C:\\Users\\Agustin\\Source\\Repos\\GoPlaces\\test\\GoPlaces.EntityFrameworkCore.Tests\\GoPlaces.EntityFrameworkCore.Tests.csproj",
         "projectName": "GoPlaces.EntityFrameworkCore.Tests",
-        "projectPath": "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\test\\GoPlaces.EntityFrameworkCore.Tests\\GoPlaces.EntityFrameworkCore.Tests.csproj",
+        "projectPath": "C:\\Users\\Agustin\\Source\\Repos\\GoPlaces\\test\\GoPlaces.EntityFrameworkCore.Tests\\GoPlaces.EntityFrameworkCore.Tests.csproj",
         "packagesPath": "C:\\Users\\Agustin\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\test\\GoPlaces.EntityFrameworkCore.Tests\\obj\\",
+        "outputPath": "C:\\Users\\Agustin\\Source\\Repos\\GoPlaces\\test\\GoPlaces.EntityFrameworkCore.Tests\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\NuGet.Config",
+          "C:\\Users\\Agustin\\source\\repos\\GoPlaces\\NuGet.Config",
           "C:\\Users\\Agustin\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
@@ -716,11 +723,11 @@
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
-              "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\src\\GoPlaces.EntityFrameworkCore\\GoPlaces.EntityFrameworkCore.csproj": {
-                "projectPath": "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\src\\GoPlaces.EntityFrameworkCore\\GoPlaces.EntityFrameworkCore.csproj"
+              "C:\\Users\\Agustin\\Source\\Repos\\GoPlaces\\src\\GoPlaces.EntityFrameworkCore\\GoPlaces.EntityFrameworkCore.csproj": {
+                "projectPath": "C:\\Users\\Agustin\\Source\\Repos\\GoPlaces\\src\\GoPlaces.EntityFrameworkCore\\GoPlaces.EntityFrameworkCore.csproj"
               },
-              "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\test\\GoPlaces.Application.Tests\\GoPlaces.Application.Tests.csproj": {
-                "projectPath": "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\test\\GoPlaces.Application.Tests\\GoPlaces.Application.Tests.csproj"
+              "C:\\Users\\Agustin\\Source\\Repos\\GoPlaces\\test\\GoPlaces.Application.Tests\\GoPlaces.Application.Tests.csproj": {
+                "projectPath": "C:\\Users\\Agustin\\Source\\Repos\\GoPlaces\\test\\GoPlaces.Application.Tests\\GoPlaces.Application.Tests.csproj"
               }
             }
           }
@@ -770,20 +777,20 @@
         }
       }
     },
-    "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\test\\GoPlaces.TestBase\\GoPlaces.TestBase.csproj": {
+    "C:\\Users\\Agustin\\Source\\Repos\\GoPlaces\\test\\GoPlaces.TestBase\\GoPlaces.TestBase.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\test\\GoPlaces.TestBase\\GoPlaces.TestBase.csproj",
+        "projectUniqueName": "C:\\Users\\Agustin\\Source\\Repos\\GoPlaces\\test\\GoPlaces.TestBase\\GoPlaces.TestBase.csproj",
         "projectName": "GoPlaces.TestBase",
-        "projectPath": "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\test\\GoPlaces.TestBase\\GoPlaces.TestBase.csproj",
+        "projectPath": "C:\\Users\\Agustin\\Source\\Repos\\GoPlaces\\test\\GoPlaces.TestBase\\GoPlaces.TestBase.csproj",
         "packagesPath": "C:\\Users\\Agustin\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\test\\GoPlaces.TestBase\\obj\\",
+        "outputPath": "C:\\Users\\Agustin\\Source\\Repos\\GoPlaces\\test\\GoPlaces.TestBase\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\NuGet.Config",
+          "C:\\Users\\Agustin\\source\\repos\\GoPlaces\\NuGet.Config",
           "C:\\Users\\Agustin\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"

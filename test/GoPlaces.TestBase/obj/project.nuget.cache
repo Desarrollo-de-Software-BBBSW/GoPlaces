@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "8VoNd2r0Cpc=",
+  "dgSpecHash": "mZ4EgBkzAGo=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\test\\GoPlaces.TestBase\\GoPlaces.TestBase.csproj",
+  "projectFilePath": "C:\\Users\\Agustin\\Source\\Repos\\GoPlaces\\test\\GoPlaces.TestBase\\GoPlaces.TestBase.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Agustin\\.nuget\\packages\\autofac\\8.2.1\\autofac.8.2.1.nupkg.sha512",
     "C:\\Users\\Agustin\\.nuget\\packages\\autofac.extensions.dependencyinjection\\10.0.0\\autofac.extensions.dependencyinjection.10.0.0.nupkg.sha512",

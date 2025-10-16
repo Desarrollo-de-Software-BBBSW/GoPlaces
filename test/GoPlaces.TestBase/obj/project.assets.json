@@ -4140,17 +4140,17 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\test\\GoPlaces.TestBase\\GoPlaces.TestBase.csproj",
+      "projectUniqueName": "C:\\Users\\Agustin\\Source\\Repos\\GoPlaces\\test\\GoPlaces.TestBase\\GoPlaces.TestBase.csproj",
       "projectName": "GoPlaces.TestBase",
-      "projectPath": "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\test\\GoPlaces.TestBase\\GoPlaces.TestBase.csproj",
+      "projectPath": "C:\\Users\\Agustin\\Source\\Repos\\GoPlaces\\test\\GoPlaces.TestBase\\GoPlaces.TestBase.csproj",
       "packagesPath": "C:\\Users\\Agustin\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\test\\GoPlaces.TestBase\\obj\\",
+      "outputPath": "C:\\Users\\Agustin\\Source\\Repos\\GoPlaces\\test\\GoPlaces.TestBase\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\NuGet.Config",
+        "C:\\Users\\Agustin\\source\\repos\\GoPlaces\\NuGet.Config",
         "C:\\Users\\Agustin\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"

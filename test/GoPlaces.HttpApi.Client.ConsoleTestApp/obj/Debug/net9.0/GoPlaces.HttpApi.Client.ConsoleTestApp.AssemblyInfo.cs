@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("GoPlaces.HttpApi.Client.ConsoleTestApp")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ef988f289ffa529a41f9409dff0f5e14c9b46855")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6079a791989a2b58e7a11e6ba54e8fae8b123b79")]
 [assembly: System.Reflection.AssemblyProductAttribute("GoPlaces.HttpApi.Client.ConsoleTestApp")]
 [assembly: System.Reflection.AssemblyTitleAttribute("GoPlaces.HttpApi.Client.ConsoleTestApp")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

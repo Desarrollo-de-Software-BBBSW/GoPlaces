@@ -5613,17 +5613,17 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\test\\GoPlaces.HttpApi.Client.ConsoleTestApp\\GoPlaces.HttpApi.Client.ConsoleTestApp.csproj",
+      "projectUniqueName": "C:\\Users\\Agustin\\Source\\Repos\\GoPlaces\\test\\GoPlaces.HttpApi.Client.ConsoleTestApp\\GoPlaces.HttpApi.Client.ConsoleTestApp.csproj",
       "projectName": "GoPlaces.HttpApi.Client.ConsoleTestApp",
-      "projectPath": "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\test\\GoPlaces.HttpApi.Client.ConsoleTestApp\\GoPlaces.HttpApi.Client.ConsoleTestApp.csproj",
+      "projectPath": "C:\\Users\\Agustin\\Source\\Repos\\GoPlaces\\test\\GoPlaces.HttpApi.Client.ConsoleTestApp\\GoPlaces.HttpApi.Client.ConsoleTestApp.csproj",
       "packagesPath": "C:\\Users\\Agustin\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\test\\GoPlaces.HttpApi.Client.ConsoleTestApp\\obj\\",
+      "outputPath": "C:\\Users\\Agustin\\Source\\Repos\\GoPlaces\\test\\GoPlaces.HttpApi.Client.ConsoleTestApp\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\NuGet.Config",
+        "C:\\Users\\Agustin\\source\\repos\\GoPlaces\\NuGet.Config",
         "C:\\Users\\Agustin\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
@@ -5639,8 +5639,8 @@
         "net9.0": {
           "targetAlias": "net9.0",
           "projectReferences": {
-            "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\src\\GoPlaces.HttpApi.Client\\GoPlaces.HttpApi.Client.csproj": {
-              "projectPath": "C:\\Users\\Agustin\\Documents\\Facultad\\Desarrollo de software\\Project\\src\\GoPlaces.HttpApi.Client\\GoPlaces.HttpApi.Client.csproj"
+            "C:\\Users\\Agustin\\Source\\Repos\\GoPlaces\\src\\GoPlaces.HttpApi.Client\\GoPlaces.HttpApi.Client.csproj": {
+              "projectPath": "C:\\Users\\Agustin\\Source\\Repos\\GoPlaces\\src\\GoPlaces.HttpApi.Client\\GoPlaces.HttpApi.Client.csproj"
             }
           }
         }
