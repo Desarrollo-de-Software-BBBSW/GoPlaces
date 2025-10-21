@@ -8,7 +8,7 @@ namespace GoPlaces.Cities
 {
     public class CitySearchResultDto
     {
-        public List<CityDto> Cities { get; set; }
+        public List<CityDto> Cities { get; set; } = new();
     }
 
 }

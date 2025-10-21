@@ -1,12 +1,14 @@
-﻿using Volo.Abp.Modularity;
+﻿using Volo.Abp.Autofac;
+using Volo.Abp.Modularity;
 
-namespace GoPlaces;
-
-[DependsOn(
-    typeof(GoPlacesApplicationModule),
-    typeof(GoPlacesDomainTestModule)
-)]
-public class GoPlacesApplicationTestModule : AbpModule
+namespace GoPlaces
 {
-
+    // Este módulo de tests DEBE depender del ApplicationModule
+    [DependsOn(
+        typeof(AbpAutofacModule),        // Usa Autofac en el host de pruebas
+        typeof(GoPlacesApplicationModule)// <<-- IMPORTANTE
+    )]
+    public class GoPlacesApplicationTestModule : AbpModule
+    {
+    }
 }

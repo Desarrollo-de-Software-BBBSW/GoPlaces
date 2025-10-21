@@ -1,7 +1,16 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "C:\\Users\\Agustin\\source\\repos\\GoPlaces\\",
-  "Documents": [],
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{1FE30EB9-74A9-47F5-A9F6-7B1FAB672D81}|test\\GoPlaces.EntityFrameworkCore.Tests\\GoPlaces.EntityFrameworkCore.Tests.csproj|c:\\users\\agustin\\source\\repos\\goplaces\\test\\goplaces.entityframeworkcore.tests\\entityframeworkcore\\goplacesentityframeworkcoretestmodule.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1FE30EB9-74A9-47F5-A9F6-7B1FAB672D81}|test\\GoPlaces.EntityFrameworkCore.Tests\\GoPlaces.EntityFrameworkCore.Tests.csproj|solutionrelative:test\\goplaces.entityframeworkcore.tests\\entityframeworkcore\\goplacesentityframeworkcoretestmodule.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1FE30EB9-74A9-47F5-A9F6-7B1FAB672D81}|test\\GoPlaces.EntityFrameworkCore.Tests\\GoPlaces.EntityFrameworkCore.Tests.csproj|c:\\users\\agustin\\source\\repos\\goplaces\\test\\goplaces.entityframeworkcore.tests\\goplaces.entityframeworkcore.tests.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{1FE30EB9-74A9-47F5-A9F6-7B1FAB672D81}|test\\GoPlaces.EntityFrameworkCore.Tests\\GoPlaces.EntityFrameworkCore.Tests.csproj|solutionrelative:test\\goplaces.entityframeworkcore.tests\\goplaces.entityframeworkcore.tests.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
@@ -9,7 +18,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": -1,
+          "SelectedChildIndex": 6,
           "Children": [
             {
               "$type": "Bookmark",
@@ -26,6 +35,35 @@
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "GoPlaces.EntityFrameworkCore.Tests.csproj",
+              "DocumentMoniker": "C:\\Users\\Agustin\\Source\\Repos\\GoPlaces\\test\\GoPlaces.EntityFrameworkCore.Tests\\GoPlaces.EntityFrameworkCore.Tests.csproj",
+              "RelativeDocumentMoniker": "test\\GoPlaces.EntityFrameworkCore.Tests\\GoPlaces.EntityFrameworkCore.Tests.csproj",
+              "ToolTip": "C:\\Users\\Agustin\\Source\\Repos\\GoPlaces\\test\\GoPlaces.EntityFrameworkCore.Tests\\GoPlaces.EntityFrameworkCore.Tests.csproj",
+              "RelativeToolTip": "test\\GoPlaces.EntityFrameworkCore.Tests\\GoPlaces.EntityFrameworkCore.Tests.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAKAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-10-18T02:14:35.732Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "GoPlacesEntityFrameworkCoreTestModule.cs",
+              "DocumentMoniker": "C:\\Users\\Agustin\\source\\repos\\GoPlaces\\test\\GoPlaces.EntityFrameworkCore.Tests\\EntityFrameworkCore\\GoPlacesEntityFrameworkCoreTestModule.cs",
+              "RelativeDocumentMoniker": "test\\GoPlaces.EntityFrameworkCore.Tests\\EntityFrameworkCore\\GoPlacesEntityFrameworkCoreTestModule.cs",
+              "ToolTip": "C:\\Users\\Agustin\\source\\repos\\GoPlaces\\test\\GoPlaces.EntityFrameworkCore.Tests\\EntityFrameworkCore\\GoPlacesEntityFrameworkCoreTestModule.cs",
+              "RelativeToolTip": "test\\GoPlaces.EntityFrameworkCore.Tests\\EntityFrameworkCore\\GoPlacesEntityFrameworkCoreTestModule.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACwAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-18T02:08:38.973Z",
+              "EditorCaption": ""
             }
           ]
         }

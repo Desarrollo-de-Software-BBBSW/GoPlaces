@@ -8,7 +8,7 @@ namespace GoPlaces.Cities
 {
     public class CitySearchRequestDto
     {
-        public string PartialName { get; set; }
+        public string? PartialName { get; set; }
     }
 
 }
