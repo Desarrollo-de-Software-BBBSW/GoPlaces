@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("GoPlaces.EntityFrameworkCore.Tests")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5b1a2b97e26abd0ba0404c11704a148d5a770dcc")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+98654bfa8bd93409a112deb72abcff40ca5107de")]
 [assembly: System.Reflection.AssemblyProductAttribute("GoPlaces.EntityFrameworkCore.Tests")]
 [assembly: System.Reflection.AssemblyTitleAttribute("GoPlaces.EntityFrameworkCore.Tests")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

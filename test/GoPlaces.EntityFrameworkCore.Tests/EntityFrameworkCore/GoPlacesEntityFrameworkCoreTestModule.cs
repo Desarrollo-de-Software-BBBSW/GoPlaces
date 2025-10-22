@@ -19,8 +19,9 @@ namespace GoPlaces.EntityFrameworkCore
     [DependsOn(
         typeof(AbpAutofacModule),                 // ✅
         typeof(GoPlacesEntityFrameworkCoreModule),// ✅ capa EFCore real
-        typeof(GoPlacesTestBaseModule)            // ✅ base de tests (no Application.Tests)
-    )]
+        typeof(GoPlacesTestBaseModule),            // ✅ base de tests (no Application.Tests)
+        typeof(GoPlacesApplicationModule)
+        )]
     public class GoPlacesEntityFrameworkCoreTestModule : AbpModule
     {
         private SqliteConnection? _sqliteConnection;
