@@ -23,13 +23,34 @@ namespace GoPlaces.Tests.Cities
         [Fact]
         public async Task SearchCitiesAsync_devuelve_resultados_reales()
         {
+            // Verifica que haya una API Key configurada
             (_config["RapidApi:ApiKey"] ?? string.Empty).ShouldNotBeNullOrWhiteSpace();
 
             var req = new CitySearchRequestDto { PartialName = "Lon" };
-            var res = await _service.SearchCitiesAsync(req);
+
+            // 🔁 Reintentos con backoff exponencial para evitar fallos por rate limit o latencia
+            var intento = 0;
+            var maxIntentos = 6;  // Total ~15s de espera máxima
+            var esperaMs = 500;
+            CitySearchResultDto? res = null;
+
+            while (intento < maxIntentos)
+            {
+                res = await _service.SearchCitiesAsync(req);
+
+                if (res?.Cities?.Count > 0)
+                    break;
+
+                intento++;
+                await Task.Delay(esperaMs);
+                esperaMs *= 2; // 0.5s, 1s, 2s, 4s, 8s, 16s
+            }
 
             res.ShouldNotBeNull();
-            res.Cities.ShouldNotBeEmpty();
+            res!.Cities.ShouldNotBeEmpty(
+                $"Sin resultados tras {intento + 1} intento(s). " +
+                "RapidAPI pudo rate-limitear o responder vacío temporalmente."
+            );
         }
 
         [Fact]
