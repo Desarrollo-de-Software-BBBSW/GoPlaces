@@ -1,5 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Http;                 // para leer header X-UserId
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Linq;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
 using Volo.Abp.BackgroundJobs.EntityFrameworkCore;
 using Volo.Abp.BlobStoring.Database.EntityFrameworkCore;
@@ -13,6 +15,8 @@ using Volo.Abp.Identity.EntityFrameworkCore;
 using Volo.Abp.OpenIddict.EntityFrameworkCore;
 using Volo.Abp.PermissionManagement.EntityFrameworkCore;
 using Volo.Abp.SettingManagement.EntityFrameworkCore;
+using Volo.Abp.Users;                 // ICurrentUser
+using GoPlaces.Ratings;               // Rating, IUserOwned
 
 namespace GoPlaces.EntityFrameworkCore;
 
@@ -22,25 +26,28 @@ public class GoPlacesDbContext :
     AbpDbContext<GoPlacesDbContext>,
     IIdentityDbContext
 {
-    // 👇 Tus agregados de dominio
+    // Acceso a usuario actual + HttpContext para fallback sin auth (nullable para factory)
+    private readonly ICurrentUser? _currentUser;
+    private readonly IHttpContextAccessor? _http;
+
+    // DEMO fallback (cuando no hay token ni header)
+    private static readonly System.Guid DemoUserId = System.Guid.Parse("11111111-1111-1111-1111-111111111111");
+
+    // Id efectivo: Token -> Header -> Demo
+    private System.Guid? CurrentUserId =>
+        _currentUser?.Id
+        ?? TryGetUserIdFromHeader()
+        ?? DemoUserId;
+
+    // Agregados de dominio
     public DbSet<GoPlaces.Destinations.Destination> Destinations { get; set; }
     public DbSet<GoPlaces.Follows.FollowList> FollowLists { get; set; }
     public DbSet<GoPlaces.Follows.FollowListItem> FollowListItems { get; set; }
 
-
+    // Ratings
+    public DbSet<Rating> Ratings { get; set; }
 
     #region Entities from the modules
-
-    /* Notice: We only implemented IIdentityProDbContext 
-     * and replaced them for this DbContext. This allows you to perform JOIN
-     * queries for the entities of these modules over the repositories easily. You
-     * typically don't need that for other modules. But, if you need, you can
-     * implement the DbContext interface of the needed module and use ReplaceDbContext
-     * attribute just like IIdentityProDbContext .
-     *
-     * More info: Replacing a DbContext of a module ensures that the related module
-     * uses this DbContext on runtime. Otherwise, it will use its own DbContext class.
-     */
 
     // Identity
     public DbSet<IdentityUser> Users { get; set; }
@@ -54,10 +61,22 @@ public class GoPlacesDbContext :
 
     #endregion
 
+    // Constructor original (lo usa el DbContextFactory de diseño)
     public GoPlacesDbContext(DbContextOptions<GoPlacesDbContext> options)
         : base(options)
     {
+        // _currentUser y _http quedan null; CurrentUserId usa header o DEMO
+    }
 
+    // Constructor con servicios (runtime)
+    public GoPlacesDbContext(
+        DbContextOptions<GoPlacesDbContext> options,
+        ICurrentUser currentUser,
+        IHttpContextAccessor httpContextAccessor)
+        : base(options)
+    {
+        _currentUser = currentUser;
+        _http = httpContextAccessor;
     }
 
     protected override void OnModelCreating(ModelBuilder builder)
@@ -87,7 +106,6 @@ public class GoPlacesDbContext :
             b.Property(x => x.Country).IsRequired().HasMaxLength(GoPlaces.Destinations.Destination.CountryMaxLength);
             b.Property(x => x.Population).IsRequired();
 
-            // Column names as you requested
             b.Property(x => x.ImageUrl)
                 .HasColumnName("Url_Image")
                 .HasMaxLength(GoPlaces.Destinations.Destination.ImageUrlMaxLength);
@@ -96,7 +114,6 @@ public class GoPlacesDbContext :
                 .HasColumnName("last_updated_date")
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .IsRequired();
-
 
             b.OwnsOne(x => x.Coordinates, o =>
             {
@@ -107,7 +124,6 @@ public class GoPlacesDbContext :
             b.HasIndex(x => x.Name);
             b.HasIndex(x => x.Country);
         });
-
 
         // FollowList
         builder.Entity<GoPlaces.Follows.FollowList>(b =>
@@ -122,12 +138,9 @@ public class GoPlacesDbContext :
              .HasDefaultValueSql("CURRENT_TIMESTAMP")
              .IsRequired();
 
-
-            // índices que ya tenías
             b.HasIndex(x => new { x.OwnerUserId, x.IsDefault });
-            b.HasIndex(x => x.OwnerUserId).IsUnique(); // si seguís con una sola lista por usuario (MVP)
+            b.HasIndex(x => x.OwnerUserId).IsUnique();
         });
-
 
         // FollowListItem
         builder.Entity<GoPlaces.Follows.FollowListItem>(b =>
@@ -135,7 +148,6 @@ public class GoPlacesDbContext :
             b.ToTable(GoPlacesConsts.DbTablePrefix + "FollowListItems", GoPlacesConsts.DbSchema);
             b.ConfigureByConvention();
 
-            // evita duplicados del mismo destino en la misma lista
             b.HasIndex(x => new { x.FollowListId, x.DestinationId }).IsUnique();
 
             b.HasOne<GoPlaces.Follows.FollowList>()
@@ -144,12 +156,32 @@ public class GoPlacesDbContext :
                 .OnDelete(DeleteBehavior.Cascade);
         });
 
+        // Rating (calificaciones por usuario)
+        builder.Entity<Rating>(b =>
+        {
+            b.ToTable(GoPlacesConsts.DbTablePrefix + "Ratings", GoPlacesConsts.DbSchema);
+            b.ConfigureByConvention();
 
-        //builder.Entity<YourEntity>(b =>
-        //{
-        //    b.ToTable(GoPlacesConsts.DbTablePrefix + "YourEntities", GoPlacesConsts.DbSchema);
-        //    b.ConfigureByConvention(); //auto configure for the base class props
-        //    //...
-        //});
+            b.Property(x => x.DestinationId).IsRequired();
+            b.Property(x => x.Score).IsRequired();
+            b.Property(x => x.Comment).HasMaxLength(1000);
+            b.Property(x => x.UserId).IsRequired();
+
+            // Unicidad por usuario y destino
+            b.HasIndex(x => new { x.DestinationId, x.UserId }).IsUnique();
+
+            b.HasIndex(x => x.UserId);
+            b.HasIndex(x => x.DestinationId);
+
+            // Filtro global: Token -> Header -> Demo
+            b.HasQueryFilter(r => CurrentUserId == null || r.UserId == CurrentUserId);
+        });
+    }
+
+    // Lee X-UserId del header para modo sin auth
+    private System.Guid? TryGetUserIdFromHeader()
+    {
+        var id = _http?.HttpContext?.Request?.Headers["X-UserId"].FirstOrDefault();
+        return System.Guid.TryParse(id, out var g) ? g : (System.Guid?)null;
     }
 }
