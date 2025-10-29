@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("GoPlaces.Application.Tests")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e1174467a57d2cd7ebd7fefa4e29f51008a578ce")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+98654bfa8bd93409a112deb72abcff40ca5107de")]
 [assembly: System.Reflection.AssemblyProductAttribute("GoPlaces.Application.Tests")]
 [assembly: System.Reflection.AssemblyTitleAttribute("GoPlaces.Application.Tests")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
