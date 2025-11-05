@@ -28,16 +28,10 @@ public class GoPlacesDbContext :
 {
     // Acceso a usuario actual + HttpContext para fallback sin auth (nullable para factory)
     private readonly ICurrentUser? _currentUser;
-    private readonly IHttpContextAccessor? _http;
 
-    // DEMO fallback (cuando no hay token ni header)
-    private static readonly System.Guid DemoUserId = System.Guid.Parse("11111111-1111-1111-1111-111111111111");
 
     // Id efectivo: Token -> Header -> Demo
-    private System.Guid? CurrentUserId =>
-        _currentUser?.Id
-        ?? TryGetUserIdFromHeader()
-        ?? DemoUserId;
+    private System.Guid? CurrentUserId => _currentUser?.Id;
 
     // Agregados de dominio
     public DbSet<GoPlaces.Destinations.Destination> Destinations { get; set; }
@@ -69,14 +63,10 @@ public class GoPlacesDbContext :
     }
 
     // Constructor con servicios (runtime)
-    public GoPlacesDbContext(
-        DbContextOptions<GoPlacesDbContext> options,
-        ICurrentUser currentUser,
-        IHttpContextAccessor httpContextAccessor)
-        : base(options)
+    public GoPlacesDbContext(DbContextOptions<GoPlacesDbContext> options, ICurrentUser currentUser)
+    : base(options)
     {
         _currentUser = currentUser;
-        _http = httpContextAccessor;
     }
 
     protected override void OnModelCreating(ModelBuilder builder)
@@ -178,10 +168,5 @@ public class GoPlacesDbContext :
         });
     }
 
-    // Lee X-UserId del header para modo sin auth
-    private System.Guid? TryGetUserIdFromHeader()
-    {
-        var id = _http?.HttpContext?.Request?.Headers["X-UserId"].FirstOrDefault();
-        return System.Guid.TryParse(id, out var g) ? g : (System.Guid?)null;
-    }
+  
 }

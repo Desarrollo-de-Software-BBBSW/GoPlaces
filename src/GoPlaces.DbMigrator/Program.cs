@@ -4,6 +4,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Events;
+using Microsoft.Extensions.Configuration;
 
 namespace GoPlaces.DbMigrator;
 
@@ -28,12 +29,27 @@ class Program
         await CreateHostBuilder(args).RunConsoleAsync();
     }
 
-    public static IHostBuilder CreateHostBuilder(string[] args) =>
-        Host.CreateDefaultBuilder(args)
-            .AddAppSettingsSecretsJson()
-            .ConfigureLogging((context, logging) => logging.ClearProviders())
-            .ConfigureServices((hostContext, services) =>
-            {
-                services.AddHostedService<DbMigratorHostedService>();
-            });
+
+public static IHostBuilder CreateHostBuilder(string[] args) =>
+    Host.CreateDefaultBuilder(args)
+        .ConfigureAppConfiguration((hostingContext, config) =>
+        {
+            var env = hostingContext.HostingEnvironment;
+
+            // Fuerza a leer estos archivos desde el proyecto DbMigrator
+            config.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                  .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true)
+                  .AddEnvironmentVariables();
+
+            // Si querés, podés permitir sobreescribir por línea de comandos:
+            // dotnet run --project ... -- ConnectionStrings:Default="..."
+            config.AddCommandLine(args);
+        })
+        .AddAppSettingsSecretsJson()
+        .ConfigureLogging((context, logging) => logging.ClearProviders())
+        .ConfigureServices((hostContext, services) =>
+        {
+            services.AddHostedService<DbMigratorHostedService>();
+        });
+
 }
