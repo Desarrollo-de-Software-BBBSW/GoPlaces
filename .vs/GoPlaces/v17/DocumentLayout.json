@@ -1,26 +1,18 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\Agustin\\source\\repos\\GoPlaces\\",
+  "WorkspaceRootPath": "C:\\Users\\Agustin\\source\\repos\\Desarrollo-de-Software-BBBSW\\GoPlaces\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{96E5259E-59A3-4FAF-BCD1-5BF8E74EF82C}|src\\GoPlaces.HttpApi.Host\\GoPlaces.HttpApi.Host.csproj|c:\\users\\agustin\\source\\repos\\goplaces\\src\\goplaces.httpapi.host\\goplaceshttpapihostmodule.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{96E5259E-59A3-4FAF-BCD1-5BF8E74EF82C}|src\\GoPlaces.HttpApi.Host\\GoPlaces.HttpApi.Host.csproj|c:\\users\\agustin\\source\\repos\\desarrollo-de-software-bbbsw\\goplaces\\src\\goplaces.httpapi.host\\goplaceshttpapihostmodule.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{96E5259E-59A3-4FAF-BCD1-5BF8E74EF82C}|src\\GoPlaces.HttpApi.Host\\GoPlaces.HttpApi.Host.csproj|solutionrelative:src\\goplaces.httpapi.host\\goplaceshttpapihostmodule.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{70680696-BB1E-4383-BCB2-42C3767171FB}|src\\GoPlaces.DbMigrator\\GoPlaces.DbMigrator.csproj|c:\\users\\agustin\\source\\repos\\goplaces\\src\\goplaces.dbmigrator\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{70680696-BB1E-4383-BCB2-42C3767171FB}|src\\GoPlaces.DbMigrator\\GoPlaces.DbMigrator.csproj|solutionrelative:src\\goplaces.dbmigrator\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{1FE30EB9-74A9-47F5-A9F6-7B1FAB672D81}|test\\GoPlaces.EntityFrameworkCore.Tests\\GoPlaces.EntityFrameworkCore.Tests.csproj|c:\\users\\agustin\\source\\repos\\desarrollo-de-software-bbbsw\\goplaces\\test\\goplaces.entityframeworkcore.tests\\entityframeworkcore\\goplacesentityframeworkcoretestmodule.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1FE30EB9-74A9-47F5-A9F6-7B1FAB672D81}|test\\GoPlaces.EntityFrameworkCore.Tests\\GoPlaces.EntityFrameworkCore.Tests.csproj|solutionrelative:test\\goplaces.entityframeworkcore.tests\\entityframeworkcore\\goplacesentityframeworkcoretestmodule.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{70680696-BB1E-4383-BCB2-42C3767171FB}|src\\GoPlaces.DbMigrator\\GoPlaces.DbMigrator.csproj|c:\\users\\agustin\\source\\repos\\goplaces\\src\\goplaces.dbmigrator\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{70680696-BB1E-4383-BCB2-42C3767171FB}|src\\GoPlaces.DbMigrator\\GoPlaces.DbMigrator.csproj|solutionrelative:src\\goplaces.dbmigrator\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{70680696-BB1E-4383-BCB2-42C3767171FB}|src\\GoPlaces.DbMigrator\\GoPlaces.DbMigrator.csproj|c:\\users\\agustin\\source\\repos\\goplaces\\src\\goplaces.dbmigrator\\swaggeropeniddictdataseedcontributor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{70680696-BB1E-4383-BCB2-42C3767171FB}|src\\GoPlaces.DbMigrator\\GoPlaces.DbMigrator.csproj|solutionrelative:src\\goplaces.dbmigrator\\swaggeropeniddictdataseedcontributor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{96E5259E-59A3-4FAF-BCD1-5BF8E74EF82C}|src\\GoPlaces.HttpApi.Host\\GoPlaces.HttpApi.Host.csproj|c:\\users\\agustin\\source\\repos\\goplaces\\src\\goplaces.httpapi.host\\swagger\\adduseridheaderoperationfilter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{96E5259E-59A3-4FAF-BCD1-5BF8E74EF82C}|src\\GoPlaces.HttpApi.Host\\GoPlaces.HttpApi.Host.csproj|solutionrelative:src\\goplaces.httpapi.host\\swagger\\adduseridheaderoperationfilter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{50B2631D-129C-47B3-A587-029CCD6099BC}|test\\GoPlaces.Application.Tests\\GoPlaces.Application.Tests.csproj|c:\\users\\agustin\\source\\repos\\desarrollo-de-software-bbbsw\\goplaces\\test\\goplaces.application.tests\\cities\\citysearchservice_integrationtests.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{50B2631D-129C-47B3-A587-029CCD6099BC}|test\\GoPlaces.Application.Tests\\GoPlaces.Application.Tests.csproj|solutionrelative:test\\goplaces.application.tests\\cities\\citysearchservice_integrationtests.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -30,15 +22,11 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 9,
+          "SelectedChildIndex": 5,
           "Children": [
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{40ea2e6b-2121-4bb8-a43e-c83c04b51041}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
             },
             {
               "$type": "Bookmark",
@@ -53,67 +41,46 @@
               "Name": "ST:128:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
             },
             {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Users\\Agustin\\source\\repos\\GoPlaces\\src\\GoPlaces.DbMigrator\\Program.cs",
-              "RelativeDocumentMoniker": "src\\GoPlaces.DbMigrator\\Program.cs",
-              "ToolTip": "C:\\Users\\Agustin\\source\\repos\\GoPlaces\\src\\GoPlaces.DbMigrator\\Program.cs",
-              "RelativeToolTip": "src\\GoPlaces.DbMigrator\\Program.cs",
-              "ViewState": "AgIAAB0AAAAAAAAAAAAcwB8AAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-31T21:43:35.344Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "appsettings.json",
-              "DocumentMoniker": "C:\\Users\\Agustin\\source\\repos\\GoPlaces\\src\\GoPlaces.DbMigrator\\appsettings.json",
-              "RelativeDocumentMoniker": "src\\GoPlaces.DbMigrator\\appsettings.json",
-              "ToolTip": "C:\\Users\\Agustin\\source\\repos\\GoPlaces\\src\\GoPlaces.DbMigrator\\appsettings.json",
-              "RelativeToolTip": "src\\GoPlaces.DbMigrator\\appsettings.json",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAByAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2025-10-29T23:42:51.725Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "SwaggerOpenIddictDataSeedContributor.cs",
-              "DocumentMoniker": "C:\\Users\\Agustin\\source\\repos\\GoPlaces\\src\\GoPlaces.DbMigrator\\SwaggerOpenIddictDataSeedContributor.cs",
-              "RelativeDocumentMoniker": "src\\GoPlaces.DbMigrator\\SwaggerOpenIddictDataSeedContributor.cs",
-              "ToolTip": "C:\\Users\\Agustin\\source\\repos\\GoPlaces\\src\\GoPlaces.DbMigrator\\SwaggerOpenIddictDataSeedContributor.cs",
-              "RelativeToolTip": "src\\GoPlaces.DbMigrator\\SwaggerOpenIddictDataSeedContributor.cs",
-              "ViewState": "AgIAAAMAAAAAAAAAAAAiwBAAAAAwAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-29T22:20:48.806Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "AddUserIdHeaderOperationFilter.cs",
-              "DocumentMoniker": "C:\\Users\\Agustin\\source\\repos\\GoPlaces\\src\\GoPlaces.HttpApi.Host\\Swagger\\AddUserIdHeaderOperationFilter.cs",
-              "RelativeDocumentMoniker": "src\\GoPlaces.HttpApi.Host\\Swagger\\AddUserIdHeaderOperationFilter.cs",
-              "ToolTip": "C:\\Users\\Agustin\\source\\repos\\GoPlaces\\src\\GoPlaces.HttpApi.Host\\Swagger\\AddUserIdHeaderOperationFilter.cs",
-              "RelativeToolTip": "src\\GoPlaces.HttpApi.Host\\Swagger\\AddUserIdHeaderOperationFilter.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAABRAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-25T19:59:31.409Z"
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{cce594b6-0c39-4442-ba28-10c64ac7e89f}"
             },
             {
               "$type": "Document",
               "DocumentIndex": 0,
               "Title": "GoPlacesHttpApiHostModule.cs",
-              "DocumentMoniker": "C:\\Users\\Agustin\\source\\repos\\GoPlaces\\src\\GoPlaces.HttpApi.Host\\GoPlacesHttpApiHostModule.cs",
+              "DocumentMoniker": "C:\\Users\\Agustin\\source\\repos\\Desarrollo-de-Software-BBBSW\\GoPlaces\\src\\GoPlaces.HttpApi.Host\\GoPlacesHttpApiHostModule.cs",
               "RelativeDocumentMoniker": "src\\GoPlaces.HttpApi.Host\\GoPlacesHttpApiHostModule.cs",
-              "ToolTip": "C:\\Users\\Agustin\\source\\repos\\GoPlaces\\src\\GoPlaces.HttpApi.Host\\GoPlacesHttpApiHostModule.cs*",
+              "ToolTip": "C:\\Users\\Agustin\\source\\repos\\Desarrollo-de-Software-BBBSW\\GoPlaces\\src\\GoPlaces.HttpApi.Host\\GoPlacesHttpApiHostModule.cs*",
               "RelativeToolTip": "src\\GoPlaces.HttpApi.Host\\GoPlacesHttpApiHostModule.cs*",
-              "ViewState": "AgIAAHoAAAAAAAAAAAAAAI0AAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAIEAAAAAAAAAAAD4v4gAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-25T20:05:12.246Z",
+              "WhenOpened": "2025-11-18T17:57:12.871Z",
               "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "GoPlacesEntityFrameworkCoreTestModule.cs",
+              "DocumentMoniker": "C:\\Users\\Agustin\\source\\repos\\Desarrollo-de-Software-BBBSW\\GoPlaces\\test\\GoPlaces.EntityFrameworkCore.Tests\\EntityFrameworkCore\\GoPlacesEntityFrameworkCoreTestModule.cs",
+              "RelativeDocumentMoniker": "test\\GoPlaces.EntityFrameworkCore.Tests\\EntityFrameworkCore\\GoPlacesEntityFrameworkCoreTestModule.cs",
+              "ToolTip": "C:\\Users\\Agustin\\source\\repos\\Desarrollo-de-Software-BBBSW\\GoPlaces\\test\\GoPlaces.EntityFrameworkCore.Tests\\EntityFrameworkCore\\GoPlacesEntityFrameworkCoreTestModule.cs",
+              "RelativeToolTip": "test\\GoPlaces.EntityFrameworkCore.Tests\\EntityFrameworkCore\\GoPlacesEntityFrameworkCoreTestModule.cs",
+              "ViewState": "AgIAABkAAAAAAAAAAAAIwB0AAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-22T22:19:55.384Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "CitySearchService_IntegrationTests.cs",
+              "DocumentMoniker": "C:\\Users\\Agustin\\source\\repos\\Desarrollo-de-Software-BBBSW\\GoPlaces\\test\\GoPlaces.Application.Tests\\Cities\\CitySearchService_IntegrationTests.cs",
+              "RelativeDocumentMoniker": "test\\GoPlaces.Application.Tests\\Cities\\CitySearchService_IntegrationTests.cs",
+              "ToolTip": "C:\\Users\\Agustin\\source\\repos\\Desarrollo-de-Software-BBBSW\\GoPlaces\\test\\GoPlaces.Application.Tests\\Cities\\CitySearchService_IntegrationTests.cs",
+              "RelativeToolTip": "test\\GoPlaces.Application.Tests\\Cities\\CitySearchService_IntegrationTests.cs",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAAACMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-22T22:03:18.397Z"
             }
           ]
         }

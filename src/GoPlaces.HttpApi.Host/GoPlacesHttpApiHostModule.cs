@@ -43,6 +43,8 @@ using Volo.Abp.Swashbuckle;
 using Volo.Abp.UI.Navigation.Urls;
 using Volo.Abp.VirtualFileSystem;
 using GoPlaces.HttpApi.Host.Exceptions;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+
 
 
 namespace GoPlaces;
@@ -132,15 +134,9 @@ public class GoPlacesHttpApiHostModule : AbpModule
         ConfigureVirtualFileSystem(context);
         ConfigureCors(context, configuration);
         // Mapeo de códigos HTTP para excepciones de negocio
-        Configure<AbpExceptionHttpStatusCodeOptions>(options =>
-        {
-            // Default: cualquier BusinessException => 400
-            options.MapCode<BusinessException>((int)HttpStatusCode.BadRequest);
-
-            // Casos específicos por código de error
-            options.MapErrorCode("Rating.AlreadyExists", (int)HttpStatusCode.Conflict);
-            options.MapErrorCode("Rating.ScoreOutOfRange", (int)HttpStatusCode.BadRequest);
-        });
+        context.Services.Replace(
+            ServiceDescriptor.Singleton<IHttpExceptionStatusCodeFinder, MyHttpStatusCodeFinder>()
+        );
 
 
 
