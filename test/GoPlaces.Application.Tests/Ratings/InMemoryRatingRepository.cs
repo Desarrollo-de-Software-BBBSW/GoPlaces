@@ -21,11 +21,10 @@ public class InMemoryRatingRepository : IRepository<Rating, Guid>
 
     // ---------- MÉTODOS QUE REALMENTE USAMOS EN RatingAppService ----------
 
-    // En RatingAppService hacés: (await _repo.GetQueryableAsync()).AnyAsync(...)
-    // IRepository no trae GetQueryableAsync, pero podemos exponerlo acá
-    // y después extender IRepository en los tests (si lo necesitás).
+    // CORRECCIÓN AQUÍ: Usamos .AsAsyncQueryable() en lugar de .AsQueryable()
+    // Esto permite que .AnyAsync() funcione sin errores.
     public Task<IQueryable<Rating>> GetQueryableAsync()
-        => Task.FromResult(_items.AsQueryable());
+        => Task.FromResult(_items.AsAsyncQueryable());
 
     public Task<Rating> InsertAsync(
         Rating entity,
@@ -44,9 +43,7 @@ public class InMemoryRatingRepository : IRepository<Rating, Guid>
     }
 
     // ---------------------------------------------------------------------
-    // El resto de los miembros de IRepository los dejamos con throw, 
-    // porque NO los usa tu RatingAppService en este TP.
-    // Podés generar estos stubs con Ctrl+. -> Implementar interfaz.
+    // El resto de los miembros de IRepository los dejamos con throw
     // ---------------------------------------------------------------------
 
     public Task<Rating> GetAsync(
@@ -101,7 +98,6 @@ public class InMemoryRatingRepository : IRepository<Rating, Guid>
     public IQueryable<Rating> WithDetails(params Expression<Func<Rating, object>>[] propertySelectors)
         => _items.AsQueryable();
 
-    // Métodos de IEntityRepository / IRepository no usados en este TP:
     public IAsyncQueryableExecuter AsyncExecuter => throw new NotImplementedException();
 
     public bool? IsChangeTrackingEnabled => throw new NotImplementedException();

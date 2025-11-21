@@ -1,8 +1,9 @@
-﻿using System;
-using System.Threading.Tasks;
-using GoPlaces.Ratings;
+﻿using GoPlaces.Ratings;
 using Shouldly;
+using System;
+using System.Threading.Tasks;
 using Volo.Abp;
+using Volo.Abp.Validation;
 using Xunit;
 
 namespace GoPlaces.Tests.Ratings;
@@ -61,7 +62,7 @@ public class RatingAppService_Tests : GoPlacesApplicationTestBase<GoPlacesApplic
             Score = 6
         };
 
-        await Should.ThrowAsync<BusinessException>(() =>
+        await Should.ThrowAsync<AbpValidationException>(() =>
             _ratingAppService.CreateAsync(invalidScoreInput));
     }
 
