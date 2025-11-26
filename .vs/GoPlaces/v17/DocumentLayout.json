@@ -3,20 +3,24 @@
   "WorkspaceRootPath": "C:\\Users\\B08\\Documents\\Solucion\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{50B2631D-129C-47B3-A587-029CCD6099BC}|test\\GoPlaces.Application.Tests\\GoPlaces.Application.Tests.csproj|c:\\users\\b08\\documents\\solucion\\test\\goplaces.application.tests\\goplacesapplicationtestmodule.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{50B2631D-129C-47B3-A587-029CCD6099BC}|test\\GoPlaces.Application.Tests\\GoPlaces.Application.Tests.csproj|solutionrelative:test\\goplaces.application.tests\\goplacesapplicationtestmodule.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1A94A50E-06DC-43C1-80B5-B662820EC3EB}|src\\GoPlaces.Application\\GoPlaces.Application.csproj|c:\\users\\b08\\documents\\solucion\\src\\goplaces.application\\ratings\\ratingappservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1A94A50E-06DC-43C1-80B5-B662820EC3EB}|src\\GoPlaces.Application\\GoPlaces.Application.csproj|solutionrelative:src\\goplaces.application\\ratings\\ratingappservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{50B2631D-129C-47B3-A587-029CCD6099BC}|test\\GoPlaces.Application.Tests\\GoPlaces.Application.Tests.csproj|c:\\users\\b08\\documents\\solucion\\test\\goplaces.application.tests\\ratings\\ratingappservice_tests.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{50B2631D-129C-47B3-A587-029CCD6099BC}|test\\GoPlaces.Application.Tests\\GoPlaces.Application.Tests.csproj|solutionrelative:test\\goplaces.application.tests\\ratings\\ratingappservice_tests.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{520659C8-C734-4298-A3DA-B539DB9DFC0B}|src\\GoPlaces.Application.Contracts\\GoPlaces.Application.Contracts.csproj|c:\\users\\b08\\documents\\solucion\\src\\goplaces.application.contracts\\ratings\\ratingdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{520659C8-C734-4298-A3DA-B539DB9DFC0B}|src\\GoPlaces.Application.Contracts\\GoPlaces.Application.Contracts.csproj|solutionrelative:src\\goplaces.application.contracts\\ratings\\ratingdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{50B2631D-129C-47B3-A587-029CCD6099BC}|test\\GoPlaces.Application.Tests\\GoPlaces.Application.Tests.csproj|c:\\users\\b08\\documents\\solucion\\test\\goplaces.application.tests\\ratings\\inmemoryratingrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{50B2631D-129C-47B3-A587-029CCD6099BC}|test\\GoPlaces.Application.Tests\\GoPlaces.Application.Tests.csproj|solutionrelative:test\\goplaces.application.tests\\ratings\\inmemoryratingrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{50B2631D-129C-47B3-A587-029CCD6099BC}|test\\GoPlaces.Application.Tests\\GoPlaces.Application.Tests.csproj|c:\\users\\b08\\documents\\solucion\\test\\goplaces.application.tests\\ratings\\asyncqueryableexecuter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{50B2631D-129C-47B3-A587-029CCD6099BC}|test\\GoPlaces.Application.Tests\\GoPlaces.Application.Tests.csproj|solutionrelative:test\\goplaces.application.tests\\ratings\\asyncqueryableexecuter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{50B2631D-129C-47B3-A587-029CCD6099BC}|test\\GoPlaces.Application.Tests\\GoPlaces.Application.Tests.csproj|c:\\users\\b08\\documents\\solucion\\test\\goplaces.application.tests\\goplacesapplicationtestmodule.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{50B2631D-129C-47B3-A587-029CCD6099BC}|test\\GoPlaces.Application.Tests\\GoPlaces.Application.Tests.csproj|solutionrelative:test\\goplaces.application.tests\\goplacesapplicationtestmodule.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{1FE30EB9-74A9-47F5-A9F6-7B1FAB672D81}|test\\GoPlaces.EntityFrameworkCore.Tests\\GoPlaces.EntityFrameworkCore.Tests.csproj|c:\\users\\b08\\documents\\solucion\\test\\goplaces.entityframeworkcore.tests\\entityframeworkcore\\goplacesentityframeworkcoretestmodule.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -34,7 +38,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 7,
           "Children": [
             {
               "$type": "Bookmark",
@@ -42,54 +46,28 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "RatingAppService_Tests.cs",
-              "DocumentMoniker": "C:\\Users\\B08\\Documents\\Solucion\\test\\GoPlaces.Application.Tests\\Ratings\\RatingAppService_Tests.cs",
-              "RelativeDocumentMoniker": "test\\GoPlaces.Application.Tests\\Ratings\\RatingAppService_Tests.cs",
-              "ToolTip": "C:\\Users\\B08\\Documents\\Solucion\\test\\GoPlaces.Application.Tests\\Ratings\\RatingAppService_Tests.cs",
-              "RelativeToolTip": "test\\GoPlaces.Application.Tests\\Ratings\\RatingAppService_Tests.cs",
-              "ViewState": "AgIAADUAAAAAAAAAAAAwwEMAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-21T23:03:44.498Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "InMemoryRatingRepository.cs",
-              "DocumentMoniker": "C:\\Users\\B08\\Documents\\Solucion\\test\\GoPlaces.Application.Tests\\Ratings\\InMemoryRatingRepository.cs",
-              "RelativeDocumentMoniker": "test\\GoPlaces.Application.Tests\\Ratings\\InMemoryRatingRepository.cs",
-              "ToolTip": "C:\\Users\\B08\\Documents\\Solucion\\test\\GoPlaces.Application.Tests\\Ratings\\InMemoryRatingRepository.cs",
-              "RelativeToolTip": "test\\GoPlaces.Application.Tests\\Ratings\\InMemoryRatingRepository.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAKAAAAABAAAAAAAAAA==",
+              "Title": "RatingAppService.cs",
+              "DocumentMoniker": "C:\\Users\\B08\\Documents\\Solucion\\src\\GoPlaces.Application\\Ratings\\RatingAppService.cs",
+              "RelativeDocumentMoniker": "src\\GoPlaces.Application\\Ratings\\RatingAppService.cs",
+              "ToolTip": "C:\\Users\\B08\\Documents\\Solucion\\src\\GoPlaces.Application\\Ratings\\RatingAppService.cs",
+              "RelativeToolTip": "src\\GoPlaces.Application\\Ratings\\RatingAppService.cs",
+              "ViewState": "AgIAABYAAAAAAAAAAAAzwCQAAAAqAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-21T22:53:07.637Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "AsyncQueryableExecuter.cs",
-              "DocumentMoniker": "C:\\Users\\B08\\Documents\\Solucion\\test\\GoPlaces.Application.Tests\\Ratings\\AsyncQueryableExecuter.cs",
-              "RelativeDocumentMoniker": "test\\GoPlaces.Application.Tests\\Ratings\\AsyncQueryableExecuter.cs",
-              "ToolTip": "C:\\Users\\B08\\Documents\\Solucion\\test\\GoPlaces.Application.Tests\\Ratings\\AsyncQueryableExecuter.cs",
-              "RelativeToolTip": "test\\GoPlaces.Application.Tests\\Ratings\\AsyncQueryableExecuter.cs",
-              "ViewState": "AgIAAFYAAAAAAAAAAAAQwGwAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-21T22:59:42.194Z",
+              "WhenOpened": "2025-11-26T13:44:02.905Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 3,
-              "Title": "GoPlacesApplicationTestModule.cs",
-              "DocumentMoniker": "C:\\Users\\B08\\Documents\\Solucion\\test\\GoPlaces.Application.Tests\\GoPlacesApplicationTestModule.cs",
-              "RelativeDocumentMoniker": "test\\GoPlaces.Application.Tests\\GoPlacesApplicationTestModule.cs",
-              "ToolTip": "C:\\Users\\B08\\Documents\\Solucion\\test\\GoPlaces.Application.Tests\\GoPlacesApplicationTestModule.cs",
-              "RelativeToolTip": "test\\GoPlaces.Application.Tests\\GoPlacesApplicationTestModule.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAFgAAAABAAAAAAAAAA==",
+              "Title": "RatingDto.cs",
+              "DocumentMoniker": "C:\\Users\\B08\\Documents\\Solucion\\src\\GoPlaces.Application.Contracts\\Ratings\\RatingDto.cs",
+              "RelativeDocumentMoniker": "src\\GoPlaces.Application.Contracts\\Ratings\\RatingDto.cs",
+              "ToolTip": "C:\\Users\\B08\\Documents\\Solucion\\src\\GoPlaces.Application.Contracts\\Ratings\\RatingDto.cs",
+              "RelativeToolTip": "src\\GoPlaces.Application.Contracts\\Ratings\\RatingDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-21T22:37:13.143Z",
+              "WhenOpened": "2025-11-26T13:07:57.267Z",
               "EditorCaption": ""
             },
             {
@@ -106,7 +84,49 @@
             },
             {
               "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "RatingAppService_Tests.cs",
+              "DocumentMoniker": "C:\\Users\\B08\\Documents\\Solucion\\test\\GoPlaces.Application.Tests\\Ratings\\RatingAppService_Tests.cs",
+              "RelativeDocumentMoniker": "test\\GoPlaces.Application.Tests\\Ratings\\RatingAppService_Tests.cs",
+              "ToolTip": "C:\\Users\\B08\\Documents\\Solucion\\test\\GoPlaces.Application.Tests\\Ratings\\RatingAppService_Tests.cs",
+              "RelativeToolTip": "test\\GoPlaces.Application.Tests\\Ratings\\RatingAppService_Tests.cs",
+              "ViewState": "AgIAAHQAAAAAAAAAAAAswIkAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-21T23:03:44.498Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "GoPlacesApplicationTestModule.cs",
+              "DocumentMoniker": "C:\\Users\\B08\\Documents\\Solucion\\test\\GoPlaces.Application.Tests\\GoPlacesApplicationTestModule.cs",
+              "RelativeDocumentMoniker": "test\\GoPlaces.Application.Tests\\GoPlacesApplicationTestModule.cs",
+              "ToolTip": "C:\\Users\\B08\\Documents\\Solucion\\test\\GoPlaces.Application.Tests\\GoPlacesApplicationTestModule.cs",
+              "RelativeToolTip": "test\\GoPlaces.Application.Tests\\GoPlacesApplicationTestModule.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAFUAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-21T22:37:13.143Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{cce594b6-0c39-4442-ba28-10c64ac7e89f}"
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 4,
+              "Title": "InMemoryRatingRepository.cs",
+              "DocumentMoniker": "C:\\Users\\B08\\Documents\\Solucion\\test\\GoPlaces.Application.Tests\\Ratings\\InMemoryRatingRepository.cs",
+              "RelativeDocumentMoniker": "test\\GoPlaces.Application.Tests\\Ratings\\InMemoryRatingRepository.cs",
+              "ToolTip": "C:\\Users\\B08\\Documents\\Solucion\\test\\GoPlaces.Application.Tests\\Ratings\\InMemoryRatingRepository.cs",
+              "RelativeToolTip": "test\\GoPlaces.Application.Tests\\Ratings\\InMemoryRatingRepository.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAKAAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-21T22:53:07.637Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
               "Title": "GoPlacesEntityFrameworkCoreTestModule.cs",
               "DocumentMoniker": "C:\\Users\\B08\\Documents\\Solucion\\test\\GoPlaces.EntityFrameworkCore.Tests\\EntityFrameworkCore\\GoPlacesEntityFrameworkCoreTestModule.cs",
               "RelativeDocumentMoniker": "test\\GoPlaces.EntityFrameworkCore.Tests\\EntityFrameworkCore\\GoPlacesEntityFrameworkCoreTestModule.cs",
@@ -114,12 +134,11 @@
               "RelativeToolTip": "test\\GoPlaces.EntityFrameworkCore.Tests\\EntityFrameworkCore\\GoPlacesEntityFrameworkCoreTestModule.cs",
               "ViewState": "AgIAAA8AAAAAAAAAAAAAABgAAAAKAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-22T22:19:55.384Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-10-22T22:19:55.384Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 6,
               "Title": "CitySearchService_IntegrationTests.cs",
               "DocumentMoniker": "C:\\Users\\B08\\Documents\\Solucion\\test\\GoPlaces.Application.Tests\\Cities\\CitySearchService_IntegrationTests.cs",
               "RelativeDocumentMoniker": "test\\GoPlaces.Application.Tests\\Cities\\CitySearchService_IntegrationTests.cs",

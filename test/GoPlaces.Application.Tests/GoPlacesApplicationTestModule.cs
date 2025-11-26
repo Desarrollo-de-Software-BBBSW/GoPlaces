@@ -3,18 +3,17 @@ using GoPlaces.EntityFrameworkCore;
 using GoPlaces.Ratings;
 using GoPlaces.Tests.Ratings;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions; // Necesario para Replace
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
 using System.Collections.Generic;
-using System.Security.Claims; // Necesario para Claims
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Volo.Abp.Auditing;
 using Volo.Abp.Autofac;
 using Volo.Abp.Domain.Repositories;
 using Volo.Abp.Modularity;
 using Volo.Abp.PermissionManagement;
-using Volo.Abp.Security.Claims; // Necesario para ICurrentPrincipalAccessor y AbpClaimTypes
-using Volo.Abp.Authorization;
+using Volo.Abp.Security.Claims;
 
 namespace GoPlaces;
 
@@ -26,63 +25,61 @@ public class GoPlacesApplicationTestModule : AbpModule
 {
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
-        // 1) Solución al error de Auditoría (IAuditLogRepository)
+        // 1) Solución Auditoría (Evita error de IAuditLogRepository)
         context.Services.Replace(ServiceDescriptor.Singleton<IAuditingStore, NullAuditingStore>());
 
-        // 2) Solución al error de Usuario Nulo (CurrentUser.Id es null)
-        // Reemplazamos el "Lector de Usuario" por uno que siempre devuelve un usuario fijo.
+        // 2) Solución Usuario (Permite simular login/logout en los tests)
         context.Services.Replace(ServiceDescriptor.Singleton<ICurrentPrincipalAccessor, FakeCurrentPrincipalAccessor>());
 
-        // 3) Deshabilitar el store dinámico de permisos
+        // 3) Deshabilitar permisos dinámicos
         Configure<PermissionManagementOptions>(options =>
         {
             options.IsDynamicPermissionStoreEnabled = false;
             options.SaveStaticPermissionsToDatabase = false;
         });
 
-        // 4) Registrar tu repositorio en memoria para Rating
+        // 4) Repositorio en memoria
         context.Services.AddSingleton<IRepository<Rating, Guid>, InMemoryRatingRepository>();
     }
 }
 
-// --- CLASES AUXILIARES PARA LAS PRUEBAS ---
+// --- CLASES AUXILIARES ---
 
-// Evita el error de "Cannot resolve IAuditLogRepository"
 public class NullAuditingStore : IAuditingStore
 {
-    public Task SaveAsync(AuditLogInfo auditInfo)
-    {
-        return Task.CompletedTask;
-    }
+    public Task SaveAsync(AuditLogInfo auditInfo) => Task.CompletedTask;
 }
 
-// Simula un usuario logueado para evitar "Nullable object must have a value" en CurrentUser.Id
 public class FakeCurrentPrincipalAccessor : ICurrentPrincipalAccessor
 {
-    public IDisposable Change(ClaimsPrincipal principal)
-    {
-        // Retorna un disposable vacío, ya que no necesitamos cambiar de usuario en estas pruebas
-        return new FakeDisposable();
-    }
+    // Bandera estática para controlar el login desde el test
+    public static bool IsAuthenticated { get; set; } = true;
+
+    public IDisposable Change(ClaimsPrincipal principal) => new FakeDisposable();
 
     public ClaimsPrincipal Principal
     {
         get
         {
-            // Creamos un usuario ficticio con un ID fijo y Rol de Admin
+            if (!IsAuthenticated)
+            {
+                // Retorna identidad anónima
+                return new ClaimsPrincipal(new ClaimsIdentity());
+            }
+
+            // Retorna identidad admin
             var claims = new List<Claim>
             {
                 new Claim(AbpClaimTypes.UserId, "2e701e62-0953-4dd3-910b-dc6cc93ccb0d"),
                 new Claim(AbpClaimTypes.UserName, "admin"),
                 new Claim(AbpClaimTypes.Email, "admin@goplaces.com")
             };
-            var identity = new ClaimsIdentity(claims, "Test"); // "Test" es el tipo de autenticación
+            var identity = new ClaimsIdentity(claims, "Test");
             return new ClaimsPrincipal(identity);
         }
     }
 }
 
-// Helper simple para el IDisposable
 public class FakeDisposable : IDisposable
 {
     public void Dispose() { }

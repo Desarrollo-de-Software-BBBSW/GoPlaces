@@ -90,4 +90,49 @@ public class RatingAppService_Tests : GoPlacesApplicationTestBase<GoPlacesApplic
         await Should.ThrowAsync<BusinessException>(() =>
             _ratingAppService.CreateAsync(duplicateInput));
     }
+    [Fact]
+    public async Task CreateAsync_Should_Throw_AuthorizationException_When_User_Is_Not_LoggedIn()
+    {
+        // 1. "Cerramos sesión" simuladamente
+        FakeCurrentPrincipalAccessor.IsAuthenticated = false;
+
+        var input = new CreateRatingDto
+        {
+            DestinationId = Guid.NewGuid(),
+            Score = 5,
+            Comment = "Intento de hackeo"
+        };
+
+        try
+        {
+            // 2. Esperamos que ABP lance excepción de Autorización (401/403)
+            await Should.ThrowAsync<Volo.Abp.Authorization.AbpAuthorizationException>(() =>
+                _ratingAppService.CreateAsync(input));
+        }
+        finally
+        {
+            // 3. IMPORTANTE: Volvemos a activar el usuario para no romper otros tests
+            FakeCurrentPrincipalAccessor.IsAuthenticated = true;
+        }
+    }
+    [Fact]
+    public async Task CreateAsync_Should_Associate_Current_User_To_Rating()
+    {
+        // El ID que pusimos fijo en el FakeCurrentPrincipalAccessor
+        var currentUserId = Guid.Parse("2e701e62-0953-4dd3-910b-dc6cc93ccb0d");
+
+        var input = new CreateRatingDto
+        {
+            DestinationId = Guid.NewGuid(),
+            Score = 5,
+            Comment = "Probando UserID"
+        };
+
+        // Act
+        var result = await _ratingAppService.CreateAsync(input);
+
+        // Assert
+        // Verificamos que el sistema (IUserOwned) haya guardado el ID del creador
+        result.UserId.ShouldBe(currentUserId);
+    }
 }

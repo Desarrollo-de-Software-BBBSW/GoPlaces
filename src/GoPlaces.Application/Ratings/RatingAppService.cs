@@ -10,6 +10,7 @@ using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
 using Volo.Abp.Users;
+using Volo.Abp.Authorization;
 
 
 namespace GoPlaces.Ratings;
@@ -29,7 +30,11 @@ public class RatingAppService : ApplicationService, IRatingAppService
         if (input.Score < 1 || input.Score > 5)
             throw new BusinessException("Rating.ScoreOutOfRange").WithData("Score", input.Score);
 
-        var userId = CurrentUser.GetId();
+        if (CurrentUser.Id == null)
+        {
+            throw new AbpAuthorizationException("Usuario no autenticado.");
+        }
+        var userId = CurrentUser.Id.Value;
 
         var exists = await (await _repo.GetQueryableAsync())
             .AnyAsync(r => r.DestinationId == input.DestinationId && r.UserId == userId);
