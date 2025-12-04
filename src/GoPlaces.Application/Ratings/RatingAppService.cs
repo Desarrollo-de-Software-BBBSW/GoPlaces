@@ -64,11 +64,9 @@ public class RatingAppService : ApplicationService, IRatingAppService
 
     public async Task<RatingDto?> GetMyForDestinationAsync(Guid destinationId)
     {
-        var userId = CurrentUser.GetId();
-
         var entity = await (await _repo.GetQueryableAsync())
-            .Where(r => r.DestinationId == destinationId && r.UserId == userId)
-            .SingleOrDefaultAsync();
+        .Where(r => r.DestinationId == destinationId)
+        .SingleOrDefaultAsync();
 
         return entity == null ? null : ObjectMapper.Map<Rating, RatingDto>(entity);
     }
