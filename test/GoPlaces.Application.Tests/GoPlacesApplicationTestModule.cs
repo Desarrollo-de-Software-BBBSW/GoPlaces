@@ -2,6 +2,7 @@
 using GoPlaces.EntityFrameworkCore;
 using GoPlaces.Ratings;
 using GoPlaces.Tests.Ratings;
+using GoPlaces.Users;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
@@ -40,6 +41,8 @@ public class GoPlacesApplicationTestModule : AbpModule
 
         // 4) Repositorio en memoria
         context.Services.AddSingleton<IRepository<Rating, Guid>, InMemoryRatingRepository>();
+
+        context.Services.AddTransient<IMyRegisterAppService, RegisterAppService>();
     }
 }
 

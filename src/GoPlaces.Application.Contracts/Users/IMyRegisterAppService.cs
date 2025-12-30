@@ -1,9 +1,11 @@
 ﻿using System.Threading.Tasks;
-using Volo.Abp.Application.Services;
+using Volo.Abp.Application.Services; // <--- Importante
 
-namespace GoPlaces.Users;
-
-public interface IMyRegisterAppService : IApplicationService
+namespace GoPlaces.Users
 {
-    Task RegisterAsync(RegisterInputDto input);
+    // DEBE heredar de IApplicationService
+    public interface IMyRegisterAppService : IApplicationService
+    {
+        Task RegisterAsync(RegisterInputDto input);
+    }
 }
