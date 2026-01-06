@@ -1,0 +1,46 @@
+<div class="container mt-5">
+  <div class="card mx-auto shadow-sm" style="max-width: 450px;">
+    <div class="card-header bg-primary text-white text-center py-3">
+      <h4 class="mb-0">Iniciar Sesión</h4>
+    </div>
+    <div class="card-body p-4">
+      <form [formGroup]="form" (ngSubmit)="login()">
+        
+        <div class="mb-3">
+          <label class="form-label fw-bold">Usuario o Email</label>
+          <div class="input-group">
+            <span class="input-group-text"><i class="fa fa-user"></i></span>
+            <input type="text" 
+                   class="form-control" 
+                   formControlName="userNameOrEmail" 
+                   placeholder="Ingresa tu usuario"
+                   [class.is-invalid]="form.get('userNameOrEmail').invalid && form.get('userNameOrEmail').touched">
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <label class="form-label fw-bold">Contraseña</label>
+          <div class="input-group">
+            <span class="input-group-text"><i class="fa fa-lock"></i></span>
+            <input type="password" 
+                   class="form-control" 
+                   formControlName="password" 
+                   placeholder="********"
+                   [class.is-invalid]="form.get('password').invalid && form.get('password').touched">
+          </div>
+        </div>
+
+        <div class="d-grid">
+          <button type="submit" class="btn btn-primary btn-lg" [disabled]="form.invalid || isBusy">
+            <span *ngIf="isBusy" class="spinner-border spinner-border-sm me-2"></span>
+            {{ isBusy ? 'Verificando...' : 'Ingresar' }}
+          </button>
+        </div>
+
+      </form>
+    </div>
+    <div class="card-footer text-center py-3">
+      <small class="text-muted">¿No tienes cuenta? <a href="/register">Regístrate aquí</a></small>
+    </div>
+  </div>
+</div>
