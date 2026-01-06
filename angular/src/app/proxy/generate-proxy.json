@@ -1517,6 +1517,78 @@
               "implementFrom": "GoPlaces.Ratings.IRatingAppService"
             }
           }
+        },
+        "GoPlaces.Users.RegisterAppService": {
+          "controllerName": "Register",
+          "controllerGroupName": "Register",
+          "isRemoteService": true,
+          "isIntegrationService": false,
+          "apiVersion": null,
+          "type": "GoPlaces.Users.RegisterAppService",
+          "interfaces": [
+            {
+              "type": "GoPlaces.Users.IMyRegisterAppService",
+              "name": "IMyRegisterAppService",
+              "methods": [
+                {
+                  "name": "RegisterAsync",
+                  "parametersOnMethod": [
+                    {
+                      "name": "input",
+                      "typeAsString": "GoPlaces.Users.RegisterInputDto, GoPlaces.Application.Contracts",
+                      "type": "GoPlaces.Users.RegisterInputDto",
+                      "typeSimple": "GoPlaces.Users.RegisterInputDto",
+                      "isOptional": false,
+                      "defaultValue": null
+                    }
+                  ],
+                  "returnValue": {
+                    "type": "System.Void",
+                    "typeSimple": "System.Void"
+                  }
+                }
+              ]
+            }
+          ],
+          "actions": {
+            "RegisterAsyncByInput": {
+              "uniqueName": "RegisterAsyncByInput",
+              "name": "RegisterAsync",
+              "httpMethod": "POST",
+              "url": "api/app/register/register",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "input",
+                  "typeAsString": "GoPlaces.Users.RegisterInputDto, GoPlaces.Application.Contracts",
+                  "type": "GoPlaces.Users.RegisterInputDto",
+                  "typeSimple": "GoPlaces.Users.RegisterInputDto",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "input",
+                  "name": "input",
+                  "jsonName": null,
+                  "type": "GoPlaces.Users.RegisterInputDto",
+                  "typeSimple": "GoPlaces.Users.RegisterInputDto",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "Body",
+                  "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "System.Void",
+                "typeSimple": "System.Void"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "GoPlaces.Users.IMyRegisterAppService"
+            }
+          }
         }
       }
     },
@@ -4094,6 +4166,51 @@
           "isRequired": false,
           "minLength": null,
           "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        }
+      ]
+    },
+    "GoPlaces.Users.RegisterInputDto": {
+      "baseType": null,
+      "isEnum": false,
+      "enumNames": null,
+      "enumValues": null,
+      "genericArguments": null,
+      "properties": [
+        {
+          "name": "UserName",
+          "jsonName": null,
+          "type": "System.String",
+          "typeSimple": "string",
+          "isRequired": true,
+          "minLength": 0,
+          "maxLength": 128,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "Email",
+          "jsonName": null,
+          "type": "System.String",
+          "typeSimple": "string",
+          "isRequired": true,
+          "minLength": 0,
+          "maxLength": 256,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "Password",
+          "jsonName": null,
+          "type": "System.String",
+          "typeSimple": "string",
+          "isRequired": true,
+          "minLength": 6,
+          "maxLength": 32,
           "minimum": null,
           "maximum": null,
           "regex": null

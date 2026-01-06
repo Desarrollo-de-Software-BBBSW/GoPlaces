@@ -36,5 +36,10 @@ export const APP_ROUTES: Routes = [
     component: CitiesSearchComponent,
     canActivate: [AuthGuard, PermissionGuard] // Protege la ruta: solo usuarios logueados
   },
+
+  {
+  path: 'register',
+  loadComponent: () => import('./pages/register/register').then(m => m.RegisterComponent)
+}
   // -------------------------------
 ];
