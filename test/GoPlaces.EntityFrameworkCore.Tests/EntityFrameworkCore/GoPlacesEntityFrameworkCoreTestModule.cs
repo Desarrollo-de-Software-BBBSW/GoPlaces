@@ -14,6 +14,7 @@ using Volo.Abp.Modularity;
 using Volo.Abp.PermissionManagement;
 using Volo.Abp.Uow;
 
+
 namespace GoPlaces.EntityFrameworkCore
 {
     [DependsOn(
@@ -43,6 +44,12 @@ namespace GoPlaces.EntityFrameworkCore
             context.Services.AddAlwaysDisableUnitOfWorkTransaction();
 
             ConfigureInMemorySqlite(context.Services);
+
+            context.Services.AddAbpDbContext<GoPlacesDbContext>(options =>
+            {
+                // includeAllEntities: true → registra IRepository<T, Guid> para TODAS las entidades
+                options.AddDefaultRepositories(includeAllEntities: true);
+            });
         }
 
         // 🔑 Ejecutar seeding al iniciar el host de pruebas (crea admin, roles, etc.)

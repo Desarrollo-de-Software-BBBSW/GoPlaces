@@ -1,14 +1,15 @@
 ﻿using GoPlaces.Cities;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 using Volo.Abp.Account;
+using Volo.Abp.Application;
 using Volo.Abp.AutoMapper;
 using Volo.Abp.FeatureManagement;
 using Volo.Abp.Identity;
 using Volo.Abp.Modularity;
 using Volo.Abp.PermissionManagement;
 using Volo.Abp.SettingManagement;
-using Microsoft.Extensions.Configuration;
-using System;
 
 namespace GoPlaces
 {
@@ -19,16 +20,22 @@ namespace GoPlaces
         typeof(AbpFeatureManagementApplicationModule),
         typeof(AbpIdentityApplicationModule),
         typeof(AbpAccountApplicationModule),
-        typeof(AbpSettingManagementApplicationModule)
+        typeof(AbpSettingManagementApplicationModule),    
+        typeof(AbpDddApplicationModule),
+        typeof(AbpAutoMapperModule),            // 👈 necesario
+        typeof(GoPlacesApplicationContractsModule)
     )]
     public class GoPlacesApplicationModule : AbpModule
     {
         public override void ConfigureServices(ServiceConfigurationContext context)
         {
-            // Configuración de AutoMapper
+            // 👇 REGISTRA el object mapper de este módulo
+            context.Services.AddAutoMapperObjectMapper<GoPlacesApplicationModule>();
+
+            // 👇 Carga TODOS los perfiles del ensamblado Application (incluye GoPlacesApplicationAutoMapperProfile)
             Configure<AbpAutoMapperOptions>(options =>
             {
-                options.AddMaps<GoPlacesApplicationModule>();
+                options.AddMaps<GoPlacesApplicationModule>(validate:false);
             });
 
             // 1️⃣ Registra el servicio de búsqueda de ciudades

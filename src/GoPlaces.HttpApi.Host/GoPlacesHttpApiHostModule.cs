@@ -17,10 +17,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using Volo.Abp;
 using Volo.Abp.Account;
 using Volo.Abp.Account.Web;
+using Volo.Abp.AspNetCore.ExceptionHandling;
 using Volo.Abp.AspNetCore.MultiTenancy;
 using Volo.Abp.AspNetCore.Mvc;
 using Volo.Abp.AspNetCore.Mvc.Libs;
@@ -40,6 +42,10 @@ using Volo.Abp.Studio.Client.AspNetCore;
 using Volo.Abp.Swashbuckle;
 using Volo.Abp.UI.Navigation.Urls;
 using Volo.Abp.VirtualFileSystem;
+using GoPlaces.HttpApi.Host.Exceptions;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+
+
 
 namespace GoPlaces;
 
@@ -92,6 +98,8 @@ public class GoPlacesHttpApiHostModule : AbpModule
         var configuration = context.Services.GetConfiguration();
         var hostingEnvironment = context.Services.GetHostingEnvironment();
 
+        context.Services.AddHttpContextAccessor();
+
         Configure<AbpMvcLibsOptions>(options =>
         {
             options.CheckLibs = false;
@@ -116,6 +124,7 @@ public class GoPlacesHttpApiHostModule : AbpModule
             });
         }
 
+
         ConfigureAuthentication(context);
         ConfigureUrls(configuration);
         ConfigureBundles();
@@ -124,6 +133,14 @@ public class GoPlacesHttpApiHostModule : AbpModule
         ConfigureSwagger(context, configuration);
         ConfigureVirtualFileSystem(context);
         ConfigureCors(context, configuration);
+        // Mapeo de códigos HTTP para excepciones de negocio
+        context.Services.Replace(
+            ServiceDescriptor.Singleton<IHttpExceptionStatusCodeFinder, MyHttpStatusCodeFinder>()
+        );
+
+
+
+
     }
 
     private void ConfigureAuthentication(ServiceConfigurationContext context)
@@ -205,6 +222,7 @@ public class GoPlacesHttpApiHostModule : AbpModule
                 options.SwaggerDoc("v1", new OpenApiInfo { Title = "GoPlaces API", Version = "v1" });
                 options.DocInclusionPredicate((docName, description) => true);
                 options.CustomSchemaIds(type => type.FullName);
+                options.OperationFilter<AddUserIdHeaderOperationFilter>();
             });
     }
 

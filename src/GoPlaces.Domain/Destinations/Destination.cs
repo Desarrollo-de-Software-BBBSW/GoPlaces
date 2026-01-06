@@ -19,7 +19,7 @@ public class Destination : FullAuditedAggregateRoot<Guid>
     public long Population { get; private set; }
     public string? ImageUrl { get; private set; }          
     public DateTime LastUpdatedDate { get; private set; }  
-    public Coordinates Coordinates { get; private set; }
+    public Coordinates Coordinates { get; private set; } = default!;
 
     private Destination() { } // EF Core
 

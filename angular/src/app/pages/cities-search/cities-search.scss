@@ -1,0 +1,18 @@
+// src/app/pages/cities-search/cities-search.scss
+
+/* Estilos para el indicador de carga */
+.input-group-append .input-group-text {
+    /* El spinner debe ser transparente o tener un color neutro */
+    background-color: transparent;
+    border: none;
+}
+
+/* Opcional: mejora la legibilidad de la tabla */
+.table {
+    font-size: 0.95rem;
+}
+
+/* Opcional: asegurar espacio debajo del error */
+.alert-danger {
+    margin-top: 15px;
+}
