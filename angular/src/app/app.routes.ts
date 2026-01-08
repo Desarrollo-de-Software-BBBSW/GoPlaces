@@ -40,6 +40,10 @@ export const APP_ROUTES: Routes = [
   {
   path: 'register',
   loadComponent: () => import('./pages/register/register').then(m => m.RegisterComponent)
-}
+},
+{
+  path: 'login',
+  loadComponent: () => import('./pages/login/login').then(m => m.LoginComponent)
+},
   // -------------------------------
 ];

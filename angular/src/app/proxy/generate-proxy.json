@@ -1518,6 +1518,78 @@
             }
           }
         },
+        "GoPlaces.Users.LoginAppService": {
+          "controllerName": "Login",
+          "controllerGroupName": "Login",
+          "isRemoteService": true,
+          "isIntegrationService": false,
+          "apiVersion": null,
+          "type": "GoPlaces.Users.LoginAppService",
+          "interfaces": [
+            {
+              "type": "GoPlaces.Users.IMyLoginAppService",
+              "name": "IMyLoginAppService",
+              "methods": [
+                {
+                  "name": "LoginAsync",
+                  "parametersOnMethod": [
+                    {
+                      "name": "input",
+                      "typeAsString": "GoPlaces.Users.LoginInputDto, GoPlaces.Application.Contracts",
+                      "type": "GoPlaces.Users.LoginInputDto",
+                      "typeSimple": "GoPlaces.Users.LoginInputDto",
+                      "isOptional": false,
+                      "defaultValue": null
+                    }
+                  ],
+                  "returnValue": {
+                    "type": "System.Boolean",
+                    "typeSimple": "boolean"
+                  }
+                }
+              ]
+            }
+          ],
+          "actions": {
+            "LoginAsyncByInput": {
+              "uniqueName": "LoginAsyncByInput",
+              "name": "LoginAsync",
+              "httpMethod": "POST",
+              "url": "api/app/login/login",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "input",
+                  "typeAsString": "GoPlaces.Users.LoginInputDto, GoPlaces.Application.Contracts",
+                  "type": "GoPlaces.Users.LoginInputDto",
+                  "typeSimple": "GoPlaces.Users.LoginInputDto",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "input",
+                  "name": "input",
+                  "jsonName": null,
+                  "type": "GoPlaces.Users.LoginInputDto",
+                  "typeSimple": "GoPlaces.Users.LoginInputDto",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "Body",
+                  "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "System.Boolean",
+                "typeSimple": "boolean"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "GoPlaces.Users.IMyLoginAppService"
+            }
+          }
+        },
         "GoPlaces.Users.RegisterAppService": {
           "controllerName": "Register",
           "controllerGroupName": "Register",
@@ -4164,6 +4236,39 @@
           "type": "System.Guid",
           "typeSimple": "string",
           "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        }
+      ]
+    },
+    "GoPlaces.Users.LoginInputDto": {
+      "baseType": null,
+      "isEnum": false,
+      "enumNames": null,
+      "enumValues": null,
+      "genericArguments": null,
+      "properties": [
+        {
+          "name": "UserNameOrEmail",
+          "jsonName": null,
+          "type": "System.String",
+          "typeSimple": "string",
+          "isRequired": true,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "Password",
+          "jsonName": null,
+          "type": "System.String",
+          "typeSimple": "string",
+          "isRequired": true,
           "minLength": null,
           "maxLength": null,
           "minimum": null,
