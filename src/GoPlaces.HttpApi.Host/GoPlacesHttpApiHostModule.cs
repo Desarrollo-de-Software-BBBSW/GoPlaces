@@ -44,6 +44,8 @@ using Volo.Abp.UI.Navigation.Urls;
 using Volo.Abp.VirtualFileSystem;
 using GoPlaces.HttpApi.Host.Exceptions;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Volo.Abp.AspNetCore.Mvc.AntiForgery;
+using Microsoft.AspNetCore.Http;
 
 
 
@@ -98,6 +100,11 @@ public class GoPlacesHttpApiHostModule : AbpModule
         var configuration = context.Services.GetConfiguration();
         var hostingEnvironment = context.Services.GetHostingEnvironment();
 
+        Configure<AbpAntiForgeryOptions>(options =>
+        {
+            options.AutoValidate = false;
+        });
+
         context.Services.AddHttpContextAccessor();
 
         Configure<AbpMvcLibsOptions>(options =>
@@ -122,6 +129,7 @@ public class GoPlacesHttpApiHostModule : AbpModule
             {
                 options.ForwardedHeaders = ForwardedHeaders.XForwardedProto;
             });
+
         }
 
 
@@ -137,7 +145,13 @@ public class GoPlacesHttpApiHostModule : AbpModule
         context.Services.Replace(
             ServiceDescriptor.Singleton<IHttpExceptionStatusCodeFinder, MyHttpStatusCodeFinder>()
         );
-
+        context.Services.ConfigureApplicationCookie(options =>
+        {
+            // Permite que la cookie viaje del puerto 4200 al 44300
+            options.Cookie.SameSite = SameSiteMode.None;
+            options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+            // Nota: SecurePolicy.Always requiere que tu Backend corra en HTTPS (localhost:443xx)
+        });
 
 
 

@@ -9,6 +9,7 @@ using Volo.Abp.Identity;
 using Microsoft.AspNetCore.Identity;
 using GoPlaces.Users;
 using Volo.Abp;
+using IdentityUser = Volo.Abp.Identity.IdentityUser;
 
 namespace GoPlaces.Tests.Users
 {

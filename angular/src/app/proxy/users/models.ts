@@ -1,3 +1,4 @@
+import type { EntityDto } from '@abp/ng.core';
 
 export interface LoginInputDto {
   userNameOrEmail: string;
@@ -8,4 +9,14 @@ export interface RegisterInputDto {
   userName: string;
   email: string;
   password: string;
+}
+
+export interface UserProfileDto extends EntityDto<string> {
+  userName: string;
+  email: string;
+  name?: string;
+  surname?: string;
+  phoneNumber?: string;
+  photoUrl?: string;
+  preferences?: string;
 }

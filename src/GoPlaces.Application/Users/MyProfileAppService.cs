@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using System;
 using System.Threading.Tasks;
+using Volo.Abp;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Data;
 using Volo.Abp.Identity;
@@ -9,7 +11,7 @@ using Volo.Abp.Users;
 
 namespace GoPlaces.Users
 {
-    [Authorize] // 🔒 Solo usuarios logueados pueden entrar aquí
+    [Authorize(AuthenticationSchemes = "Identity.Application")]
     public class MyProfileAppService : ApplicationService, IMyProfileAppService
     {
         private readonly IdentityUserManager _userManager;
@@ -23,11 +25,24 @@ namespace GoPlaces.Users
 
         public async Task<UserProfileDto> GetAsync()
         {
-            // 1. Buscamos al usuario logueado en la BD
-            var userId = _currentUser.Id.GetValueOrDefault();
-            var user = await _userManager.GetByIdAsync(userId);
+            // 1. Verificación de Seguridad: ¿ABP sabe quién eres?
+            if (_currentUser.Id == null)
+            {
+                // Si entra aquí, es que la Cookie no le pasó el ID correctamente a ABP
+                throw new UserFriendlyException("Error: El sistema no detecta tu ID de usuario. La sesión puede estar corrupta.");
+            }
 
-            // 2. Convertimos la Entidad a DTO manualmente
+            var userId = _currentUser.Id.Value;
+
+            // 2. Usamos FindByIdAsync en vez de GetByIdAsync (Find devuelve null si no existe, Get explota)
+            var user = await _userManager.FindByIdAsync(userId.ToString());
+
+            if (user == null)
+            {
+                throw new UserFriendlyException($"Error: El usuario con ID {userId} no existe en la base de datos.");
+            }
+
+            // 3. Devolvemos el DTO
             return new UserProfileDto
             {
                 Id = user.Id,
@@ -37,9 +52,9 @@ namespace GoPlaces.Users
                 Surname = user.Surname,
                 PhoneNumber = user.PhoneNumber,
 
-                // 3. Recuperamos los datos extra (si no existen, devuelve null)
-                PhotoUrl = user.GetProperty<string>("PhotoUrl"),
-                Preferences = user.GetProperty<string>("Preferences")
+                // Usamos ?. para evitar errores si GetProperty devolviera algo raro
+                PhotoUrl = user.ExtraProperties.ContainsKey("PhotoUrl") ? user.GetProperty<string>("PhotoUrl") : null,
+                Preferences = user.ExtraProperties.ContainsKey("Preferences") ? user.GetProperty<string>("Preferences") : null
             };
         }
 

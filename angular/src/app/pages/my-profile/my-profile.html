@@ -1,0 +1,64 @@
+<div class="container mt-4">
+  <div class="card shadow-sm">
+    <div class="card-header bg-white border-bottom-0 pt-4 pb-0">
+      <h3 class="card-title"><i class="fa fa-id-card me-2"></i>Mi Perfil</h3>
+      <p class="text-muted">Actualiza tu información personal</p>
+    </div>
+    
+    <div class="card-body">
+      <form [formGroup]="form" (ngSubmit)="save()">
+        
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label fw-bold">Usuario</label>
+            <input type="text" class="form-control" formControlName="userName">
+            <small class="text-muted">El nombre de usuario no se puede cambiar.</small>
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label class="form-label fw-bold">Email</label>
+            <input type="email" class="form-control" formControlName="email">
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label fw-bold">Nombre</label>
+            <input type="text" class="form-control" formControlName="name">
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label class="form-label fw-bold">Apellido</label>
+            <input type="text" class="form-control" formControlName="surname">
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-bold">Teléfono</label>
+          <input type="text" class="form-control" formControlName="phoneNumber">
+        </div>
+
+        <hr class="my-4">
+        <h5 class="mb-3">Información Adicional</h5>
+
+        <div class="mb-3">
+          <label class="form-label fw-bold">URL de Foto de Perfil</label>
+          <input type="text" class="form-control" formControlName="photoUrl" placeholder="https://ejemplo.com/foto.jpg">
+        </div>
+
+        <div class="mb-4">
+          <label class="form-label fw-bold">Preferencias</label>
+          <textarea class="form-control" formControlName="preferences" rows="3" placeholder="Ej: Me gustan los hoteles con piscina..."></textarea>
+        </div>
+
+        <div class="d-flex justify-content-end">
+          <button type="submit" class="btn btn-primary px-4" [disabled]="form.invalid || isBusy">
+            <span *ngIf="isBusy" class="spinner-border spinner-border-sm me-2"></span>
+            {{ isBusy ? 'Guardando...' : 'Guardar Cambios' }}
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>
