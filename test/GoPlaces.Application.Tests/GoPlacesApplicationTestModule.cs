@@ -17,7 +17,12 @@ using Volo.Abp.Identity;
 using Volo.Abp.Modularity;
 using Volo.Abp.PermissionManagement;
 using Volo.Abp.Security.Claims;
-using Volo.Abp.SettingManagement; // 👈 NECESARIO PARA EL NUEVO ERROR
+using Volo.Abp.SettingManagement;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using IdentityUser = Volo.Abp.Identity.IdentityUser;
 
 namespace GoPlaces;
 
@@ -65,6 +70,28 @@ public class GoPlacesApplicationTestModule : AbpModule
         context.Services.AddTransient<IMyRegisterAppService, RegisterAppService>();
 
         context.Services.AddTransient<IMyLoginAppService, LoginAppService>();
+
+        // 👇 1. CREAMOS UN MOCK DE USER MANAGER (Necesario para el SignInManager)
+        var userStore = Substitute.For<IUserStore<IdentityUser>>();
+        var userManager = Substitute.For<UserManager<IdentityUser>>(
+            userStore, null, null, null, null, null, null, null, null);
+        // 👇 2. CREAMOS UN MOCK DE CONTEXT ACCESSOR
+        var contextAccessor = Substitute.For<IHttpContextAccessor>();
+
+        // 👇 3. CREAMOS EL MOCK DE CLAIMS FACTORY
+        var claimsFactory = Substitute.For<IUserClaimsPrincipalFactory<IdentityUser>>();
+
+        // 👇 4. FINALMENTE, CREAMOS EL MOCK DE SIGNIN MANAGER
+        // SignInManager es una clase concreta, así que usamos Substitute.ForPartsOf
+        // para poder sobreescribir sus métodos virtuales (como PasswordSignInAsync)
+        var signInManager = Substitute.For<SignInManager<IdentityUser>>(
+            userManager,
+            contextAccessor,
+            claimsFactory,
+            null, null, null, null
+        );
+        // Registramos este mock para que LoginAppService lo use
+        context.Services.AddSingleton(signInManager);
     }
 }
 
