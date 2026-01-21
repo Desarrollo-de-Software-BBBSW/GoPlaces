@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Threading.Tasks;
 using Volo.Abp;
@@ -21,6 +22,25 @@ namespace GoPlaces.Users
         {
             _userManager = userManager;
             _currentUser = currentUser;
+        }
+
+        public async Task ChangePasswordAsync(ChangePasswordInputDto input)
+        {
+            // 1. Obtener el usuario actual a través del ID de la sesión
+            var userId = _currentUser.Id.GetValueOrDefault();
+            var user = await _userManager.GetByIdAsync(userId);
+
+            // 2. Usar la funcionalidad nativa de IdentityUserManager
+            // ChangePasswordAsync verifica internamente si la 'CurrentPassword' es correcta
+            var result = await _userManager.ChangePasswordAsync(
+                user,
+                input.CurrentPassword,
+                input.NewPassword
+            );
+
+            // 3. Verificar si hubo errores (ej: contraseña actual incorrecta o nueva contraseña débil)
+            // CheckErrors() es una extensión de ABP que lanza excepciones amigables automáticamente
+            result.CheckErrors();
         }
 
         public async Task<UserProfileDto> GetAsync()

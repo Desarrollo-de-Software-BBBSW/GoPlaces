@@ -10,5 +10,8 @@ namespace GoPlaces.Users
 
         // Guardar cambios
         Task UpdateAsync(UserProfileDto input);
+
+        //Cambiar contraseña
+        Task ChangePasswordAsync(ChangePasswordInputDto input);
     }
 }

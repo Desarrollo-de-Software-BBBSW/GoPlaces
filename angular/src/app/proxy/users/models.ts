@@ -1,5 +1,10 @@
 import type { EntityDto } from '@abp/ng.core';
 
+export interface ChangePasswordInputDto {
+  currentPassword: string;
+  newPassword: string;
+}
+
 export interface LoginInputDto {
   userNameOrEmail: string;
   password: string;
