@@ -1,42 +1,40 @@
-﻿using System;
-using System.Threading.Tasks;
-using Volo.Abp;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity; // 👈 Necesario para SignInManager
 using Volo.Abp.Application.Services;
-using Volo.Abp.Identity; // Necesario para IdentityUserManager
+using Volo.Abp.Identity;
+using Volo.Abp;
+using IdentityUser = Volo.Abp.Identity.IdentityUser;
 
 namespace GoPlaces.Users
 {
     public class LoginAppService : ApplicationService, IMyLoginAppService
     {
-        private readonly IdentityUserManager _userManager;
+        // Usamos SignInManager en lugar de UserManager porque este SÍ crea la cookie de sesión
+        private readonly SignInManager<IdentityUser> _signInManager;
 
-        public LoginAppService(IdentityUserManager userManager)
+        public LoginAppService(SignInManager<IdentityUser> signInManager)
         {
-            _userManager = userManager;
+            _signInManager = signInManager;
         }
 
         public async Task<bool> LoginAsync(LoginInputDto input)
         {
-            // 1. Buscar usuario por Nombre o Email
-            var user = await _userManager.FindByNameAsync(input.UserNameOrEmail)
-                       ?? await _userManager.FindByEmailAsync(input.UserNameOrEmail);
+            // 1. Intentar iniciar sesión (CheckPassword + Crear Cookie)
+            // El tercer parámetro 'isPersistent: true' mantiene la sesión abierta aunque cierres el navegador
+            var result = await _signInManager.PasswordSignInAsync(
+                input.UserNameOrEmail,
+                input.Password,
+                isPersistent: true,
+                lockoutOnFailure: false
+            );
 
-            if (user == null)
+            if (result.Succeeded)
             {
-                // Por seguridad, no decimos "Usuario no encontrado", sino "Credenciales inválidas"
-                throw new UserFriendlyException("Usuario o contraseña incorrectos");
+                return true;
             }
 
-            // 2. Verificar la contraseña (ABP se encarga del Hash)
-            var checkPassword = await _userManager.CheckPasswordAsync(user, input.Password);
-
-            if (!checkPassword)
-            {
-                throw new UserFriendlyException("Usuario o contraseña incorrectos");
-            }
-
-            // 3. Si llegamos aquí, es válido
-            return true;
+            // Si falla, lanzamos error como antes
+            throw new UserFriendlyException("Usuario o contraseña incorrectos");
         }
     }
 }

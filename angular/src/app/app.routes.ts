@@ -45,5 +45,10 @@ export const APP_ROUTES: Routes = [
   path: 'login',
   loadComponent: () => import('./pages/login/login').then(m => m.LoginComponent)
 },
+
+{
+  path: 'my-profile',
+  loadComponent: () => import('./pages/my-profile/my-profile').then(m => m.MyProfileComponent)
+},
   // -------------------------------
 ];
