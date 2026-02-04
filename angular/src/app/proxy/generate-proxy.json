@@ -1643,6 +1643,14 @@
                     "type": "System.Void",
                     "typeSimple": "System.Void"
                   }
+                },
+                {
+                  "name": "DeleteAsync",
+                  "parametersOnMethod": [],
+                  "returnValue": {
+                    "type": "System.Void",
+                    "typeSimple": "System.Void"
+                  }
                 }
               ]
             }
@@ -1730,6 +1738,21 @@
                   "descriptorName": ""
                 }
               ],
+              "returnValue": {
+                "type": "System.Void",
+                "typeSimple": "System.Void"
+              },
+              "allowAnonymous": false,
+              "implementFrom": "GoPlaces.Users.IMyProfileAppService"
+            },
+            "DeleteAsync": {
+              "uniqueName": "DeleteAsync",
+              "name": "DeleteAsync",
+              "httpMethod": "DELETE",
+              "url": "api/app/my-profile",
+              "supportedVersions": [],
+              "parametersOnMethod": [],
+              "parameters": [],
               "returnValue": {
                 "type": "System.Void",
                 "typeSimple": "System.Void"
