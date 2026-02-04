@@ -1,4 +1,4 @@
-import type { UserProfileDto } from './models';
+import type { ChangePasswordInputDto, UserProfileDto } from './models';
 import { RestService, Rest } from '@abp/ng.core';
 import { Injectable } from '@angular/core';
 
@@ -7,6 +7,15 @@ import { Injectable } from '@angular/core';
 })
 export class MyProfileService {
   apiName = 'Default';
+  
+
+  changePassword = (input: ChangePasswordInputDto, config?: Partial<Rest.Config>) =>
+    this.restService.request<any, void>({
+      method: 'POST',
+      url: '/api/app/my-profile/change-password',
+      body: input,
+    },
+    { apiName: this.apiName,...config });
   
 
   get = (config?: Partial<Rest.Config>) =>
