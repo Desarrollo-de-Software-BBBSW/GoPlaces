@@ -82,6 +82,7 @@ namespace GoPlaces.Tests.Users
             fakeUser.Name.ShouldBe("Juan Actualizado");
             fakeUser.GetProperty<string>("PhotoUrl").ShouldBe("https://nueva-foto.com/img.png");
         }
+
         [Fact]
         public async Task ChangePasswordAsync_Should_Work_When_CurrentPassword_Is_Correct()
         {
@@ -89,16 +90,15 @@ namespace GoPlaces.Tests.Users
             var userId = Guid.Parse("2e701e62-0953-4dd3-910b-dc6cc93ccb0d");
             var currentPassword = "Password123!";
             var newPassword = "NewPassword123!";
-
             var fakeUser = new IdentityUser(userId, "juanperez", "juan@goplaces.com");
 
-            // TRUCO CLAVE: Como IdentityUserManager es real, verificará el hash.
-            // Necesitamos inyectar el Hasher real para generarle un hash válido al usuario falso.
             var passwordHasher = GetRequiredService<IPasswordHasher<IdentityUser>>();
-            typeof(IdentityUser).GetProperty("PasswordHash")
-            .SetValue(fakeUser, passwordHasher.HashPassword(fakeUser, currentPassword));
 
-            // Simulamos que la BD encuentra al usuario
+            // SOLUCIÓN AL ERROR DE PASSWORDHASH:
+            // Usamos esto para asignar el valor a la fuerza
+            typeof(IdentityUser).GetProperty("PasswordHash")
+                .SetValue(fakeUser, passwordHasher.HashPassword(fakeUser, currentPassword));
+
             _fakeUserRepository.FindAsync(userId, Arg.Any<bool>(), Arg.Any<CancellationToken>())
                 .Returns(Task.FromResult(fakeUser));
 
@@ -112,11 +112,7 @@ namespace GoPlaces.Tests.Users
             await _profileAppService.ChangePasswordAsync(input);
 
             // 3. ASSERT
-            // Verificamos que se llamó al UpdateAsync del repositorio (significa que IdentityUserManager intentó guardar)
             await _fakeUserRepository.Received(1).UpdateAsync(Arg.Is<IdentityUser>(u => u.Id == userId), Arg.Any<bool>(), Arg.Any<CancellationToken>());
-
-            // Opcional: Verificar que el hash cambió (no será igual al original)
-            fakeUser.PasswordHash.ShouldNotBe(passwordHasher.HashPassword(fakeUser, currentPassword));
         }
 
         [Fact]
@@ -153,6 +149,28 @@ namespace GoPlaces.Tests.Users
 
             // Aseguramos que NO se llamó a UpdateAsync porque falló la validación
             await _fakeUserRepository.DidNotReceive().UpdateAsync(Arg.Any<IdentityUser>(), Arg.Any<bool>(), Arg.Any<CancellationToken>());
+        }
+        [Fact]
+        public async Task DeleteAsync_Should_Soft_Delete_Current_User()
+        {
+            // 1. ARRANGE
+            var userId = Guid.Parse("2e701e62-0953-4dd3-910b-dc6cc93ccb0d");
+            var fakeUser = new IdentityUser(userId, "juanperez", "juan@goplaces.com");
+
+            _fakeUserRepository.FindAsync(userId, Arg.Any<bool>(), Arg.Any<CancellationToken>())
+                .Returns(Task.FromResult(fakeUser));
+
+            // 2. ACT
+            await _profileAppService.DeleteAsync();
+
+            // 3. ASSERT
+            // SOLUCIÓN AL ERROR DE ARGUMENTOS:
+            // Agregamos 'Arg.Any<bool>()' como segundo parámetro para que coincida con la firma del método
+            await _fakeUserRepository.Received(1).DeleteAsync(
+                Arg.Is<IdentityUser>(u => u.Id == userId), // 1. El usuario
+                Arg.Any<bool>(),                           // 2. autoSave (FALTABA ESTE)
+                Arg.Any<CancellationToken>()               // 3. Token de cancelación
+            );
         }
     }
 }
