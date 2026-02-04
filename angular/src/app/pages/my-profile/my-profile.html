@@ -1,10 +1,11 @@
 <div class="container mt-4 mb-5">
+  
   <div class="card shadow-sm mb-4">
     <div class="card-header bg-white border-bottom-0 pt-4 pb-0">
       <h3 class="card-title"><i class="fa fa-id-card me-2"></i>Mi Perfil</h3>
       <p class="text-muted">Actualiza tu información personal</p>
     </div>
-    
+
     <div class="card-body">
       <form [formGroup]="form" (ngSubmit)="save()">
         
@@ -62,7 +63,7 @@
     </div>
   </div>
 
-  <div class="card shadow-sm">
+  <div class="card shadow-sm mb-4">
     <div class="card-header bg-white border-bottom-0 pt-4 pb-0">
       <h3 class="card-title"><i class="fa fa-key me-2"></i>Seguridad</h3>
       <p class="text-muted">Cambia tu contraseña de acceso</p>
@@ -94,4 +95,26 @@
       </form>
     </div>
   </div>
+
+  <div class="card shadow-sm border-danger mt-4">
+    <div class="card-header bg-danger text-white pt-3 pb-2">
+      <h5 class="card-title"><i class="fa fa-exclamation-triangle me-2"></i>Zona de Peligro</h5>
+    </div>
+    
+    <div class="card-body">
+      <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+        <div>
+          <h6 class="fw-bold text-danger mb-1">Eliminar Cuenta</h6>
+          <p class="text-muted mb-0 small">
+            Una vez que elimines tu cuenta, no hay vuelta atrás. Por favor, asegúrate.
+          </p>
+        </div>
+        
+        <button type="button" class="btn btn-outline-danger" (click)="deleteAccount()" [disabled]="isBusy">
+          Eliminar mi cuenta
+        </button>
+      </div>
+    </div>
+  </div>
+
 </div>

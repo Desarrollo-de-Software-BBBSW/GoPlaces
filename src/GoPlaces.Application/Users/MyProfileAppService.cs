@@ -99,5 +99,23 @@ namespace GoPlaces.Users
             // 3. Guardamos en Base de Datos
             await _userManager.UpdateAsync(user);
         }
+        public async Task DeleteAsync()
+        {
+            var userId = _currentUser.Id.Value;
+
+            // Buscamos al usuario (usamos FindByIdAsync para no lanzar excepción si no existe aun)
+            var user = await _userManager.FindByIdAsync(userId.ToString());
+
+            if (user == null)
+            {
+                // Si por alguna razón extraña no existe, avisamos.
+                throw new UserFriendlyException("El usuario no existe o ya fue eliminado.");
+            }
+
+            // ALERTA: ABP maneja esto automáticamente como "Soft Delete".
+            // Al llamar a DeleteAsync, ABP intercepta la llamada y en vez de borrar la fila (DELETE FROM...),
+            // simplemente pone "IsDeleted = 1" en la base de datos.
+            (await _userManager.DeleteAsync(user)).CheckErrors();
+        }
     }
 }

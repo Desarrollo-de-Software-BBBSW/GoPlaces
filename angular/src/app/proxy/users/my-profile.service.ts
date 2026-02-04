@@ -18,6 +18,14 @@ export class MyProfileService {
     { apiName: this.apiName,...config });
   
 
+  delete = (config?: Partial<Rest.Config>) =>
+    this.restService.request<any, void>({
+      method: 'DELETE',
+      url: '/api/app/my-profile',
+    },
+    { apiName: this.apiName,...config });
+  
+
   get = (config?: Partial<Rest.Config>) =>
     this.restService.request<any, UserProfileDto>({
       method: 'GET',
