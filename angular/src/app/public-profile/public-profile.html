@@ -1,0 +1,54 @@
+<div class="container mt-5">
+  
+  <div *ngIf="isLoading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Cargando...</span>
+    </div>
+    <p class="mt-2 text-muted">Buscando usuario...</p>
+  </div>
+
+  <div *ngIf="!isLoading && !userProfile" class="alert alert-warning text-center shadow-sm">
+    <i class="fa fa-search me-2"></i> {{ errorMessage || 'Usuario no encontrado' }}
+  </div>
+
+  <div *ngIf="!isLoading && userProfile" class="card shadow border-0 mx-auto" style="max-width: 600px;">
+    
+    <div class="card-header bg-primary text-white text-center py-4 rounded-top">
+      
+      <div class="mb-3">
+        <img *ngIf="userProfile.photoUrl" 
+             [src]="userProfile.photoUrl" 
+             alt="Foto de perfil" 
+             class="rounded-circle border border-3 border-white shadow-sm"
+             style="width: 120px; height: 120px; object-fit: cover;">
+             
+        <div *ngIf="!userProfile.photoUrl" 
+             class="rounded-circle bg-white text-primary d-inline-flex align-items-center justify-content-center border border-3 border-white shadow-sm"
+             style="width: 120px; height: 120px; font-size: 3rem;">
+          <i class="fa fa-user"></i>
+        </div>
+      </div>
+
+      <h2 class="h4 fw-bold mb-0">
+        {{ userProfile.name }} {{ userProfile.surname }}
+      </h2>
+      <p class="mb-0 opacity-75">&#64;{{ userProfile.userName }}</p>
+    </div>
+
+    <div class="card-body p-4">
+      
+      <div class="mb-4">
+        <h6 class="text-uppercase text-muted fw-bold small ls-1">Acerca de mí</h6>
+        <p class="lead fs-6">
+          {{ userProfile.preferences || 'Este usuario no ha compartido ninguna descripción aún.' }}
+        </p>
+      </div>
+
+      </div>
+    
+    <div class="card-footer bg-light text-center py-3">
+      <small class="text-muted">Perfil público de GoPlaces</small>
+    </div>
+  </div>
+
+</div>

@@ -1762,6 +1762,78 @@
             }
           }
         },
+        "GoPlaces.Users.PublicUserAppService": {
+          "controllerName": "PublicUser",
+          "controllerGroupName": "PublicUser",
+          "isRemoteService": true,
+          "isIntegrationService": false,
+          "apiVersion": null,
+          "type": "GoPlaces.Users.PublicUserAppService",
+          "interfaces": [
+            {
+              "type": "GoPlaces.Users.IPublicUserAppService",
+              "name": "IPublicUserAppService",
+              "methods": [
+                {
+                  "name": "GetByUserNameAsync",
+                  "parametersOnMethod": [
+                    {
+                      "name": "userName",
+                      "typeAsString": "System.String, System.Private.CoreLib",
+                      "type": "System.String",
+                      "typeSimple": "string",
+                      "isOptional": false,
+                      "defaultValue": null
+                    }
+                  ],
+                  "returnValue": {
+                    "type": "GoPlaces.Users.PublicUserProfileDto",
+                    "typeSimple": "GoPlaces.Users.PublicUserProfileDto"
+                  }
+                }
+              ]
+            }
+          ],
+          "actions": {
+            "GetByUserNameAsyncByUserName": {
+              "uniqueName": "GetByUserNameAsyncByUserName",
+              "name": "GetByUserNameAsync",
+              "httpMethod": "GET",
+              "url": "api/app/public-user/by-user-name",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "userName",
+                  "typeAsString": "System.String, System.Private.CoreLib",
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "userName",
+                  "name": "userName",
+                  "jsonName": null,
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "GoPlaces.Users.PublicUserProfileDto",
+                "typeSimple": "GoPlaces.Users.PublicUserProfileDto"
+              },
+              "allowAnonymous": false,
+              "implementFrom": "GoPlaces.Users.IPublicUserAppService"
+            }
+          }
+        },
         "GoPlaces.Users.RegisterAppService": {
           "controllerName": "Register",
           "controllerGroupName": "Register",
@@ -4474,6 +4546,75 @@
           "type": "System.String",
           "typeSimple": "string",
           "isRequired": true,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        }
+      ]
+    },
+    "GoPlaces.Users.PublicUserProfileDto": {
+      "baseType": "Volo.Abp.Application.Dtos.EntityDto<System.Guid>",
+      "isEnum": false,
+      "enumNames": null,
+      "enumValues": null,
+      "genericArguments": null,
+      "properties": [
+        {
+          "name": "UserName",
+          "jsonName": null,
+          "type": "System.String",
+          "typeSimple": "string",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "Name",
+          "jsonName": null,
+          "type": "System.String",
+          "typeSimple": "string",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "Surname",
+          "jsonName": null,
+          "type": "System.String",
+          "typeSimple": "string",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "PhotoUrl",
+          "jsonName": null,
+          "type": "System.String",
+          "typeSimple": "string",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "Preferences",
+          "jsonName": null,
+          "type": "System.String",
+          "typeSimple": "string",
+          "isRequired": false,
           "minLength": null,
           "maxLength": null,
           "minimum": null,
