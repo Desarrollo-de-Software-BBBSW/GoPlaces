@@ -10,6 +10,14 @@ export interface LoginInputDto {
   password: string;
 }
 
+export interface PublicUserProfileDto extends EntityDto<string> {
+  userName?: string;
+  name?: string;
+  surname?: string;
+  photoUrl?: string;
+  preferences?: string;
+}
+
 export interface RegisterInputDto {
   userName: string;
   email: string;

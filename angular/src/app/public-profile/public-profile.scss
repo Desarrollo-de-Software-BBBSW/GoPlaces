@@ -1,0 +1,19 @@
+// Ajuste para que la tarjeta flote un poco
+.card {
+  transition: transform 0.2s ease-in-out;
+  border: none;
+  
+  &:hover {
+    transform: translateY(-5px);
+  }
+}
+
+// Estilo para la letra pequeña de los títulos
+.ls-1 {
+  letter-spacing: 1px;
+}
+
+// Ajustes responsive para la foto
+img.rounded-circle {
+  background-color: #fff;
+}

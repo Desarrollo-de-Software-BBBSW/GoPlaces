@@ -5,6 +5,7 @@ import { AuthGuard, PermissionGuard } from '@abp/ng.core';
 // Importamos tu nuevo componente
 import { CitiesSearchComponent } from './pages/cities-search/cities-search';
 
+import { PublicProfileComponent } from './public-profile/public-profile';
 export const APP_ROUTES: Routes = [
   {
     path: '',
@@ -49,6 +50,10 @@ export const APP_ROUTES: Routes = [
 {
   path: 'my-profile',
   loadComponent: () => import('./pages/my-profile/my-profile').then(m => m.MyProfileComponent)
+},
+{
+    path: 'profile/:userName', // <--- La parte mágica ":userName"
+    component: PublicProfileComponent
 },
   // -------------------------------
 ];
