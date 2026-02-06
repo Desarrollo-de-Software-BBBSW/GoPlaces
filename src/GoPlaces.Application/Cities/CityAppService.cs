@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
+using Volo.Abp;
 
 namespace GoPlaces.Cities
 {
@@ -22,6 +23,11 @@ namespace GoPlaces.Cities
         public async Task<CitySearchResultDto> SearchCitiesAsync(CitySearchRequestDto request)
         {
             return await _citySearchService.SearchCitiesAsync(request);
+        }
+        public async Task<CityDto> GetAsync(int id)
+        {
+            // Simplemente llamamos al servicio interno pidiendo por ID
+            return await _citySearchService.GetByIdAsync(id);
         }
     }
 

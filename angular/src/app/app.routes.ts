@@ -6,6 +6,9 @@ import { AuthGuard, PermissionGuard } from '@abp/ng.core';
 import { CitiesSearchComponent } from './pages/cities-search/cities-search';
 
 import { PublicProfileComponent } from './public-profile/public-profile';
+
+import { CityDetailComponent } from './pages/city-detail/city-detail';
+
 export const APP_ROUTES: Routes = [
   {
     path: '',
@@ -54,6 +57,10 @@ export const APP_ROUTES: Routes = [
 {
     path: 'profile/:userName', // <--- La parte mágica ":userName"
     component: PublicProfileComponent
+},
+{
+    path: 'cities/:id',
+    component: CityDetailComponent
 },
   // -------------------------------
 ];
