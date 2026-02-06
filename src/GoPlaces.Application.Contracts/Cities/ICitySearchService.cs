@@ -9,6 +9,7 @@ namespace GoPlaces.Cities
     public interface ICitySearchService
     {
         Task<CitySearchResultDto> SearchCitiesAsync(CitySearchRequestDto request);
+        Task<CityDto> GetByIdAsync(int id);
     }
 
 }
