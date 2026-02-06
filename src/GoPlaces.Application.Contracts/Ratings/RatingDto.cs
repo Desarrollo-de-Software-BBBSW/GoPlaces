@@ -9,7 +9,7 @@ namespace GoPlaces.Ratings;
 
 public class RatingDto : EntityDto<Guid>
 {
-    public Guid DestinationId { get; set; }
+    public int DestinationId { get; set; }
     public int Score { get; set; }
     public string? Comment { get; set; }
     public Guid UserId { get; set; }

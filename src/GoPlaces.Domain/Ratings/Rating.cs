@@ -6,19 +6,20 @@ using System.Threading.Tasks;
 using Volo.Abp.Domain.Entities;
 using Volo.Abp;
 using Volo.Abp.Domain.Entities.Auditing;
+using Volo.Abp.Users;
 
 namespace GoPlaces.Ratings;
 
 public class Rating : AuditedAggregateRoot<Guid>, IUserOwned
 {
-    public Guid DestinationId { get; private set; }
+    public int DestinationId { get; private set; }
     public int Score { get; private set; }
     public string? Comment { get; private set; }
     public Guid UserId { get; set; }
 
     private Rating() { } // EF
 
-    public Rating(Guid id, Guid destinationId, int score, string? comment, Guid userId)
+    public Rating(Guid id, int destinationId, int score, string? comment, Guid userId)
         : base(id)
     {
         SetScore(score);

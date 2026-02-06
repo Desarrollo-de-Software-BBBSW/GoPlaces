@@ -24,12 +24,13 @@ public class GoPlacesDbContext :
     AbpDbContext<GoPlacesDbContext>,
     IIdentityDbContext
 {
-    // 👇 1. Hacemos que sea nullable (?) para que no falle en migraciones
     private readonly ICurrentUser? _currentUser;
 
     public DbSet<GoPlaces.Destinations.Destination> Destinations { get; set; }
     public DbSet<GoPlaces.Follows.FollowList> FollowLists { get; set; }
     public DbSet<GoPlaces.Follows.FollowListItem> FollowListItems { get; set; }
+
+    // 👇 COMENTAR ESTA LÍNEA (El DbSet de Ratings)
     public DbSet<Rating> Ratings { get; set; }
 
     #region Entities from the modules
@@ -43,15 +44,12 @@ public class GoPlacesDbContext :
     public DbSet<IdentitySession> Sessions { get; set; }
     #endregion
 
-    // 👇 2. RECUPERAMOS EL CONSTRUCTOR DE MIGRACIONES (Soluciona tu error)
-    // Este constructor se usa cuando ejecutas 'dotnet ef migrations add'
     public GoPlacesDbContext(DbContextOptions<GoPlacesDbContext> options)
         : base(options)
     {
         _currentUser = null;
     }
 
-    // 👇 3. ESTE ES EL CONSTRUCTOR PARA LA APP (Inyección de dependencias)
     public GoPlacesDbContext(
         DbContextOptions<GoPlacesDbContext> options,
         ICurrentUser currentUser)
@@ -116,7 +114,8 @@ public class GoPlacesDbContext :
                 .OnDelete(DeleteBehavior.Cascade);
         });
 
-        // Rating
+        // 👇 COMENTAR TODO ESTE BLOQUE (Configuración de Ratings)
+        
         builder.Entity<Rating>(b =>
         {
             b.ToTable(GoPlacesConsts.DbTablePrefix + "Ratings", GoPlacesConsts.DbSchema);
@@ -129,9 +128,8 @@ public class GoPlacesDbContext :
             b.HasIndex(x => x.UserId);
             b.HasIndex(x => x.DestinationId);
 
-            // 👇 4. FILTRO SEGURO PARA MIGRACIONES
-            // Agregamos "_currentUser != null" para que no explote si se usa el constructor de migraciones
             b.HasQueryFilter(r => _currentUser != null && r.UserId == _currentUser.Id);
         });
+        
     }
 }

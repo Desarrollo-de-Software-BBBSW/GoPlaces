@@ -4,6 +4,7 @@ using GoPlaces.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Volo.Abp.EntityFrameworkCore;
 
@@ -12,9 +13,11 @@ using Volo.Abp.EntityFrameworkCore;
 namespace GoPlaces.Migrations
 {
     [DbContext(typeof(GoPlacesDbContext))]
-    partial class GoPlacesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260206163404_Recreate_Ratings_With_Int")]
+    partial class Recreate_Ratings_With_Int
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

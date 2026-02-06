@@ -13,8 +13,8 @@ public interface IRatingAppService : IApplicationService
     Task<RatingDto> CreateAsync(CreateRatingDto input);
 
     // Lista de ratings del destino (por el filtro global, verás solo los tuyos)
-    Task<ListResultDto<RatingDto>> GetByDestinationAsync(Guid destinationId);
+    Task<ListResultDto<RatingDto>> GetByDestinationAsync(int destinationId);
 
     // Tu rating (único) para un destino (si existe)
-    Task<RatingDto?> GetMyForDestinationAsync(Guid destinationId);
+    Task<RatingDto?> GetMyForDestinationAsync(int destinationId);
 }
