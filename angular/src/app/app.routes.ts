@@ -38,7 +38,7 @@ export const APP_ROUTES: Routes = [
   {
     path: 'cities/search', // La URL será: http://localhost:4200/cities/search
     component: CitiesSearchComponent,
-    canActivate: [AuthGuard, PermissionGuard] // Protege la ruta: solo usuarios logueados
+    //canActivate: [AuthGuard, PermissionGuard] // Protege la ruta: solo usuarios logueados
   },
 
   {

@@ -26,7 +26,56 @@
         <i class="fa fa-map-marker-alt me-1 text-danger"></i> {{ city.country }}
       </p>
 
-      <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+      <hr class="my-4">
+      
+      <div class="rating-section mb-4">
+        
+        <div *ngIf="!isAuthenticated" class="alert alert-light border">
+          <small><i class="fa fa-lock me-1"></i> <a routerLink="/account/login">Inicia sesión</a> para calificar.</small>
+        </div>
+
+        <div *ngIf="isAuthenticated && !userRating">
+          <h5 class="mb-3">¿Qué te pareció este lugar?</h5>
+          
+          <div class="mb-3 fs-2 text-warning" style="cursor: pointer;">
+            <i *ngFor="let star of [1,2,3,4,5]"
+               class="fa"
+               [ngClass]="(hoverScore >= star || selectedScore >= star) ? 'fa-star' : 'fa-star-o'"
+               (mouseenter)="hoverScore = star"
+               (mouseleave)="hoverScore = 0"
+               (click)="selectedScore = star">
+            </i>
+          </div>
+
+          <div class="mb-3" *ngIf="selectedScore > 0">
+            <textarea [(ngModel)]="ratingComment" class="form-control" rows="2" placeholder="Escribe un comentario (opcional)..."></textarea>
+          </div>
+
+          <button class="btn btn-primary" 
+                  [disabled]="selectedScore === 0 || isRatingSubmitting"
+                  (click)="submitRating()">
+            <span *ngIf="isRatingSubmitting" class="spinner-border spinner-border-sm me-1"></span>
+            Enviar Calificación
+          </button>
+        </div>
+
+        <div *ngIf="userRating" class="bg-light p-3 rounded border border-success">
+          <div class="text-success fw-bold mb-1">
+            <i class="fa fa-check-circle me-1"></i> ¡Ya calificaste este destino!
+          </div>
+          <div class="text-warning fs-4">
+            <i *ngFor="let star of [1,2,3,4,5]" 
+               class="fa" 
+               [ngClass]="userRating.score >= star ? 'fa-star' : 'fa-star-o'">
+            </i>
+          </div>
+          <p *ngIf="userRating.comment" class="text-muted mt-2 fst-italic">
+            "{{ userRating.comment }}"
+          </p>
+        </div>
+
+      </div>
+      <div class="d-grid gap-2 d-sm-flex justify-content-sm-center mt-4">
         <button routerLink="/cities" class="btn btn-outline-secondary px-4">
           <i class="fa fa-arrow-left me-2"></i> Volver
         </button>
