@@ -1,18 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { ToasterService, ConfirmationService, Confirmation } from '@abp/ng.theme.shared'; // <--- Agregados ConfirmationService y Confirmation
-import { AuthService } from '@abp/ng.core'; // <--- Agregado AuthService
+import { ToasterService, ConfirmationService, Confirmation } from '@abp/ng.theme.shared';
+import { AuthService, ConfigStateService } from '@abp/ng.core'; // 👈 Agregado ConfigStateService
 
-// Importamos el servicio y ambos DTOs
 import { MyProfileService, UserProfileDto, ChangePasswordInputDto } from 'src/app/proxy/users'; 
 
 @Component({
   selector: 'app-my-profile',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
-  templateUrl: './my-profile.html', // Asegúrate que el nombre coincida con tu archivo
-  styleUrls: ['./my-profile.scss'] // Asegúrate que el nombre coincida con tu archivo
+  templateUrl: './my-profile.html',
+  styleUrls: ['./my-profile.scss']
 })
 export class MyProfileComponent implements OnInit {
   form: FormGroup;
@@ -24,14 +23,19 @@ export class MyProfileComponent implements OnInit {
     private fb: FormBuilder,
     private profileService: MyProfileService,
     private toaster: ToasterService,
-    private confirmation: ConfirmationService, // <--- Inyectado
-    private authService: AuthService            // <--- Inyectado
+    private confirmation: ConfirmationService,
+    private authService: AuthService,
+    private config: ConfigStateService // 👈 Inyectamos esto para ver quién está logueado
   ) {
     this.buildForm();
     this.buildPasswordForm();
   }
 
   ngOnInit(): void {
+    // DIAGNÓSTICO: Verificamos en consola quién cree Angular que es el usuario
+    const currentUser = this.config.getOne('currentUser');
+    console.log('🔴 USUARIO EN SESIÓN (FRONTEND):', currentUser);
+
     this.loadProfile();
   }
 
@@ -43,8 +47,8 @@ export class MyProfileComponent implements OnInit {
       name: [''],
       surname: [''],
       phoneNumber: [''],
-      photoUrl: [''],
-      preferences: ['']
+      photoUrl: [''], // Asegúrate de que tu DTO tenga este campo
+      preferences: [''] // Asegúrate de que tu DTO tenga este campo
     });
   }
 
@@ -58,12 +62,21 @@ export class MyProfileComponent implements OnInit {
 
   loadProfile() {
     this.isBusy = true;
+    
+    // 1. Limpiamos el formulario antes de cargar para borrar "fantasmas"
+    this.form.reset();
+
+    // 2. Pedimos los datos frescos a la API
     this.profileService.get().subscribe({
       next: (data) => {
+        console.log('🟢 DATOS RECIBIDOS DE LA API:', data); // 👈 Mira esto en consola (F12)
+        
+        // Si data.name sigue siendo Juan, el error está en el Backend (C#)
         this.form.patchValue(data);
         this.isBusy = false;
       },
       error: (err) => {
+        console.error(err);
         this.toaster.error('No se pudo cargar el perfil', 'Error');
         this.isBusy = false;
       }
@@ -74,12 +87,16 @@ export class MyProfileComponent implements OnInit {
     if (this.form.invalid) return;
 
     this.isBusy = true;
+    // getRawValue() incluye los campos deshabilitados (como userName)
     const input = this.form.getRawValue() as UserProfileDto; 
 
     this.profileService.update(input).subscribe({
       next: () => {
         this.toaster.success('Tus datos han sido actualizados', '¡Éxito!');
         this.isBusy = false;
+        
+        // Opcional: Recargar para asegurar que todo esté sincro
+        this.loadProfile(); 
       },
       error: (err) => {
         this.toaster.error('Ocurrió un error al guardar', 'Error');
@@ -101,19 +118,18 @@ export class MyProfileComponent implements OnInit {
         this.isPasswordBusy = false;
       },
       error: (err) => {
-        this.toaster.error('No se pudo cambiar la contraseña. Verifica los datos.', 'Error');
+        const msg = err.error?.error?.message || 'Verifica tu contraseña actual.';
+        this.toaster.error(msg, 'Error al cambiar contraseña');
         this.isPasswordBusy = false;
       }
     });
   }
 
-  // Función para eliminar cuenta
   deleteAccount() {
     this.confirmation.warn(
       'Esta acción no se puede deshacer. Tu cuenta será inhabilitada permanentemente.',
       '¿Estás seguro de eliminar tu cuenta?',
       {
-        // CORRECCIÓN: Usamos 'yesText' y 'cancelText' en lugar de confirmButtonText
         yesText: 'Sí, eliminar mi cuenta',
         cancelText: 'Cancelar'
       }
@@ -131,7 +147,6 @@ export class MyProfileComponent implements OnInit {
             this.isBusy = false;
           }
         });
-
       }
     });
   }

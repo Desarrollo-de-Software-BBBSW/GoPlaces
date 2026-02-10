@@ -1409,9 +1409,9 @@
                   "parametersOnMethod": [
                     {
                       "name": "destinationId",
-                      "typeAsString": "System.Guid, System.Private.CoreLib",
-                      "type": "System.Guid",
-                      "typeSimple": "string",
+                      "typeAsString": "System.Int32, System.Private.CoreLib",
+                      "type": "System.Int32",
+                      "typeSimple": "number",
                       "isOptional": false,
                       "defaultValue": null
                     }
@@ -1426,9 +1426,9 @@
                   "parametersOnMethod": [
                     {
                       "name": "destinationId",
-                      "typeAsString": "System.Guid, System.Private.CoreLib",
-                      "type": "System.Guid",
-                      "typeSimple": "string",
+                      "typeAsString": "System.Int32, System.Private.CoreLib",
+                      "type": "System.Int32",
+                      "typeSimple": "number",
                       "isOptional": false,
                       "defaultValue": null
                     }
@@ -1488,9 +1488,9 @@
               "parametersOnMethod": [
                 {
                   "name": "destinationId",
-                  "typeAsString": "System.Guid, System.Private.CoreLib",
-                  "type": "System.Guid",
-                  "typeSimple": "string",
+                  "typeAsString": "System.Int32, System.Private.CoreLib",
+                  "type": "System.Int32",
+                  "typeSimple": "number",
                   "isOptional": false,
                   "defaultValue": null
                 }
@@ -1500,8 +1500,8 @@
                   "nameOnMethod": "destinationId",
                   "name": "destinationId",
                   "jsonName": null,
-                  "type": "System.Guid",
-                  "typeSimple": "string",
+                  "type": "System.Int32",
+                  "typeSimple": "number",
                   "isOptional": false,
                   "defaultValue": null,
                   "constraintTypes": [],
@@ -1525,9 +1525,9 @@
               "parametersOnMethod": [
                 {
                   "name": "destinationId",
-                  "typeAsString": "System.Guid, System.Private.CoreLib",
-                  "type": "System.Guid",
-                  "typeSimple": "string",
+                  "typeAsString": "System.Int32, System.Private.CoreLib",
+                  "type": "System.Int32",
+                  "typeSimple": "number",
                   "isOptional": false,
                   "defaultValue": null
                 }
@@ -1537,8 +1537,8 @@
                   "nameOnMethod": "destinationId",
                   "name": "destinationId",
                   "jsonName": null,
-                  "type": "System.Guid",
-                  "typeSimple": "string",
+                  "type": "System.Int32",
+                  "typeSimple": "number",
                   "isOptional": false,
                   "defaultValue": null,
                   "constraintTypes": [],
@@ -4433,8 +4433,8 @@
         {
           "name": "DestinationId",
           "jsonName": null,
-          "type": "System.Guid",
-          "typeSimple": "string",
+          "type": "System.Int32",
+          "typeSimple": "number",
           "isRequired": true,
           "minLength": null,
           "maxLength": null,
@@ -4478,8 +4478,8 @@
         {
           "name": "DestinationId",
           "jsonName": null,
-          "type": "System.Guid",
-          "typeSimple": "string",
+          "type": "System.Int32",
+          "typeSimple": "number",
           "isRequired": false,
           "minLength": null,
           "maxLength": null,
