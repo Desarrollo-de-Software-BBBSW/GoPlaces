@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -11,72 +10,93 @@ using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
 using Volo.Abp.Users;
 using Volo.Abp.Authorization;
+using GoPlaces.Destinations; // 👈 Necesario para Coordinates
+using GoPlaces.Cities;
 
-namespace GoPlaces.Ratings;
-
-[Authorize]
-public class RatingAppService : ApplicationService, IRatingAppService
+namespace GoPlaces.Ratings
 {
-    private readonly IRepository<Rating, Guid> _repo;
-
-    public RatingAppService(IRepository<Rating, Guid> repo)
+    [Authorize]
+    public class RatingAppService : ApplicationService, IRatingAppService
     {
-        _repo = repo;
-    }
+        private readonly IRepository<Rating, Guid> _repo;
+        private readonly IRepository<Destination, Guid> _destinationRepository;
+        private readonly ICitySearchService _citySearchService;
 
-    public async Task<RatingDto> CreateAsync(CreateRatingDto input)
-    {
-        // Validación de rango (BusinessException está bien aquí, o UserFriendly si quieres mostrarlo en UI)
-        if (input.Score < 1 || input.Score > 5)
-            throw new BusinessException("Rating.ScoreOutOfRange").WithData("Score", input.Score);
-
-        if (CurrentUser.Id == null)
+        public RatingAppService(
+            IRepository<Rating, Guid> repo,
+            IRepository<Destination, Guid> destinationRepository,
+            ICitySearchService citySearchService)
         {
-            throw new AbpAuthorizationException("Usuario no autenticado.");
-        }
-        var userId = CurrentUser.Id.Value;
-
-        // Verificamos si ya existe
-        var exists = await (await _repo.GetQueryableAsync())
-            .AnyAsync(r => r.DestinationId == input.DestinationId && r.UserId == userId);
-
-        if (exists)
-        {
-            // CORRECCIÓN PRINCIPAL PARA EL TEST:
-            // Cambiamos BusinessException por UserFriendlyException.
-            // Esto hace que el test pase (porque espera este tipo) y que el frontend muestre el mensaje bonito.
-            throw new UserFriendlyException("Ya has calificado este lugar.");
+            _repo = repo;
+            _destinationRepository = destinationRepository;
+            _citySearchService = citySearchService;
         }
 
-        var normalizedComment = string.IsNullOrWhiteSpace(input.Comment) ? null : input.Comment.Trim();
+        public async Task<RatingDto> CreateAsync(CreateRatingDto input)
+        {
+            if (input.Score < 1 || input.Score > 5)
+                throw new BusinessException("Rating.ScoreOutOfRange");
 
-        var rating = new Rating(GuidGenerator.Create(), input.DestinationId, input.Score, normalizedComment, userId);
+            var userId = CurrentUser.Id.Value;
 
-        await _repo.InsertAsync(rating, autoSave: true);
+            // 1. Verificamos si ya existe el destino localmente
+            var destination = await _destinationRepository.FindAsync(input.DestinationId);
 
-        return ObjectMapper.Map<Rating, RatingDto>(rating);
-    }
+            if (destination == null)
+            {
+                // 2. Si no existe, lo traemos de GeoDB e insertamos
+                var externalCity = await _citySearchService.GetByIdAsync(input.DestinationId);
+                if (externalCity != null)
+                {
+                    // ✅ CONSTRUCTOR CORREGIDO: Usamos population: 0 y Coordinates(0,0)
+                    destination = new Destination(
+                        externalCity.Id,
+                        externalCity.Name,
+                        externalCity.Country,
+                        0,                           // population
+                        new Coordinates(0, 0)        // coordinates
+                    );
 
-    public async Task<ListResultDto<RatingDto>> GetByDestinationAsync(int destinationId)
-    {
-        var list = await (await _repo.GetQueryableAsync())
-            .Where(r => r.DestinationId == destinationId)
-            .OrderByDescending(r => r.CreationTime)
-            .ToListAsync();
+                    await _destinationRepository.InsertAsync(destination, autoSave: true);
+                }
+                else
+                {
+                    throw new UserFriendlyException("No se pudo obtener la info de la ciudad.");
+                }
+            }
 
-        return new ListResultDto<RatingDto>(
-            ObjectMapper.Map<List<Rating>, List<RatingDto>>(list)
-        );
-    }
+            // 3. Verificamos si ya calificó
+            var exists = await (await _repo.GetQueryableAsync())
+                .AnyAsync(r => r.DestinationId == input.DestinationId && r.UserId == userId);
 
-    public async Task<RatingDto?> GetMyForDestinationAsync(int destinationId)
-    {
-        if (CurrentUser.Id == null) return null;
+            if (exists) throw new UserFriendlyException("Ya has calificado este lugar.");
 
-        var entity = await (await _repo.GetQueryableAsync())
-            .Where(r => r.DestinationId == destinationId && r.UserId == CurrentUser.Id.Value) // <--- CORRECCIÓN LÓGICA IMPORTANTE
-            .SingleOrDefaultAsync();
+            // 4. Guardamos Rating
+            var rating = new Rating(GuidGenerator.Create(), input.DestinationId, input.Score, input.Comment, userId);
+            await _repo.InsertAsync(rating, autoSave: true);
 
-        return entity == null ? null : ObjectMapper.Map<Rating, RatingDto>(entity);
+            return ObjectMapper.Map<Rating, RatingDto>(rating);
+        }
+
+        public async Task<ListResultDto<RatingDto>> GetByDestinationAsync(Guid destinationId)
+        {
+            var list = await (await _repo.GetQueryableAsync())
+                .Where(r => r.DestinationId == destinationId)
+                .OrderByDescending(r => r.CreationTime)
+                .ToListAsync();
+
+            return new ListResultDto<RatingDto>(
+                ObjectMapper.Map<List<Rating>, List<RatingDto>>(list)
+            );
+        }
+
+        public async Task<RatingDto?> GetMyForDestinationAsync(Guid destinationId)
+        {
+            if (CurrentUser.Id == null) return null;
+            var entity = await (await _repo.GetQueryableAsync())
+                .Where(r => r.DestinationId == destinationId && r.UserId == CurrentUser.Id.Value)
+                .SingleOrDefaultAsync();
+            return entity == null ? null : ObjectMapper.Map<Rating, RatingDto>(entity);
+        }
     }
 }

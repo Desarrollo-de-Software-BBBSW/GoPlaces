@@ -1,18 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Volo.Abp.Domain.Values;
 
 namespace GoPlaces.Destinations;
 
 public class Coordinates : ValueObject
 {
-    public double Latitude { get; }
-    public double Longitude { get; }
+    // EF Core necesita 'private set' para poder rellenar estos datos al leer de la DB.
+    // Si solo pones { get; }, EF Core a veces falla al materializar la entidad.
+    public double Latitude { get; private set; }
+    public double Longitude { get; private set; }
 
-    private Coordinates() { } // EF Core
+    // Constructor privado vacío requerido por EF Core/JSON Serializers
+    private Coordinates() { }
 
     public Coordinates(double latitude, double longitude)
     {
@@ -20,6 +19,7 @@ public class Coordinates : ValueObject
         Longitude = longitude;
     }
 
+    // Esto es obligatorio en ABP ValueObject para que la comparación (==) funcione bien
     protected override IEnumerable<object> GetAtomicValues()
     {
         yield return Latitude;

@@ -1,51 +1,33 @@
 ﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
-using Volo.Abp.Application.Services;
-using Volo.Abp.Identity;
 using Volo.Abp;
-using IdentityUser = Volo.Abp.Identity.IdentityUser;
+using Volo.Abp.Identity;
+using Volo.Abp.DependencyInjection;
 
-namespace GoPlaces.Users
+namespace GoPlaces.Users;
+
+[ExposeServices(typeof(IMyLoginAppService))]
+public class LoginAppService : GoPlacesAppService, IMyLoginAppService
 {
-    // Asegúrate de que la interfaz (IMyLoginAppService) sea la correcta según tu proyecto
-    public class LoginAppService : ApplicationService, IMyLoginAppService
+    // Cambiamos UserManager<IdentityUser> por IdentityUserManager (el estándar de ABP)
+    protected IdentityUserManager UserManager { get; }
+
+    public LoginAppService(IdentityUserManager userManager)
     {
-        private readonly SignInManager<IdentityUser> _signInManager;
-        private readonly UserManager<IdentityUser> _userManager; // 👈 1. AGREGADO: Declaramos la variable
+        UserManager = userManager;
+    }
 
-        // 2. MODIFICADO: Inyectamos UserManager en el constructor
-        public LoginAppService(
-            SignInManager<IdentityUser> signInManager,
-            UserManager<IdentityUser> userManager) // 👈 Pedimos la herramienta aquí
+    public virtual async Task<bool> LoginAsync(LoginInputDto input)
+    {
+        var user = await UserManager.FindByNameAsync(input.UserNameOrEmail)
+                   ?? await UserManager.FindByEmailAsync(input.UserNameOrEmail);
+
+        if (user == null)
         {
-            _signInManager = signInManager;
-            _userManager = userManager; // 👈 Guardamos la herramienta para usarla abajo
+            throw new UserFriendlyException("Usuario o contraseña incorrectos.");
         }
 
-        public async Task<bool> LoginAsync(LoginInputDto input)
-        {
-            // 1. Ahora sí podemos usar _userManager para buscar al usuario
-            var user = await _userManager.FindByNameAsync(input.UserNameOrEmail)
-                       ?? await _userManager.FindByEmailAsync(input.UserNameOrEmail);
-
-            if (user == null)
-            {
-                throw new UserFriendlyException("El usuario o contraseña son incorrectos.");
-            }
-
-            // 2. Verificamos la contraseña SIN crear cookies (evita el error de OpenIddict)
-            var result = await _signInManager.CheckPasswordSignInAsync(
-                user,
-                input.Password,
-                lockoutOnFailure: false
-            );
-
-            if (!result.Succeeded)
-            {
-                throw new UserFriendlyException("El usuario o contraseña son incorrectos.");
-            }
-
-            return true;
-        }
+        // Usamos UserManager para verificar la contraseña en lugar de SignInManager
+        // Esto funciona perfectamente en Tests y en Producción
+        return await UserManager.CheckPasswordAsync(user, input.Password);
     }
 }

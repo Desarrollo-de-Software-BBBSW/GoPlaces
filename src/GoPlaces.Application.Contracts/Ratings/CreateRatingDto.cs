@@ -10,7 +10,8 @@ namespace GoPlaces.Ratings;
 public class CreateRatingDto
 {
     [Required]
-    public int DestinationId { get; set; }
+    // 👇 CAMBIO CRÍTICO: De int a Guid
+    public Guid DestinationId { get; set; }
 
     [Range(1, 5, ErrorMessage = "Score must be between 1 and 5.")]
     public int Score { get; set; }

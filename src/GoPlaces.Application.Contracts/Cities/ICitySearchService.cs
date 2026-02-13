@@ -1,15 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using Volo.Abp.Application.Services;
 
 namespace GoPlaces.Cities
 {
-    public interface ICitySearchService
+    public interface ICitySearchService : IApplicationService
     {
         Task<CitySearchResultDto> SearchCitiesAsync(CitySearchRequestDto request);
-        Task<CityDto> GetByIdAsync(int id);
-    }
 
+        // 👇 AQUÍ ESTÁ EL CAMBIO: de int a Guid
+        Task<CityDto> GetByIdAsync(Guid id);
+    }
 }

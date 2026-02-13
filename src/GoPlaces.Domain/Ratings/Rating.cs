@@ -12,14 +12,17 @@ namespace GoPlaces.Ratings;
 
 public class Rating : AuditedAggregateRoot<Guid>, IUserOwned
 {
-    public int DestinationId { get; private set; }
+    // ✅ CAMBIO 1: Ahora guardamos un GUID, no un int
+    public Guid DestinationId { get; private set; }
+
     public int Score { get; private set; }
     public string? Comment { get; private set; }
     public Guid UserId { get; set; }
 
-    private Rating() { } // EF
+    private Rating() { } // Constructor vacío para Entity Framework
 
-    public Rating(Guid id, int destinationId, int score, string? comment, Guid userId)
+    // ✅ CAMBIO 2: El constructor recibe Guid para el destino
+    public Rating(Guid id, Guid destinationId, int score, string? comment, Guid userId)
         : base(id)
     {
         SetScore(score);

@@ -233,8 +233,8 @@ namespace GoPlaces.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("CreatorId");
 
-                    b.Property<int>("DestinationId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("DestinationId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("ExtraProperties")
                         .IsRequired()

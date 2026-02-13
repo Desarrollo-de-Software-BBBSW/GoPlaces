@@ -1,20 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Volo.Abp.Application.Services;
 using Volo.Abp.Application.Dtos;
+using Volo.Abp.Application.Services;
 
-namespace GoPlaces.Ratings;
-
-public interface IRatingAppService : IApplicationService
+namespace GoPlaces.Ratings
 {
-    Task<RatingDto> CreateAsync(CreateRatingDto input);
+    public interface IRatingAppService : IApplicationService
+    {
+        Task<RatingDto> CreateAsync(CreateRatingDto input);
 
-    // Lista de ratings del destino (por el filtro global, verás solo los tuyos)
-    Task<ListResultDto<RatingDto>> GetByDestinationAsync(int destinationId);
+        // ✅ Corregido: Ahora acepta Guid para coincidir con la base de datos
+        Task<ListResultDto<RatingDto>> GetByDestinationAsync(Guid destinationId);
 
-    // Tu rating (único) para un destino (si existe)
-    Task<RatingDto?> GetMyForDestinationAsync(int destinationId);
+        // ✅ Corregido: Ahora acepta Guid para el chequeo de "ya votó"
+        Task<RatingDto?> GetMyForDestinationAsync(Guid destinationId);
+    }
 }

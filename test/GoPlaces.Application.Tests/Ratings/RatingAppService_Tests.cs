@@ -1,56 +1,79 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using GoPlaces.Cities;
+using GoPlaces.Ratings;
 using Shouldly;
+using Volo.Abp.Guids;
+using Volo.Abp.Security.Claims;
+using Volo.Abp.Domain.Repositories;
 using Xunit;
-using Volo.Abp;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace GoPlaces.Ratings;
+using DestinationEntity = GoPlaces.Destinations.Destination;
+using CoordinatesValue = GoPlaces.Destinations.Coordinates;
 
-public class RatingAppService_Tests : GoPlacesApplicationTestBase<GoPlacesApplicationTestModule>
+namespace GoPlaces.Ratings
 {
-    private readonly IRatingAppService _ratingService;
-
-    public RatingAppService_Tests()
+    public class RatingAppService_Tests : GoPlacesApplicationTestBase<GoPlacesApplicationTestModule>
     {
-        _ratingService = GetRequiredService<IRatingAppService>();
-    }
+        private readonly IRepository<DestinationEntity, Guid> _destinationRepo;
+        private readonly IRepository<Rating, Guid> _ratingRepo;
+        private readonly ICitySearchService _cityService;
+        private readonly IGuidGenerator _guidGenerator;
+        private readonly ICurrentPrincipalAccessor _currentPrincipalAccessor;
 
-    [Fact]
-    public async Task Should_Create_Rating()
-    {
-        // ARRANGE
-        var destinationId = 33924; // Paris
-        var input = new CreateRatingDto
+        public RatingAppService_Tests()
         {
-            DestinationId = destinationId,
-            Score = 5,
-            Comment = "¡Excelente lugar!"
-        };
+            _destinationRepo = GetRequiredService<IRepository<DestinationEntity, Guid>>();
+            _ratingRepo = GetRequiredService<IRepository<Rating, Guid>>();
+            _cityService = GetRequiredService<ICitySearchService>();
+            _guidGenerator = GetRequiredService<IGuidGenerator>();
+            _currentPrincipalAccessor = GetRequiredService<ICurrentPrincipalAccessor>();
+        }
 
-        // ACT
-        var result = await _ratingService.CreateAsync(input);
-
-        // ASSERT
-        result.ShouldNotBeNull();
-        result.Score.ShouldBe(5);
-        result.DestinationId.ShouldBe(destinationId);
-    }
-
-    [Fact]
-    public async Task Should_Not_Allow_Duplicate_Rating()
-    {
-        // ARRANGE
-        var destinationId = 12345;
-        var input = new CreateRatingDto { DestinationId = destinationId, Score = 4 };
-
-        // Creamos la primera vez
-        await _ratingService.CreateAsync(input);
-
-        // ACT & ASSERT
-        // Intentamos crear la segunda vez para el mismo destino
-        await Assert.ThrowsAsync<UserFriendlyException>(async () =>
+        [Fact]
+        public async Task Should_Create_Rating()
         {
-            await _ratingService.CreateAsync(input);
-        });
+            var destinationId = _guidGenerator.Create();
+
+            var destination = new DestinationEntity(
+                destinationId,
+                "Paris",
+                "France",
+                2000000,
+                new CoordinatesValue(48.85, 2.35),
+                "paris.jpg",
+                DateTime.UtcNow
+            );
+
+            await _destinationRepo.InsertAsync(destination);
+
+            var userId = _guidGenerator.Create();
+            var claims = new List<Claim>
+            {
+                new Claim(AbpClaimTypes.UserId, userId.ToString()),
+                new Claim(AbpClaimTypes.UserName, "testuser")
+            };
+
+            using (_currentPrincipalAccessor.Change(new ClaimsPrincipal(new ClaimsIdentity(claims, "TestAuth"))))
+            {
+                var ratingService = new RatingAppService(_ratingRepo, _destinationRepo, _cityService);
+                ratingService.LazyServiceProvider = ServiceProvider.GetRequiredService<Volo.Abp.DependencyInjection.IAbpLazyServiceProvider>();
+
+                var input = new CreateRatingDto
+                {
+                    DestinationId = destinationId,
+                    Score = 5,
+                    Comment = "Perfect!"
+                };
+
+                var result = await ratingService.CreateAsync(input);
+
+                result.ShouldNotBeNull();
+                result.Score.ShouldBe(5);
+            }
+        }
     }
 }

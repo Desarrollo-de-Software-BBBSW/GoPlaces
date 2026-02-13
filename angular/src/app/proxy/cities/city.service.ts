@@ -7,23 +7,31 @@ import { Injectable } from '@angular/core';
 })
 export class CityService {
   apiName = 'Default';
-  
 
-  get = (id: number, config?: Partial<Rest.Config>) =>
+  constructor(private restService: RestService) {}
+
+  // ✅ Método GET (Ya corregido para recibir string/GUID)
+  get = (id: string, config?: Partial<Rest.Config>) =>
     this.restService.request<any, CityDto>({
       method: 'GET',
       url: `/api/app/city/${id}`,
     },
-    { apiName: this.apiName,...config });
-  
+    { apiName: this.apiName, ...config });
 
+  // ✅ Método Search (Buscador)
   searchCities = (request: CitySearchRequestDto, config?: Partial<Rest.Config>) =>
     this.restService.request<any, CitySearchResultDto>({
       method: 'POST',
       url: '/api/app/city/search-cities',
       body: request,
     },
-    { apiName: this.apiName,...config });
+    { apiName: this.apiName, ...config });
 
-  constructor(private restService: RestService) {}
+  // ✅ NUEVO MÉTODO: Este es el que te faltaba para "Popular Destinations"
+  getPopularCities = (config?: Partial<Rest.Config>) =>
+    this.restService.request<any, CityDto[]>({
+      method: 'GET',
+      url: '/api/app/city/popular-cities',
+    },
+    { apiName: this.apiName, ...config });
 }

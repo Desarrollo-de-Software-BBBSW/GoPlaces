@@ -5,7 +5,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
-using Volo.Abp; // Necesario para UserFriendlyException (opcional, si quieres usarlo)
+using Volo.Abp;
 
 namespace GoPlaces.Cities
 {
@@ -18,6 +18,15 @@ namespace GoPlaces.Cities
         {
             _httpClientFactory = httpClientFactory;
             _logger = logger;
+        }
+
+        // Helper para convertir int a Guid de forma consistente
+        // Ej: ID 5 -> 00000000-0000-0000-0000-000000000005
+        private Guid IntToGuid(int value)
+        {
+            byte[] bytes = new byte[16];
+            BitConverter.GetBytes(value).CopyTo(bytes, 0);
+            return new Guid(bytes);
         }
 
         public async Task<CitySearchResultDto> SearchCitiesAsync(CitySearchRequestDto request)
@@ -41,7 +50,8 @@ namespace GoPlaces.Cities
                 {
                     Cities = data.Select(c => new CityDto
                     {
-                        Id = c.Id,
+                        // CONVERSIÓN CRÍTICA: Int -> Guid
+                        Id = IntToGuid(c.Id),
                         Name = c.City ?? string.Empty,
                         Country = c.Country ?? string.Empty
                     }).ToList()
@@ -59,24 +69,25 @@ namespace GoPlaces.Cities
             }
         }
 
-        // 👇 NUEVA IMPLEMENTACIÓN DEL MÉTODO QUE FALTABA 👇
-        public async Task<CityDto> GetByIdAsync(int id)
+        // CAMBIO: Recibe Guid en lugar de int
+        public async Task<CityDto> GetByIdAsync(Guid id)
         {
+            // Convertimos el Guid de vuelta a int para llamar a la API
+            // (Tomamos los primeros 4 bytes que es donde guardamos el int)
+            int geoDbId = BitConverter.ToInt32(id.ToByteArray(), 0);
+
             try
             {
                 var client = _httpClientFactory.CreateClient("GeoDB");
-                // Endpoint para obtener una sola ciudad por ID
-                var url = $"cities/{id}";
+                var url = $"cities/{geoDbId}"; // Usamos el ID numérico original
 
                 var response = await client.GetAsync(url);
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    // Si no existe (404) o hay error, lanzamos excepción para que la capa superior se entere
-                    throw new UserFriendlyException($"No se pudo encontrar la ciudad con ID {id}. API Status: {response.StatusCode}");
+                    throw new UserFriendlyException($"No se pudo encontrar la ciudad. API Status: {response.StatusCode}");
                 }
 
-                // OJO: La respuesta de GeoDB para un item singular es diferente (Data es un objeto, no una lista)
                 var result = await response.Content.ReadFromJsonAsync<GeoDbSingleApiResponse>();
 
                 if (result?.Data == null)
@@ -86,7 +97,7 @@ namespace GoPlaces.Cities
 
                 return new CityDto
                 {
-                    Id = result.Data.Id,
+                    Id = IntToGuid(result.Data.Id), // Volvemos a convertir a Guid
                     Name = result.Data.City ?? string.Empty,
                     Country = result.Data.Country ?? string.Empty
                 };
@@ -94,28 +105,24 @@ namespace GoPlaces.Cities
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Error obteniendo detalle de ciudad {id}");
-                throw; // Relanzamos el error para que lo maneje el Controller/AppService
+                throw;
             }
         }
 
-        // --- Modelos para deserializar ---
-
-        // Modelo para respuesta de LISTAS (Search)
+        // --- Modelos Internos (Se mantienen con int porque así viene de la API externa) ---
         private sealed class GeoDbApiResponse
         {
             public List<GeoDbCity> Data { get; set; } = new();
         }
 
-        // 👇 NUEVO MODELO para respuesta INDIVIDUAL (GetById)
         private sealed class GeoDbSingleApiResponse
         {
-            public GeoDbCity Data { get; set; } // Aquí Data es un solo objeto, no una lista
+            public GeoDbCity Data { get; set; }
         }
 
-        // El objeto ciudad es el mismo para ambos casos
         private sealed class GeoDbCity
         {
-            public int Id { get; set; }
+            public int Id { get; set; } // La API externa sigue enviando int
             public string? City { get; set; }
             public string? Country { get; set; }
         }

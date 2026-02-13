@@ -1,46 +1,40 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Volo.Abp;
-using Volo.Abp.Application.Services;
-using Volo.Abp.Data;
 using Volo.Abp.Identity;
+using Volo.Abp.DependencyInjection;
+using Volo.Abp.Data; // 👈 NECESARIO para leer propiedades extra (PhotoUrl)
+using GoPlaces.Users;
 
-namespace GoPlaces.Users
+namespace GoPlaces.Users;
+
+[ExposeServices(typeof(IPublicUserLookupAppService))]
+public class PublicUserAppService : GoPlacesAppService, IPublicUserLookupAppService
 {
-    [Authorize] // Solo usuarios logueados pueden ver perfiles
-    public class PublicUserAppService : ApplicationService, IPublicUserAppService
+    protected IIdentityUserRepository UserRepository { get; }
+
+    public PublicUserAppService(IIdentityUserRepository userRepository)
     {
-        private readonly IdentityUserManager _userManager;
+        UserRepository = userRepository;
+    }
 
-        public PublicUserAppService(IdentityUserManager userManager)
+    public virtual async Task<PublicUserProfileDto> GetByUserNameAsync(string userName)
+    {
+        // includeDetails: true asegura que traiga todo
+        var user = await UserRepository.FindByNormalizedUserNameAsync(userName.ToUpper(), includeDetails: true);
+
+        if (user == null)
         {
-            _userManager = userManager;
+            throw new UserFriendlyException($"No se encontró el usuario: {userName}");
         }
 
-        public async Task<PublicUserProfileDto> GetByUserNameAsync(string userName)
+        return new PublicUserProfileDto
         {
-            // 1. Buscamos el usuario por su UserName
-            var user = await _userManager.FindByNameAsync(userName);
+            UserName = user.UserName,
+            Name = user.Name,
+            Surname = user.Surname, // Agregamos el apellido también por si acaso
 
-            if (user == null)
-            {
-                throw new UserFriendlyException($"El usuario '{userName}' no existe.");
-            }
-
-            // 2. Mapeamos MANUALMENTE solo los datos seguros.
-            // (No usamos AutoMapper aquí para estar 100% seguros de no filtrar el email por error)
-            return new PublicUserProfileDto
-            {
-                Id = user.Id,
-                UserName = user.UserName,
-                Name = user.Name,
-                Surname = user.Surname,
-
-                // Extraemos las propiedades extra con seguridad
-                PhotoUrl = user.ExtraProperties.ContainsKey("PhotoUrl") ? user.GetProperty<string>("PhotoUrl") : null,
-                Preferences = user.ExtraProperties.ContainsKey("Preferences") ? user.GetProperty<string>("Preferences") : null
-            };
-        }
+            // 👇 ESTA ES LA LÍNEA QUE FALTABA Y CAUSABA EL ERROR "but was null"
+            PhotoUrl = user.GetProperty<string>("PhotoUrl")
+        };
     }
 }
