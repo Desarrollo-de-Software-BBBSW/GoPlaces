@@ -8,8 +8,6 @@ using Shouldly;
 using Volo.Abp.Domain.Repositories;
 using Xunit;
 
-// ⚠️ NO AGREGUES 'using GoPlaces.Destinations;' para evitar conflictos.
-
 namespace GoPlaces.Tests.Cities
 {
     public class CityAppService_Tests : GoPlacesApplicationTestBase<GoPlacesApplicationTestModule>
@@ -18,16 +16,12 @@ namespace GoPlaces.Tests.Cities
 
         // Mocks
         private readonly Mock<ICitySearchService> _mockCitySearchService;
-
-        // ✅ CORRECCIÓN: Usamos 'GoPlaces.Destinations.Destination' explícitamente
         private readonly Mock<IRepository<GoPlaces.Destinations.Destination, Guid>> _mockDestinationRepository;
         private readonly Mock<IRepository<Rating, Guid>> _mockRatingRepository;
 
         public CityAppService_Tests()
         {
             _mockCitySearchService = new Mock<ICitySearchService>();
-
-            // ✅ CORRECCIÓN: Inicialización con el nombre completo
             _mockDestinationRepository = new Mock<IRepository<GoPlaces.Destinations.Destination, Guid>>();
             _mockRatingRepository = new Mock<IRepository<Rating, Guid>>();
 
@@ -68,7 +62,7 @@ namespace GoPlaces.Tests.Cities
             var cityId = Guid.NewGuid();
             var expectedCity = new CityDto { Id = cityId, Name = "Paris", Country = "France" };
 
-            // Simulamos que NO existe en base de datos local (devuelve null)
+            // Simulamos que NO existe en base de datos local
             _mockDestinationRepository
                 .Setup(r => r.FindAsync(cityId, It.IsAny<bool>(), It.IsAny<System.Threading.CancellationToken>()))
                 .ReturnsAsync((GoPlaces.Destinations.Destination)null);
@@ -84,6 +78,26 @@ namespace GoPlaces.Tests.Cities
             // 3. ASSERT
             result.ShouldNotBeNull();
             result.Name.ShouldBe("Paris");
+        }
+
+        // 👇👇👇 PRUEBA NUEVA AGREGADA AQUÍ 👇👇👇
+        [Fact]
+        public async Task SearchCitiesAsync_Should_Return_Empty_List_When_No_Results()
+        {
+            // ARRANGE
+            _mockCitySearchService
+                .Setup(s => s.SearchCitiesAsync(It.Is<CitySearchRequestDto>(r => r.PartialName == "XYZ")))
+                .ReturnsAsync(new CitySearchResultDto
+                {
+                    Cities = new List<CityDto>() // Lista vacía
+                });
+
+            // ACT
+            var result = await _cityAppService.SearchCitiesAsync(new CitySearchRequestDto { PartialName = "XYZ" });
+
+            // ASSERT
+            result.ShouldNotBeNull();
+            result.Cities.ShouldBeEmpty();
         }
     }
 }

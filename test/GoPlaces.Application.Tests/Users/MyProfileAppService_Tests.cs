@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Security.Claims; // 👈 Necesario para crear la identidad manualmente
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Shouldly;
 using Volo.Abp;
 using Volo.Abp.Identity;
-using Volo.Abp.Security.Claims; // 👈 Necesario para ICurrentPrincipalAccessor
+using Volo.Abp.Security.Claims;
 using Xunit;
 using Microsoft.Extensions.DependencyInjection;
-// 👇 Resolvemos la ambigüedad (IdentityUser)
 using IdentityUser = Volo.Abp.Identity.IdentityUser;
 
 namespace GoPlaces.Users;
@@ -17,7 +16,6 @@ public class MyProfileAppService_Tests : GoPlacesApplicationTestBase<GoPlacesApp
 {
     private readonly IMyProfileAppService _profileAppService;
     private readonly IdentityUserManager _userManager;
-    // En lugar de ICurrentUser, usamos el Accessor de bajo nivel
     private readonly ICurrentPrincipalAccessor _currentPrincipalAccessor;
 
     public MyProfileAppService_Tests()
@@ -27,14 +25,13 @@ public class MyProfileAppService_Tests : GoPlacesApplicationTestBase<GoPlacesApp
         _currentPrincipalAccessor = GetRequiredService<ICurrentPrincipalAccessor>();
     }
 
-    // 👇 MÉTODO AYUDANTE: Esto hace lo mismo que .Change() pero manualmente
     private IDisposable CambiarUsuario(Guid userId, string email)
     {
         var claims = new List<Claim>
         {
             new Claim(AbpClaimTypes.UserId, userId.ToString()),
             new Claim(AbpClaimTypes.Email, email),
-            new Claim(AbpClaimTypes.UserName, "testuser") // Opcional
+            new Claim(AbpClaimTypes.UserName, "testuser")
         };
 
         var identity = new ClaimsIdentity(claims, "Test");
@@ -49,7 +46,6 @@ public class MyProfileAppService_Tests : GoPlacesApplicationTestBase<GoPlacesApp
         var userId = Guid.NewGuid();
         var email = "test@test.com";
 
-        // Usamos nuestro método manual
         using (CambiarUsuario(userId, email))
         {
             await WithUnitOfWorkAsync(async () =>
@@ -116,6 +112,37 @@ public class MyProfileAppService_Tests : GoPlacesApplicationTestBase<GoPlacesApp
 
             var userAfter = await _userManager.GetByIdAsync(userId);
             (await _userManager.CheckPasswordAsync(userAfter, newPass)).ShouldBeTrue();
+        }
+    }
+
+    // 👇👇👇 ESTA ES LA PRUEBA QUE FALTABA 👇👇👇
+    [Fact]
+    public async Task ChangePasswordAsync_Should_Throw_Exception_When_CurrentPassword_Is_Wrong()
+    {
+        var userId = Guid.NewGuid();
+        var realPass = "RealPass.123!";
+        var wrongPass = "Wrong.123!"; // Contraseña incorrecta intencional
+
+        using (CambiarUsuario(userId, "wrongpass@test.com"))
+        {
+            await WithUnitOfWorkAsync(async () =>
+            {
+                var user = new IdentityUser(userId, "wrongpassuser", "wrongpass@test.com");
+                // Creamos el usuario con la contraseña REAL
+                var result = await _userManager.CreateAsync(user, realPass);
+                if (!result.Succeeded) throw new UserFriendlyException("Error al crear usuario");
+            });
+
+            // Intentamos cambiar la contraseña enviando la INCORRECTA como actual
+            // Esto debe lanzar AbpIdentityResultException (porque Identity devuelve Failed)
+            await Assert.ThrowsAsync<AbpIdentityResultException>(async () =>
+            {
+                await _profileAppService.ChangePasswordAsync(new ChangePasswordInputDto
+                {
+                    CurrentPassword = wrongPass,
+                    NewPassword = "NewPassword.123!"
+                });
+            });
         }
     }
 

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using GoPlaces.Cities;
 using GoPlaces.Ratings;
 using Shouldly;
+using Volo.Abp; // Necesario para UserFriendlyException
 using Volo.Abp.Guids;
 using Volo.Abp.Security.Claims;
 using Volo.Abp.Domain.Repositories;
@@ -73,6 +74,43 @@ namespace GoPlaces.Ratings
 
                 result.ShouldNotBeNull();
                 result.Score.ShouldBe(5);
+            }
+        }
+
+        // 👇👇👇 PRUEBA NUEVA AGREGADA AQUÍ 👇👇👇
+        [Fact]
+        public async Task Should_Throw_Exception_When_User_Rates_Twice()
+        {
+            // 1. Crear Destino
+            var destinationId = _guidGenerator.Create();
+            var destination = new DestinationEntity(
+                destinationId, "Rome", "Italy", 1000, new CoordinatesValue(0, 0), "img.jpg", DateTime.UtcNow);
+            await _destinationRepo.InsertAsync(destination);
+
+            // 2. Configurar Usuario
+            var userId = _guidGenerator.Create();
+            var claims = new List<Claim>
+            {
+                new Claim(AbpClaimTypes.UserId, userId.ToString()),
+                new Claim(AbpClaimTypes.UserName, "duplicateuser")
+            };
+
+            // 3. Simular Sesión
+            using (_currentPrincipalAccessor.Change(new ClaimsPrincipal(new ClaimsIdentity(claims, "TestAuth"))))
+            {
+                var ratingService = new RatingAppService(_ratingRepo, _destinationRepo, _cityService);
+                ratingService.LazyServiceProvider = ServiceProvider.GetRequiredService<Volo.Abp.DependencyInjection.IAbpLazyServiceProvider>();
+
+                var input = new CreateRatingDto { DestinationId = destinationId, Score = 4, Comment = "First" };
+
+                // Primera votación: Éxito
+                await ratingService.CreateAsync(input);
+
+                // Segunda votación: Debe fallar
+                await Assert.ThrowsAsync<UserFriendlyException>(async () =>
+                {
+                    await ratingService.CreateAsync(input);
+                });
             }
         }
     }
