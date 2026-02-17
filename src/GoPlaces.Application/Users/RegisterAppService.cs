@@ -7,7 +7,7 @@ using Volo.Abp.DependencyInjection;
 
 namespace GoPlaces.Users;
 
-[ExposeServices(typeof(IMyRegisterAppService))]
+[ExposeServices(typeof(RegisterAppService),typeof(IMyRegisterAppService))]
 public class RegisterAppService : GoPlacesAppService, IMyRegisterAppService
 {
     private readonly IdentityUserManager _userManager;
