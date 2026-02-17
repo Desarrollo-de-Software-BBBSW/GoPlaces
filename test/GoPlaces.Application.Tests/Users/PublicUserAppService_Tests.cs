@@ -56,6 +56,7 @@ namespace GoPlaces.Users
             result.PhotoUrl.ShouldBe(photoUrl);
         }
 
+        // 👇 CORRECCIÓN APLICADA AQUÍ 👇
         [Fact]
         public async Task GetByUserNameAsync_Should_Throw_Exception_If_User_Not_Found()
         {
@@ -63,9 +64,14 @@ namespace GoPlaces.Users
             var targetUserName = "fantasma";
 
             // 2. ACT & ASSERT
-            await Assert.ThrowsAsync<UserFriendlyException>(async () =>
+            // Envolvemos la llamada que lanza excepción dentro de un UnitOfWork
+            // para asegurar que los recursos de SQLite se liberen correctamente antes del Shutdown del test.
+            await WithUnitOfWorkAsync(async () =>
             {
-                await _publicAppService.GetByUserNameAsync(targetUserName);
+                await Assert.ThrowsAsync<UserFriendlyException>(async () =>
+                {
+                    await _publicAppService.GetByUserNameAsync(targetUserName);
+                });
             });
         }
     }
