@@ -1,8 +1,10 @@
 
 export interface CityDto {
-  id: number;
-  name?: string;
-  country?: string;
+  // 👇 CAMBIO: Cambia 'number' por 'string'
+  id: string; 
+  name: string;
+  country: string;
+  rating: number;
 }
 
 export interface CitySearchRequestDto {

@@ -1,0 +1,45 @@
+<div class="row mt-4">
+  <div class="col-12 mb-4">
+    <h2 class="display-6">🌟 Destinos Más Populares</h2>
+    <p class="text-muted">Descubre los lugares mejor calificados por nuestra comunidad.</p>
+  </div>
+
+  <div class="col-12 text-center py-5" *ngIf="isLoading">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Cargando...</span>
+    </div>
+  </div>
+
+  <div class="col-12" *ngIf="!isLoading && popularCities.length === 0">
+    <div class="alert alert-warning text-center">
+      No hay destinos calificados todavía. ¡Sé el primero en calificar uno!
+    </div>
+  </div>
+
+  <div class="col-md-4 mb-4" *ngFor="let city of popularCities">
+    <div class="card h-100 shadow-sm border-0 hover-card">
+      <div class="position-relative" style="height: 200px; overflow: hidden;">
+        <img 
+          [src]="city.imageUrl || 'assets/images/logo/logo-dark.png'" 
+          class="card-img-top w-100 h-100" 
+          style="object-fit: cover;" 
+          alt="{{ city.name }}"
+        >
+        <span class="position-absolute top-0 end-0 m-2 badge bg-warning text-dark shadow">
+          {{ city.rating | number:'1.1-1' }} ★
+        </span>
+      </div>
+      
+      <div class="card-body">
+        <h5 class="card-title fw-bold">{{ city.name }}</h5>
+        <p class="card-text text-muted small">
+          <i class="fa fa-map-marker-alt text-danger me-1"></i> {{ city.country }}
+        </p>
+        
+        <a [routerLink]="['/cities', city.id]" class="btn btn-outline-primary w-100 mt-2">
+          Ver Detalles
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,78 +1,85 @@
-﻿using System.Threading.Tasks;
-using Xunit;
-using Shouldly;
-using NSubstitute;
-using Volo.Abp.Identity;
+﻿using GoPlaces.Users;
 using Microsoft.AspNetCore.Identity;
-using GoPlaces.Users;
-using Volo.Abp;
+using Shouldly;
+using System.Threading.Tasks;
+using Volo.Abp.Guids;
+using Volo.Abp.Uow;
+using Xunit;
 using IdentityUser = Volo.Abp.Identity.IdentityUser;
+using IdentityUserManager = Volo.Abp.Identity.IdentityUserManager;
 
 namespace GoPlaces.Tests.Users
 {
     public class LoginAppService_Tests : GoPlacesApplicationTestBase<GoPlacesApplicationTestModule>
     {
-        private readonly IMyLoginAppService _loginAppService;
-
-        // Ahora necesitamos controlar al SignInManager, no al Repositorio
-        private readonly SignInManager<IdentityUser> _fakeSignInManager;
+        private readonly IdentityUserManager _userManager;
+        private readonly IUnitOfWorkManager _unitOfWorkManager;
+        private readonly IGuidGenerator _guidGenerator;
 
         public LoginAppService_Tests()
         {
-            _loginAppService = GetRequiredService<IMyLoginAppService>();
-            _fakeSignInManager = GetRequiredService<SignInManager<IdentityUser>>();
+            _userManager = GetRequiredService<IdentityUserManager>();
+            _unitOfWorkManager = GetRequiredService<IUnitOfWorkManager>();
+            _guidGenerator = GetRequiredService<IGuidGenerator>();
         }
 
         [Fact]
         public async Task Should_Login_With_Valid_Credentials()
         {
-            // 1. ARRANGE
-            var username = "JuanPerez";
-            var password = "Password123!";
+            var username = "login_master";
+            var password = "1q2w3E*Password";
 
-            // Simulamos que SignInManager dice "¡ÉXITO!"
-            // Nota: No necesitamos crear usuarios reales ni hashes, solo simular la respuesta
-            _fakeSignInManager
-                .PasswordSignInAsync(username, password, true, false)
-                .Returns(Task.FromResult(SignInResult.Success));
-
-            // 2. ACT
-            var input = new LoginInputDto
+            await WithUnitOfWorkAsync(async () =>
             {
-                UserNameOrEmail = username,
-                Password = password
-            };
+                var user = new IdentityUser(_guidGenerator.Create(), username, "master@test.com");
+                user.SetEmailConfirmed(true);
 
-            var result = await _loginAppService.LoginAsync(input);
+                await _userManager.UpdateSecurityStampAsync(user);
+                (await _userManager.CreateAsync(user, password)).CheckErrors();
 
-            // 3. ASSERT
-            result.ShouldBeTrue();
+                await _unitOfWorkManager.Current.SaveChangesAsync();
 
-            // Verificamos que el servicio haya llamado al método correcto
-            await _fakeSignInManager.Received(1)
-                .PasswordSignInAsync(username, password, true, false);
+                var loginService = GetRequiredService<IMyLoginAppService>();
+                var result = await loginService.LoginAsync(new LoginInputDto
+                {
+                    UserNameOrEmail = username,
+                    Password = password
+                });
+
+                result.ShouldBeTrue();
+            });
         }
 
+        // 👇👇👇 CORRECCIÓN AQUÍ 👇👇👇
+        // Tu servicio devuelve 'false' si la password está mal, NO lanza excepción.
         [Fact]
         public async Task Should_Fail_With_Wrong_Password()
         {
-            // 1. ARRANGE
-            var username = "JuanPerez";
-            var wrongPassword = "WrongPassword";
+            var username = "fail_user";
+            var correctPassword = "CorrectPassword123!";
 
-            // Simulamos que SignInManager dice "FALLÓ"
-            _fakeSignInManager
-                .PasswordSignInAsync(username, wrongPassword, true, false)
-                .Returns(Task.FromResult(SignInResult.Failed));
-
-            // 2. ACT & ASSERT
-            await Assert.ThrowsAsync<UserFriendlyException>(async () =>
+            await WithUnitOfWorkAsync(async () =>
             {
-                await _loginAppService.LoginAsync(new LoginInputDto
+                // 1. Crear usuario con contraseña correcta
+                var user = new IdentityUser(_guidGenerator.Create(), username, "fail@test.com");
+                user.SetEmailConfirmed(true);
+
+                await _userManager.UpdateSecurityStampAsync(user);
+                (await _userManager.CreateAsync(user, correctPassword)).CheckErrors();
+
+                await _unitOfWorkManager.Current.SaveChangesAsync();
+
+                var loginService = GetRequiredService<IMyLoginAppService>();
+
+                // 2. Intentar loguearse con contraseña INCORRECTA
+                var result = await loginService.LoginAsync(new LoginInputDto
                 {
                     UserNameOrEmail = username,
-                    Password = wrongPassword
+                    Password = "WrongPassword!" // ❌
                 });
+
+                // 3. El resultado debe ser FALSE (Login fallido)
+                result.ShouldBeFalse();
             });
         }
     }

@@ -1,13 +1,17 @@
 import { AuthService } from '@abp/ng.core';
 import { Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common'; // Importación necesaria
-import { ThemeSharedModule } from '@abp/ng.theme.shared'; // Importación necesaria
+import { CommonModule } from '@angular/common';
+import { ThemeSharedModule } from '@abp/ng.theme.shared';
+
+// 👇 1. IMPORTAMOS EL COMPONENTE
+import { PopularDestinationsComponent } from './popular-destinations/popular-destinations';
 
 @Component({
-  standalone: true, // <<-- ESTO ES LO QUE FALTA
+  standalone: true,
   imports: [
     CommonModule,
-    ThemeSharedModule 
+    ThemeSharedModule,
+    PopularDestinationsComponent // 👈 2. LO AGREGAMOS A LA LISTA
   ],
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -15,7 +19,6 @@ import { ThemeSharedModule } from '@abp/ng.theme.shared'; // Importación necesa
 })
 export class HomeComponent {
   
-  // Inyección moderna del servicio de autenticación
   protected authService = inject(AuthService);
 
   get hasLoggedIn(): boolean {

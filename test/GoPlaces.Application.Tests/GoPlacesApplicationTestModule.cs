@@ -1,123 +1,103 @@
 ﻿using GoPlaces.EntityFrameworkCore;
-using GoPlaces.Ratings;
-using GoPlaces.Tests.Ratings;
-using GoPlaces.Users;
+using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using NSubstitute;
 using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Security.Claims;
+using System.Threading;
 using Volo.Abp;
 using Volo.Abp.Auditing;
 using Volo.Abp.Autofac;
-using Volo.Abp.Domain.Repositories;
-using Volo.Abp.Identity;
+using Volo.Abp.EntityFrameworkCore;
+using Volo.Abp.EntityFrameworkCore.Sqlite;
 using Volo.Abp.Modularity;
 using Volo.Abp.PermissionManagement;
 using Volo.Abp.Security.Claims;
 using Volo.Abp.SettingManagement;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Http;
-using Volo.Abp.Users;
+using Volo.Abp.Uow;
 
+// Alias para resolver ambigüedad CS0104
 using IdentityUser = Volo.Abp.Identity.IdentityUser;
 
-namespace GoPlaces
+namespace GoPlaces;
+
+[DependsOn(
+    typeof(AbpAutofacModule),
+    typeof(GoPlacesApplicationModule),
+    typeof(GoPlacesEntityFrameworkCoreModule),
+    typeof(AbpEntityFrameworkCoreSqliteModule)
+)]
+public class GoPlacesApplicationTestModule : AbpModule
 {
-    [DependsOn(
-        typeof(AbpAutofacModule),
-        typeof(GoPlacesApplicationModule)
-    )]
-    public class GoPlacesApplicationTestModule : AbpModule
+    private SqliteConnection? _sqliteConnection;
+
+    public override void ConfigureServices(ServiceConfigurationContext context)
     {
-        public override void ConfigureServices(ServiceConfigurationContext context)
+        _sqliteConnection = CreateDatabaseAndGetConnection();
+
+        Configure<AbpDbContextOptions>(options =>
         {
-            // 1. Auditoría
-            context.Services.Replace(ServiceDescriptor.Singleton<IAuditingStore, NullAuditingStore>());
+            options.Configure(ctx => ctx.DbContextOptions.UseSqlite(_sqliteConnection));
+        });
 
-            // 2. Accessor (Login falso para tests viejos)
-            context.Services.Replace(ServiceDescriptor.Singleton<ICurrentPrincipalAccessor, FakeCurrentPrincipalAccessor>());
+        context.Services.AddAlwaysDisableUnitOfWorkTransaction();
 
-            Configure<PermissionManagementOptions>(options =>
-            {
-                options.IsDynamicPermissionStoreEnabled = false;
-                options.SaveStaticPermissionsToDatabase = false;
-            });
+        context.Services.AddAbpDbContext<GoPlacesDbContext>(options =>
+        {
+            options.AddDefaultRepositories(includeAllEntities: true);
+        });
 
-            Configure<SettingManagementOptions>(options =>
-            {
-                options.IsDynamicSettingStoreEnabled = false;
-                options.SaveStaticSettingsToDatabase = false;
-            });
-
-            // 3. Repositorios
-            context.Services.AddSingleton<IRepository<Rating, Guid>, InMemoryRatingRepository>();
-
-            // 👇 CLAVE: Este es el Mock que le dará datos a tu Perfil. Ya estaba, pero ahora lo usaremos.
-            context.Services.AddSingleton(Substitute.For<IIdentityUserRepository>());
-
-            context.Services.AddSingleton(Substitute.For<IIdentityRoleRepository>());
-            context.Services.AddSingleton(Substitute.For<IOrganizationUnitRepository>());
-            context.Services.AddSingleton(Substitute.For<IIdentityLinkUserRepository>());
-            context.Services.AddSingleton(Substitute.For<ISettingDefinitionRecordRepository>());
-
-            // 4. MOCKS PARA LOGIN (Solo SignInManager)
-
-            // Creamos mocks locales solo para poder instanciar SignInManager
-            var userStore = Substitute.For<IUserStore<IdentityUser>>();
-            var userManager = Substitute.For<UserManager<IdentityUser>>(
-                userStore, null, null, null, null, null, null, null, null);
-
-            // NO registramos userManager ni userStore en el sistema global para no confundir a ProfileService.
-            // context.Services.AddSingleton(userManager); <--- BORRADO
-
-            var contextAccessor = Substitute.For<IHttpContextAccessor>();
-            var claimsFactory = Substitute.For<IUserClaimsPrincipalFactory<IdentityUser>>();
-
-            var signInManager = Substitute.For<SignInManager<IdentityUser>>(
-                userManager,
-                contextAccessor,
-                claimsFactory,
-                null, null, null, null
-            );
-            // Este SÍ lo registramos porque LoginAppService lo pide explícitamente
-            context.Services.AddSingleton(signInManager);
-
-            // 5. SERVICIOS
-            context.Services.AddTransient<IMyRegisterAppService, RegisterAppService>();
-            context.Services.AddTransient<IMyLoginAppService, LoginAppService>();
-            context.Services.AddTransient<IMyProfileAppService, MyProfileAppService>();
-        }
+        context.Services.Replace(ServiceDescriptor.Singleton<IAuditingStore, NullAuditingStore>());
+        context.Services.Replace(ServiceDescriptor.Singleton<ICurrentPrincipalAccessor, FakeCurrentPrincipalAccessor>());
     }
 
-    public class NullAuditingStore : IAuditingStore
+    public override void OnApplicationShutdown(ApplicationShutdownContext context)
     {
-        public Task SaveAsync(AuditLogInfo auditInfo)
-        {
-            return Task.CompletedTask;
-        }
+        _sqliteConnection?.Dispose();
     }
 
-    public class FakeCurrentPrincipalAccessor : ICurrentPrincipalAccessor
+    private static SqliteConnection CreateDatabaseAndGetConnection()
     {
-        public static bool IsAuthenticated { get; set; } = true;
+        var connection = new SqliteConnection("Data Source=:memory:");
+        connection.Open();
 
-        public ClaimsPrincipal Principal
+        var options = new DbContextOptionsBuilder<GoPlacesDbContext>()
+            .UseSqlite(connection)
+            .Options;
+
+        using (var context = new GoPlacesDbContext(options))
         {
-            get
-            {
-                if (!IsAuthenticated) return null;
-                var claims = new List<Claim>
-                {
-                    new Claim(AbpClaimTypes.UserId, "2e701e62-0953-4dd3-910b-dc6cc93ccb0d"),
-                    new Claim(AbpClaimTypes.UserName, "admin"),
-                    new Claim(AbpClaimTypes.Email, "admin@abp.io")
-                };
-                return new ClaimsPrincipal(new ClaimsIdentity(claims, "Test"));
-            }
+            context.Database.EnsureCreated();
         }
-        public IDisposable Change(ClaimsPrincipal principal) => new DisposeAction(() => { });
+
+        return connection;
+    }
+}
+
+public class NullAuditingStore : IAuditingStore
+{
+    public System.Threading.Tasks.Task SaveAsync(AuditLogInfo auditInfo) => System.Threading.Tasks.Task.CompletedTask;
+}
+
+public class FakeCurrentPrincipalAccessor : ICurrentPrincipalAccessor
+{
+    private readonly AsyncLocal<ClaimsPrincipal> _currentPrincipal = new AsyncLocal<ClaimsPrincipal>();
+    public ClaimsPrincipal Principal => _currentPrincipal.Value ?? GetDefaultPrincipal();
+
+    private ClaimsPrincipal GetDefaultPrincipal()
+    {
+        return new ClaimsPrincipal(new ClaimsIdentity(new[]
+        {
+            new Claim(AbpClaimTypes.UserId, Guid.NewGuid().ToString()),
+            new Claim(AbpClaimTypes.UserName, "admin")
+        }, "Tests"));
+    }
+
+    public IDisposable Change(ClaimsPrincipal principal)
+    {
+        var parent = Principal;
+        _currentPrincipal.Value = principal;
+        return new DisposeAction(() => { _currentPrincipal.Value = parent; });
     }
 }

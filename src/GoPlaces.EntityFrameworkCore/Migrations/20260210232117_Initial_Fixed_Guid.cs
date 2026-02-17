@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace GoPlaces.Migrations
 {
     /// <inheritdoc />
-    public partial class initial : Migration
+    public partial class Initial_Fixed_Guid : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -423,6 +423,79 @@ namespace GoPlaces.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "AppDestinations",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
+                    Country = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: false),
+                    Population = table.Column<long>(type: "bigint", nullable: false),
+                    Url_Image = table.Column<string>(type: "nvarchar(512)", maxLength: 512, nullable: true),
+                    last_updated_date = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP"),
+                    Latitude = table.Column<double>(type: "float", nullable: false),
+                    Longitude = table.Column<double>(type: "float", nullable: false),
+                    ExtraProperties = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(40)", maxLength: 40, nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatorId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    LastModifierId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
+                    DeleterId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AppDestinations", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AppFollowLists",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    OwnerUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    IsDefault = table.Column<bool>(type: "bit", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    last_updated_date = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP"),
+                    ExtraProperties = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(40)", maxLength: 40, nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatorId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    LastModifierId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
+                    DeleterId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AppFollowLists", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AppRatings",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    DestinationId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Score = table.Column<int>(type: "int", nullable: false),
+                    Comment = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ExtraProperties = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(40)", maxLength: 40, nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatorId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    LastModifierId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AppRatings", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "OpenIddictApplications",
                 columns: table => new
                 {
@@ -717,6 +790,27 @@ namespace GoPlaces.Migrations
                         name: "FK_AbpUserTokens_AbpUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AbpUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AppFollowListItems",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    FollowListId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    DestinationId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatorId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AppFollowListItems", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AppFollowListItems_AppFollowLists_FollowListId",
+                        column: x => x.FollowListId,
+                        principalTable: "AppFollowLists",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -1027,6 +1121,49 @@ namespace GoPlaces.Migrations
                 column: "UserName");
 
             migrationBuilder.CreateIndex(
+                name: "IX_AppDestinations_Country",
+                table: "AppDestinations",
+                column: "Country");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AppDestinations_Name",
+                table: "AppDestinations",
+                column: "Name");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AppFollowListItems_FollowListId_DestinationId",
+                table: "AppFollowListItems",
+                columns: new[] { "FollowListId", "DestinationId" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AppFollowLists_OwnerUserId",
+                table: "AppFollowLists",
+                column: "OwnerUserId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AppFollowLists_OwnerUserId_IsDefault",
+                table: "AppFollowLists",
+                columns: new[] { "OwnerUserId", "IsDefault" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AppRatings_DestinationId",
+                table: "AppRatings",
+                column: "DestinationId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AppRatings_DestinationId_UserId",
+                table: "AppRatings",
+                columns: new[] { "DestinationId", "UserId" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AppRatings_UserId",
+                table: "AppRatings",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_OpenIddictApplications_ClientId",
                 table: "OpenIddictApplications",
                 column: "ClientId");
@@ -1136,6 +1273,15 @@ namespace GoPlaces.Migrations
                 name: "AbpUserTokens");
 
             migrationBuilder.DropTable(
+                name: "AppDestinations");
+
+            migrationBuilder.DropTable(
+                name: "AppFollowListItems");
+
+            migrationBuilder.DropTable(
+                name: "AppRatings");
+
+            migrationBuilder.DropTable(
                 name: "OpenIddictScopes");
 
             migrationBuilder.DropTable(
@@ -1155,6 +1301,9 @@ namespace GoPlaces.Migrations
 
             migrationBuilder.DropTable(
                 name: "AbpUsers");
+
+            migrationBuilder.DropTable(
+                name: "AppFollowLists");
 
             migrationBuilder.DropTable(
                 name: "OpenIddictAuthorizations");

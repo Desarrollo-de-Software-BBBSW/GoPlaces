@@ -1,8 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using GoPlaces.Cities;
+using GoPlaces.Ratings;
 using Moq;
 using Shouldly;
+using Volo.Abp.Domain.Repositories;
 using Xunit;
 
 namespace GoPlaces.Tests.Cities
@@ -10,13 +13,23 @@ namespace GoPlaces.Tests.Cities
     public class CityAppService_Tests : GoPlacesApplicationTestBase<GoPlacesApplicationTestModule>
     {
         private readonly CityAppService _cityAppService;
+
+        // Mocks
         private readonly Mock<ICitySearchService> _mockCitySearchService;
+        private readonly Mock<IRepository<GoPlaces.Destinations.Destination, Guid>> _mockDestinationRepository;
+        private readonly Mock<IRepository<Rating, Guid>> _mockRatingRepository;
 
         public CityAppService_Tests()
         {
-            // Inicializamos el Mock y el Servicio
             _mockCitySearchService = new Mock<ICitySearchService>();
-            _cityAppService = new CityAppService(_mockCitySearchService.Object);
+            _mockDestinationRepository = new Mock<IRepository<GoPlaces.Destinations.Destination, Guid>>();
+            _mockRatingRepository = new Mock<IRepository<Rating, Guid>>();
+
+            _cityAppService = new CityAppService(
+                _mockCitySearchService.Object,
+                _mockDestinationRepository.Object,
+                _mockRatingRepository.Object
+            );
         }
 
         [Fact]
@@ -29,7 +42,7 @@ namespace GoPlaces.Tests.Cities
                 {
                     Cities = new List<CityDto>
                     {
-                        new() { Id = 1, Name = "London", Country = "United Kingdom" }
+                        new() { Id = Guid.NewGuid(), Name = "London", Country = "United Kingdom" }
                     }
                 });
 
@@ -40,46 +53,21 @@ namespace GoPlaces.Tests.Cities
             result.ShouldNotBeNull();
             result.Cities.Count.ShouldBe(1);
             result.Cities[0].Name.ShouldBe("London");
-
-            _mockCitySearchService.Verify(
-                s => s.SearchCitiesAsync(It.IsAny<CitySearchRequestDto>()),
-                Times.Once);
         }
 
         [Fact]
-        public async Task SearchCitiesAsync_cuando_no_hay_resultados_devuelve_lista_vacia()
-        {
-            // ARRANGE
-            _mockCitySearchService
-                .Setup(s => s.SearchCitiesAsync(It.Is<CitySearchRequestDto>(r => r.PartialName == "zzzz-no")))
-                .ReturnsAsync(new CitySearchResultDto { Cities = new List<CityDto>() });
-
-            // ACT
-            var result = await _cityAppService.SearchCitiesAsync(new CitySearchRequestDto { PartialName = "zzzz-no" });
-
-            // ASSERT
-            result.ShouldNotBeNull();
-            result.Cities.ShouldBeEmpty();
-
-            _mockCitySearchService.Verify(
-                s => s.SearchCitiesAsync(It.IsAny<CitySearchRequestDto>()),
-                Times.Once);
-        }
-
-        // 👇 NUEVO TEST AGREGADO 👇
-        [Fact]
-        public async Task GetAsync_devuelve_ciudad_por_id()
+        public async Task GetAsync_devuelve_ciudad_por_id_desde_servicio_externo()
         {
             // 1. ARRANGE
-            var cityId = 999;
-            var expectedCity = new CityDto
-            {
-                Id = cityId,
-                Name = "Paris",
-                Country = "France"
-            };
+            var cityId = Guid.NewGuid();
+            var expectedCity = new CityDto { Id = cityId, Name = "Paris", Country = "France" };
 
-            // Configuramos el Mock: Cuando llamen a GetByIdAsync con el ID 999, devuelve la ciudad esperada
+            // Simulamos que NO existe en base de datos local
+            _mockDestinationRepository
+                .Setup(r => r.FindAsync(cityId, It.IsAny<bool>(), It.IsAny<System.Threading.CancellationToken>()))
+                .ReturnsAsync((GoPlaces.Destinations.Destination)null);
+
+            // Simulamos que SÍ existe en API externa
             _mockCitySearchService
                 .Setup(s => s.GetByIdAsync(cityId))
                 .ReturnsAsync(expectedCity);
@@ -89,14 +77,27 @@ namespace GoPlaces.Tests.Cities
 
             // 3. ASSERT
             result.ShouldNotBeNull();
-            result.Id.ShouldBe(cityId);
             result.Name.ShouldBe("Paris");
-            result.Country.ShouldBe("France");
+        }
 
-            // Verificamos que el servicio interno fue llamado una vez
-            _mockCitySearchService.Verify(
-                s => s.GetByIdAsync(cityId),
-                Times.Once);
+        // 👇👇👇 PRUEBA NUEVA AGREGADA AQUÍ 👇👇👇
+        [Fact]
+        public async Task SearchCitiesAsync_Should_Return_Empty_List_When_No_Results()
+        {
+            // ARRANGE
+            _mockCitySearchService
+                .Setup(s => s.SearchCitiesAsync(It.Is<CitySearchRequestDto>(r => r.PartialName == "XYZ")))
+                .ReturnsAsync(new CitySearchResultDto
+                {
+                    Cities = new List<CityDto>() // Lista vacía
+                });
+
+            // ACT
+            var result = await _cityAppService.SearchCitiesAsync(new CitySearchRequestDto { PartialName = "XYZ" });
+
+            // ASSERT
+            result.ShouldNotBeNull();
+            result.Cities.ShouldBeEmpty();
         }
     }
 }

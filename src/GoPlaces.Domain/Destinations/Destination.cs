@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.Domain.Entities.Auditing;
 
@@ -17,20 +13,14 @@ public class Destination : FullAuditedAggregateRoot<Guid>
     public string Name { get; private set; }
     public string Country { get; private set; }
     public long Population { get; private set; }
-    public string? ImageUrl { get; private set; }          
-    public DateTime LastUpdatedDate { get; private set; }  
-    public Coordinates Coordinates { get; private set; } = default!;
+    public string? ImageUrl { get; private set; }
+    public DateTime LastUpdatedDate { get; private set; }
+    public Coordinates Coordinates { get; private set; }
 
-    private Destination() { } // EF Core
+    private Destination() { }
 
-    public Destination(
-        Guid id,
-        string name,
-        string country,
-        long population,
-        Coordinates coordinates,
-        string? imageUrl = null,
-        DateTime? lastUpdatedDate = null) : base(id)
+    public Destination(Guid id, string name, string country, long population, Coordinates coordinates, string? imageUrl = null, DateTime? lastUpdatedDate = null)
+        : base(id)
     {
         SetName(name);
         SetCountry(country);
@@ -40,32 +30,13 @@ public class Destination : FullAuditedAggregateRoot<Guid>
         SetLastUpdatedDate(lastUpdatedDate ?? DateTime.UtcNow);
     }
 
-    public void SetName(string name) =>
-        Name = Check.NotNullOrWhiteSpace(name, nameof(name), maxLength: NameMaxLength);
+    public void SetName(string name) => Name = Check.NotNullOrWhiteSpace(name, nameof(name), maxLength: NameMaxLength);
+    public void SetCountry(string country) => Country = Check.NotNullOrWhiteSpace(country, nameof(country), maxLength: CountryMaxLength);
+    public void SetPopulation(long population) => Population = population >= 0 ? population : throw new BusinessException("GoPlaces:InvalidPopulation");
 
-    public void SetCountry(string country) =>
-        Country = Check.NotNullOrWhiteSpace(country, nameof(country), maxLength: CountryMaxLength);
+    // 👇 ESTE ES EL QUE TE FALTA Y ROMPE LA COMPILACIÓN
+    public void SetCoordinates(Coordinates coordinates) => Coordinates = Check.NotNull(coordinates, nameof(coordinates));
 
-    public void SetPopulation(long population)
-    {
-        if (population < 0)
-            throw new BusinessException("GoPlaces:InvalidPopulation");
-        Population = population;
-    }
-
-    public void SetImageUrl(string? imageUrl)
-    {
-        if (!string.IsNullOrWhiteSpace(imageUrl))
-            Check.Length(imageUrl, nameof(imageUrl), maxLength: ImageUrlMaxLength);
-        ImageUrl = imageUrl?.Trim();
-    }
-
-    public void SetLastUpdatedDate(DateTime when)
-    {
-        if (when == default) when = DateTime.UtcNow;
-        LastUpdatedDate = when;
-    }
-
-    public void SetCoordinates(Coordinates coordinates) =>
-        Coordinates = Check.NotNull(coordinates, nameof(coordinates));
+    public void SetImageUrl(string? imageUrl) => ImageUrl = imageUrl?.Trim();
+    public void SetLastUpdatedDate(DateTime when) => LastUpdatedDate = when == default ? DateTime.UtcNow : when;
 }

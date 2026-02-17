@@ -1,24 +1,25 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-using Xunit;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
-using NSubstitute;
-using Volo.Abp.Identity;
-using Volo.Abp.Data; // Para SetProperty
+using System;
+using System.Threading.Tasks;
 using Volo.Abp;
+using Volo.Abp.Data; // 👈 Necesario para SetProperty / GetProperty
+using Volo.Abp.Identity;
+using Xunit;
+using IdentityUser = Volo.Abp.Identity.IdentityUser;
 
 namespace GoPlaces.Users
 {
     public class PublicUserAppService_Tests : GoPlacesApplicationTestBase<GoPlacesApplicationTestModule>
     {
-        private readonly IPublicUserAppService _publicAppService;
-        private readonly IIdentityUserRepository _fakeUserRepository;
+        private readonly IPublicUserLookupAppService _publicAppService;
+        private readonly IdentityUserManager _userManager;
 
         public PublicUserAppService_Tests()
         {
-            _publicAppService = GetRequiredService<IPublicUserAppService>();
-            _fakeUserRepository = GetRequiredService<IIdentityUserRepository>();
+            _publicAppService = GetRequiredService<IPublicUserLookupAppService>();
+            _userManager = GetRequiredService<IdentityUserManager>();
         }
 
         [Fact]
@@ -26,16 +27,22 @@ namespace GoPlaces.Users
         {
             // 1. ARRANGE
             var targetUserName = "pedro123";
-            var normalizedUserName = "PEDRO123"; // Identity busca por nombre normalizado (Mayúsculas)
+            var photoUrl = "https://pedro.com/foto.jpg";
 
-            var fakeUser = new IdentityUser(Guid.NewGuid(), targetUserName, "pedro@email.com");
-            fakeUser.Name = "Pedro";
-            fakeUser.Surname = "Picapiedra";
-            fakeUser.SetProperty("PhotoUrl", "https://pedro.com/foto.jpg");
+            await WithUnitOfWorkAsync(async () =>
+            {
+                // Paso A: Crear el usuario básico primero
+                var fakeUser = new IdentityUser(Guid.NewGuid(), targetUserName, "pedro@email.com");
+                fakeUser.Name = "Pedro";
+                fakeUser.Surname = "Picapiedra";
 
-            // Simulamos que el repositorio encuentra al usuario cuando buscamos por su nombre normalizado
-            _fakeUserRepository.FindByNormalizedUserNameAsync(normalizedUserName, Arg.Any<bool>(), Arg.Any<CancellationToken>())
-                .Returns(Task.FromResult(fakeUser));
+                (await _userManager.CreateAsync(fakeUser)).CheckErrors();
+
+                // Paso B: AHORA establecemos la propiedad y actualizamos.
+                // Esto fuerza a EF Core a detectar el cambio en 'ExtraProperties' y guardar el JSON.
+                fakeUser.SetProperty("PhotoUrl", photoUrl);
+                (await _userManager.UpdateAsync(fakeUser)).CheckErrors();
+            });
 
             // 2. ACT
             var result = await _publicAppService.GetByUserNameAsync(targetUserName);
@@ -44,10 +51,9 @@ namespace GoPlaces.Users
             result.ShouldNotBeNull();
             result.UserName.ShouldBe(targetUserName);
             result.Name.ShouldBe("Pedro");
-            result.PhotoUrl.ShouldBe("https://pedro.com/foto.jpg");
 
-            // Verificamos que NO estamos exponiendo datos sensibles (aunque el DTO ni siquiera tiene la propiedad Email, es bueno recordarlo)
-            // (El compilador daría error si intentas result.Email, lo cual es perfecto)
+            // Ahora sí, el JSON se persistió y la propiedad no será null
+            result.PhotoUrl.ShouldBe(photoUrl);
         }
 
         [Fact]
@@ -55,11 +61,6 @@ namespace GoPlaces.Users
         {
             // 1. ARRANGE
             var targetUserName = "fantasma";
-            var normalizedUserName = "FANTASMA";
-
-            // El repo devuelve null
-            _fakeUserRepository.FindByNormalizedUserNameAsync(normalizedUserName, Arg.Any<bool>(), Arg.Any<CancellationToken>())
-                .Returns(Task.FromResult((IdentityUser)null));
 
             // 2. ACT & ASSERT
             await Assert.ThrowsAsync<UserFriendlyException>(async () =>
