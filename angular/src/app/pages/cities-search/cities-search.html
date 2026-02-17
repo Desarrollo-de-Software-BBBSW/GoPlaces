@@ -37,6 +37,7 @@
               <th>ID</th>
               <th>Nombre</th>
               <th>País</th>
+              <th class="text-center" style="width: 150px;">Acción</th>
             </tr>
           </thead>
           <tbody>
@@ -44,6 +45,14 @@
               <td>{{ city.id }}</td>
               <td>{{ city.name }}</td>
               <td>{{ city.country }}</td>
+              <td class="text-center">
+                <button 
+                  class="btn btn-success btn-sm" 
+                  (click)="saveCity(city)"
+                  title="Guardar en mis destinos">
+                  <span>💾 Guardar</span> 
+                </button>
+              </td>
             </tr>
           </tbody>
         </table>

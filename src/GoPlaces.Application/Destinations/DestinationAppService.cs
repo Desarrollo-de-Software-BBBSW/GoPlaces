@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Application.Dtos;
@@ -25,50 +24,35 @@ namespace GoPlaces.Destinations
             _repository = repository;
         }
 
-        // ✅ Crear usando AutoMapper (usa AfterMap para SetCoordinates)
-        public async Task<DestinationDto> Crear(CreateUpdateDestinationDto input)
+        // ✅ 1. ESTÁNDAR (Para el Frontend y ABP)
+        // Sobreescribimos el método base para agregar validaciones si quieres
+        public override async Task<DestinationDto> CreateAsync(CreateUpdateDestinationDto input)
         {
             if (string.IsNullOrWhiteSpace(input.Name))
+            {
                 throw new ArgumentException("Destination name cannot be empty");
+            }
 
-            // Mapea DTO -> Entity (Coordinates se setea en AfterMap del perfil)
-            var entity = ObjectMapper.Map<CreateUpdateDestinationDto, Destination>(input);
+            // Aquí podrías agregar la lógica de "evitar duplicados" si quisieras
+            // var existing = ...
 
-            // Insert y autosave para que quede persistido inmediatamente
-            entity = await _repository.InsertAsync(entity, autoSave: true);
-
-            return ObjectMapper.Map<Destination, DestinationDto>(entity);
+            // Llama a la lógica base de ABP (Map -> Insert -> Save)
+            return await base.CreateAsync(input);
         }
 
-        // Opción A (usa AutoMapper) — si ya corregiste el perfil con Latitude/Longitude
+        // ✅ 2. COMPATIBILIDAD (Para tus Tests viejos)
+        // Mantenemos este método para que nada explote si alguien llama a "Crear"
+        public async Task<DestinationDto> Crear(CreateUpdateDestinationDto input)
+        {
+            // Simplemente redirige al método estándar
+            return await CreateAsync(input);
+        }
+
+        // ✅ 3. EXTRA (Para listados simples)
         public async Task<List<DestinationDto>> GetAllDestinationsAsync()
         {
             var destinations = await _repository.GetListAsync();
             return ObjectMapper.Map<List<Destination>, List<DestinationDto>>(destinations);
         }
-
-        /* 
-        // Opción B (proyección manual a DTO, si preferís no depender del mapper acá)
-        public async Task<List<DestinationDto>> GetAllDestinationsAsync()
-        {
-            var query = await _repository.GetQueryableAsync();
-
-            var list = await query
-                .Select(d => new DestinationDto
-                {
-                    Id = d.Id,
-                    Name = d.Name,
-                    Country = d.Country,
-                    Population = d.Population,
-                    ImageUrl = d.ImageUrl,
-                    LastUpdatedDate = d.LastUpdatedDate,
-                    Latitude = d.Coordinates.Latitude,
-                    Longitude = d.Coordinates.Longitude
-                })
-                .ToListAsync();
-
-            return list;
-        }
-        */
     }
 }
