@@ -1,5 +1,6 @@
 ﻿using GoPlaces.Destinations;
 using GoPlaces.Ratings;
+using GoPlaces.Experiences; // 👈 AGREGADO: Importamos Experiences
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
@@ -25,14 +26,18 @@ public class GoPlacesDbContext :
     AbpDbContext<GoPlacesDbContext>,
     IIdentityDbContext
 {
-    // ✅ CORRECTO: Una sola definición para Destinations
+    // ✅ Destinations
     public DbSet<Destination> Destinations { get; set; }
 
-    // ✅ IMPORTANTE: Descomenta esto. Sin esto, RatingAppService falla al iniciar.
+    // ✅ Ratings
     public DbSet<Rating> Ratings { get; set; }
 
+    // ✅ FollowLists
     public DbSet<GoPlaces.Follows.FollowList> FollowLists { get; set; }
     public DbSet<GoPlaces.Follows.FollowListItem> FollowListItems { get; set; }
+
+    // ✅ EXPERIENCES (NUEVA TABLA AGREGADA)
+    public DbSet<Experience> Experiences { get; set; }
 
     #region Entities from the modules
     public DbSet<IdentityUser> Users { get; set; }
@@ -54,6 +59,7 @@ public class GoPlacesDbContext :
     {
         base.OnModelCreating(builder);
 
+        // Módulos ABP
         builder.ConfigurePermissionManagement();
         builder.ConfigureSettingManagement();
         builder.ConfigureBackgroundJobs();
@@ -63,7 +69,7 @@ public class GoPlacesDbContext :
         builder.ConfigureOpenIddict();
         builder.ConfigureBlobStoring();
 
-        // Configuración de Destination
+        // 1. Configuración de DESTINATIONS
         builder.Entity<Destination>(b =>
         {
             b.ToTable(GoPlacesConsts.DbTablePrefix + "Destinations", GoPlacesConsts.DbSchema);
@@ -82,7 +88,7 @@ public class GoPlacesDbContext :
             b.HasIndex(x => x.Country);
         });
 
-        // Configuración de Ratings (¡DESCOMENTAR!)
+        // 2. Configuración de RATINGS
         builder.Entity<Rating>(b =>
         {
             b.ToTable(GoPlacesConsts.DbTablePrefix + "Ratings", GoPlacesConsts.DbSchema);
@@ -94,7 +100,27 @@ public class GoPlacesDbContext :
             b.HasIndex(x => new { x.DestinationId, x.UserId }).IsUnique();
         });
 
-        // FollowLists... (El resto igual)
+        // 3. Configuración de EXPERIENCES (NUEVA)
+        builder.Entity<Experience>(b =>
+        {
+            b.ToTable(GoPlacesConsts.DbTablePrefix + "Experiences", GoPlacesConsts.DbSchema);
+            b.ConfigureByConvention(); // Configura Id, CreationTime, CreatorId, etc.
+
+            b.Property(x => x.Title).IsRequired().HasMaxLength(128);
+            b.Property(x => x.Description).HasMaxLength(2000);
+            b.Property(x => x.Price).HasColumnType("decimal(18,2)"); // Importante para dinero
+
+            // Relación con Destination
+            b.HasOne<Destination>()
+             .WithMany()
+             .HasForeignKey(x => x.DestinationId)
+             .IsRequired()
+             .OnDelete(DeleteBehavior.Cascade); // Si borras el destino, borras sus experiencias
+
+            b.HasIndex(x => x.DestinationId);
+        });
+
+        // 4. Configuración de FOLLOW LISTS
         builder.Entity<GoPlaces.Follows.FollowList>(b =>
         {
             b.ToTable(GoPlacesConsts.DbTablePrefix + "FollowLists", GoPlacesConsts.DbSchema);
@@ -103,7 +129,7 @@ public class GoPlacesDbContext :
             b.Property(x => x.Description).HasMaxLength(GoPlaces.Follows.FollowList.DescriptionMaxLength);
             b.Property(x => x.LastUpdatedDate).HasColumnName("last_updated_date").HasDefaultValueSql("CURRENT_TIMESTAMP").IsRequired();
             b.HasIndex(x => new { x.OwnerUserId, x.IsDefault });
-            b.HasIndex(x => x.OwnerUserId).IsUnique();
+            b.HasIndex(x => x.OwnerUserId).IsUnique(); // ⚠️ OJO: Esto impide tener más de 1 lista por usuario. ¿Seguro que quieres esto?
         });
 
         builder.Entity<GoPlaces.Follows.FollowListItem>(b =>

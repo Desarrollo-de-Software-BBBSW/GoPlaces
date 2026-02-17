@@ -1,6 +1,7 @@
 using AutoMapper;
 using GoPlaces.Destinations;
 using GoPlaces.Ratings;
+using GoPlaces.Experiences;
 
 namespace GoPlaces;
 
@@ -24,6 +25,9 @@ public class GoPlacesApplicationAutoMapperProfile : Profile
 
         // Ratings
         CreateMap<Rating, RatingDto>();
+
+        CreateMap<Experience, ExperienceDto>();
+        CreateMap<CreateUpdateExperienceDto, Experience>();
     }
 }
 
