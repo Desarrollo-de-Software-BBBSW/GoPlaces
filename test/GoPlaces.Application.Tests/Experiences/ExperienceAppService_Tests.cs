@@ -61,12 +61,9 @@ namespace GoPlaces.Experiences
             result.Title.ShouldBe("Tour de Sushi");
         }
 
-        // 👇👇👇 CORRECCIÓN AQUÍ 👇👇👇
         [Fact]
         public async Task Should_Throw_Exception_When_Destination_Does_Not_Exist()
         {
-            // Usamos WithUnitOfWorkAsync para asegurar que la conexión se gestione correctamente
-            // antes de que el test intente hacer shutdown.
             await WithUnitOfWorkAsync(async () =>
             {
                 var fakeDestinationId = Guid.NewGuid();
@@ -85,7 +82,6 @@ namespace GoPlaces.Experiences
                 });
             });
         }
-        // 👆👆👆 FIN DE CORRECCIÓN 👆👆👆
 
         [Fact]
         public async Task Should_Get_List_Of_Experiences()
@@ -184,12 +180,85 @@ namespace GoPlaces.Experiences
                     Date = DateTime.Now
                 };
 
-                // Envolvemos en UnitOfWork también por seguridad
                 await WithUnitOfWorkAsync(async () =>
                 {
                     await Assert.ThrowsAsync<AbpAuthorizationException>(async () =>
                     {
                         await _experienceAppService.UpdateAsync(experienceId, updateInput);
+                    });
+                });
+            }
+        }
+
+        // 👇👇👇 NUEVAS PRUEBAS PARA ELIMINACIÓN 👇👇👇
+
+        [Fact]
+        public async Task Should_Delete_Experience_If_Owner()
+        {
+            var ownerId = Guid.NewGuid();
+            var destId = _guidGenerator.Create();
+            await _destinationRepository.InsertAsync(new DestinationEntity(destId, "Berlin", "Germany", 3000, new CoordinatesValue(0, 0), "img.jpg"));
+
+            Guid experienceId;
+
+            // 1. DUEÑO CREA
+            using (CambiarUsuario(ownerId))
+            {
+                var created = await _experienceAppService.CreateAsync(new CreateUpdateExperienceDto
+                {
+                    DestinationId = destId,
+                    Title = "Para Borrar",
+                    Description = "Se va a eliminar",
+                    Price = 10,
+                    Date = DateTime.Now
+                });
+                experienceId = created.Id;
+            }
+
+            // 2. DUEÑO ELIMINA
+            using (CambiarUsuario(ownerId))
+            {
+                await _experienceAppService.DeleteAsync(experienceId);
+
+                // 3. Verificamos que ya no está en la lista
+                var result = await _experienceAppService.GetListAsync(new Volo.Abp.Application.Dtos.PagedAndSortedResultRequestDto());
+                result.Items.ShouldNotContain(x => x.Id == experienceId);
+            }
+        }
+
+        [Fact]
+        public async Task Should_Fail_Delete_If_Not_Owner()
+        {
+            var ownerId = Guid.NewGuid();
+            var hackerId = Guid.NewGuid();
+            var destId = _guidGenerator.Create();
+            await _destinationRepository.InsertAsync(new DestinationEntity(destId, "Madrid", "Spain", 3000, new CoordinatesValue(0, 0), "img.jpg"));
+
+            Guid experienceId;
+
+            // 1. DUEÑO CREA
+            using (CambiarUsuario(ownerId))
+            {
+                var created = await _experienceAppService.CreateAsync(new CreateUpdateExperienceDto
+                {
+                    DestinationId = destId,
+                    Title = "No me borres",
+                    Description = "Seguro",
+                    Price = 100,
+                    Date = DateTime.Now
+                });
+                experienceId = created.Id;
+            }
+
+            // 2. HACKER INTENTA BORRAR
+            using (CambiarUsuario(hackerId))
+            {
+                // Envolvemos en UnitOfWork porque vamos a atrapar una excepción en EF Core/SQLite
+                await WithUnitOfWorkAsync(async () =>
+                {
+                    await Assert.ThrowsAsync<AbpAuthorizationException>(async () =>
+                    {
+                        await _experienceAppService.DeleteAsync(experienceId);
                     });
                 });
             }
