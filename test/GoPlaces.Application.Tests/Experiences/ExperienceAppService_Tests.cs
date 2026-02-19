@@ -190,8 +190,6 @@ namespace GoPlaces.Experiences
             }
         }
 
-        // 👇👇👇 NUEVAS PRUEBAS PARA ELIMINACIÓN 👇👇👇
-
         [Fact]
         public async Task Should_Delete_Experience_If_Owner()
         {
@@ -253,7 +251,6 @@ namespace GoPlaces.Experiences
             // 2. HACKER INTENTA BORRAR
             using (CambiarUsuario(hackerId))
             {
-                // Envolvemos en UnitOfWork porque vamos a atrapar una excepción en EF Core/SQLite
                 await WithUnitOfWorkAsync(async () =>
                 {
                     await Assert.ThrowsAsync<AbpAuthorizationException>(async () =>
@@ -261,6 +258,54 @@ namespace GoPlaces.Experiences
                         await _experienceAppService.DeleteAsync(experienceId);
                     });
                 });
+            }
+        }
+
+        // 👇👇👇 NUEVA PRUEBA: Consultar experiencias de otros usuarios 👇👇👇
+
+        [Fact]
+        public async Task Should_Get_Other_Users_Experiences()
+        {
+            var miUsuarioId = Guid.NewGuid();
+            var otroUsuarioId = Guid.NewGuid();
+            var destId = _guidGenerator.Create();
+
+            await _destinationRepository.InsertAsync(new DestinationEntity(destId, "Lisbon", "Portugal", 5000, new CoordinatesValue(0, 0), "img.jpg"));
+
+            // 1. OTRO USUARIO crea una experiencia
+            using (CambiarUsuario(otroUsuarioId))
+            {
+                await _experienceAppService.CreateAsync(new CreateUpdateExperienceDto
+                {
+                    DestinationId = destId,
+                    Title = "Experiencia de un Desconocido",
+                    Description = "No es mía",
+                    Price = 50,
+                    Date = DateTime.Now
+                });
+            }
+
+            // 2. YO creo mi propia experiencia
+            using (CambiarUsuario(miUsuarioId))
+            {
+                await _experienceAppService.CreateAsync(new CreateUpdateExperienceDto
+                {
+                    DestinationId = destId,
+                    Title = "Mi Experiencia Secreta",
+                    Description = "Esta no debería salir",
+                    Price = 20,
+                    Date = DateTime.Now
+                });
+            }
+
+            // 3. YO consulto las experiencias "de otros"
+            using (CambiarUsuario(miUsuarioId))
+            {
+                var result = await _experienceAppService.GetOtherUsersExperiencesAsync(destId);
+
+                // ASSERT
+                result.Items.ShouldContain(x => x.Title == "Experiencia de un Desconocido");
+                result.Items.ShouldNotContain(x => x.Title == "Mi Experiencia Secreta");
             }
         }
     }
