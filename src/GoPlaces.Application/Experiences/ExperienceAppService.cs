@@ -80,11 +80,28 @@ namespace GoPlaces.Experiences
             return new ListResultDto<ExperienceDto>(experienceDtos);
         }
 
-        // ✅ NUEVA LÓGICA: Filtrar por valoración (Positiva, Negativa, Neutra)
         public async Task<ListResultDto<ExperienceDto>> GetExperiencesByRatingAsync(string rating)
         {
-            // Buscamos ignorando mayúsculas/minúsculas para ser más flexibles
             var experiences = await Repository.GetListAsync(x => x.Rating.ToLower() == rating.ToLower());
+
+            var experienceDtos = ObjectMapper.Map<List<Experience>, List<ExperienceDto>>(experiences);
+            return new ListResultDto<ExperienceDto>(experienceDtos);
+        }
+
+        // ✅ NUEVA LÓGICA: Buscar por palabra clave en Título y Descripción
+        public async Task<ListResultDto<ExperienceDto>> SearchExperiencesByKeywordAsync(string keyword)
+        {
+            if (string.IsNullOrWhiteSpace(keyword))
+            {
+                return new ListResultDto<ExperienceDto>(); // Devolvemos lista vacía si no envían nada
+            }
+
+            var keywordLower = keyword.ToLower();
+
+            // Buscamos si la palabra está en el título O en la descripción
+            var experiences = await Repository.GetListAsync(x =>
+                x.Title.ToLower().Contains(keywordLower) ||
+                x.Description.ToLower().Contains(keywordLower));
 
             var experienceDtos = ObjectMapper.Map<List<Experience>, List<ExperienceDto>>(experiences);
             return new ListResultDto<ExperienceDto>(experienceDtos);

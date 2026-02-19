@@ -14,7 +14,9 @@ namespace GoPlaces.Experiences
     {
         Task<ListResultDto<ExperienceDto>> GetOtherUsersExperiencesAsync(Guid destinationId);
 
-        // ✅ NUEVO MÉTODO: Filtrar por valoración
         Task<ListResultDto<ExperienceDto>> GetExperiencesByRatingAsync(string rating);
+
+        // ✅ NUEVO MÉTODO: Buscar experiencias por palabra clave
+        Task<ListResultDto<ExperienceDto>> SearchExperiencesByKeywordAsync(string keyword);
     }
 }
