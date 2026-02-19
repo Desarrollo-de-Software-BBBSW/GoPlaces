@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Application.Dtos;
 
@@ -11,6 +12,7 @@ namespace GoPlaces.Experiences
             PagedAndSortedResultRequestDto,
             CreateUpdateExperienceDto>
     {
-        // Aquí pondremos métodos extra si los necesitamos
+        // ✅ NUEVO MÉTODO: Consultar experiencias de otros usuarios en un destino
+        Task<ListResultDto<ExperienceDto>> GetOtherUsersExperiencesAsync(Guid destinationId);
     }
 }

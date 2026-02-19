@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.Application.Dtos;
@@ -43,41 +44,49 @@ namespace GoPlaces.Experiences
         // ✅ Lógica de Edición Segura
         public override async Task<ExperienceDto> UpdateAsync(Guid id, CreateUpdateExperienceDto input)
         {
-            // 1. Recuperamos la entidad original de la BD
             var experience = await Repository.GetAsync(id);
 
-            // 2. Verificamos si el usuario actual es el DUEÑO
-            // Si el CreatorId es null (creado por sistema) o diferente al usuario actual...
             if (experience.CreatorId != CurrentUser.Id)
             {
                 throw new AbpAuthorizationException("No tienes permiso para editar esta experiencia. Solo el creador puede hacerlo.");
             }
 
-            // 3. Validamos que el destino siga existiendo (por si intentan moverla a un ID falso)
             var destinationExists = await _destinationRepository.AnyAsync(x => x.Id == input.DestinationId);
             if (!destinationExists)
             {
                 throw new UserFriendlyException("El destino especificado no existe.");
             }
 
-            // 4. Si todo está bien, dejamos que ABP haga el update estándar
             return await base.UpdateAsync(id, input);
         }
 
-        // ✅ NUEVA LÓGICA: Eliminación Segura
+        // ✅ Lógica de Eliminación Segura
         public override async Task DeleteAsync(Guid id)
         {
-            // 1. Buscamos la experiencia en la base de datos
             var experience = await Repository.GetAsync(id);
 
-            // 2. Verificamos si el usuario actual es el DUEÑO
             if (experience.CreatorId != CurrentUser.Id)
             {
                 throw new AbpAuthorizationException("No tienes permiso para eliminar esta experiencia. Solo el creador puede hacerlo.");
             }
 
-            // 3. Si es el dueño, procedemos con el borrado estándar de ABP
             await base.DeleteAsync(id);
+        }
+
+        // ✅ NUEVA LÓGICA: Consultar experiencias de otros en un destino
+        public async Task<ListResultDto<ExperienceDto>> GetOtherUsersExperiencesAsync(Guid destinationId)
+        {
+            var currentUserId = CurrentUser.Id;
+
+            // Obtenemos la lista filtrando por destino y excluyendo mis propias experiencias
+            var experiences = await Repository.GetListAsync(x =>
+                x.DestinationId == destinationId &&
+                x.CreatorId != currentUserId);
+
+            // Mapeamos de Entidad a DTO para enviarlo al Front
+            var experienceDtos = ObjectMapper.Map<List<Experience>, List<ExperienceDto>>(experiences);
+
+            return new ListResultDto<ExperienceDto>(experienceDtos);
         }
     }
 }
