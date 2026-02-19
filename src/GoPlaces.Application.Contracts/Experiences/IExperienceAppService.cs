@@ -6,13 +6,15 @@ using Volo.Abp.Application.Dtos;
 namespace GoPlaces.Experiences
 {
     public interface IExperienceAppService :
-        ICrudAppService< // ABP nos regala: Get, GetList, Create, Update, Delete
+        ICrudAppService<
             ExperienceDto,
             Guid,
             PagedAndSortedResultRequestDto,
             CreateUpdateExperienceDto>
     {
-        // ✅ NUEVO MÉTODO: Consultar experiencias de otros usuarios en un destino
         Task<ListResultDto<ExperienceDto>> GetOtherUsersExperiencesAsync(Guid destinationId);
+
+        // ✅ NUEVO MÉTODO: Filtrar por valoración
+        Task<ListResultDto<ExperienceDto>> GetExperiencesByRatingAsync(string rating);
     }
 }

@@ -10,5 +10,6 @@ namespace GoPlaces.Experiences
         public string Description { get; set; }
         public decimal Price { get; set; }
         public DateTime Date { get; set; }
+        public string Rating { get; set; } // 👈 NUEVA PROPIEDAD
     }
 }

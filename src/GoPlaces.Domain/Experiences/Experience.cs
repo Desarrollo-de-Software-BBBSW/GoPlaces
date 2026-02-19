@@ -10,11 +10,12 @@ namespace GoPlaces.Experiences
         public string Description { get; set; }
         public decimal Price { get; set; }
         public DateTime Date { get; set; }
+        public string Rating { get; set; } // 👈 NUEVO CAMPO: "Positiva", "Negativa", "Neutra"
 
         // Constructor vacío para Entity Framework
         protected Experience() { }
 
-        public Experience(Guid id, Guid destinationId, string title, string description, decimal price, DateTime date)
+        public Experience(Guid id, Guid destinationId, string title, string description, decimal price, DateTime date, string rating)
             : base(id)
         {
             DestinationId = destinationId;
@@ -22,6 +23,7 @@ namespace GoPlaces.Experiences
             Description = description;
             Price = price;
             Date = date;
+            Rating = rating; // 👈 Lo asignamos
         }
     }
 }

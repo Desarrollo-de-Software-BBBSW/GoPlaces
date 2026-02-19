@@ -5,7 +5,7 @@ using Volo.Abp;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
-using Volo.Abp.Authorization; // Necesario para AbpAuthorizationException
+using Volo.Abp.Authorization;
 using GoPlaces.Destinations;
 
 namespace GoPlaces.Experiences
@@ -29,7 +29,6 @@ namespace GoPlaces.Experiences
             _destinationRepository = destinationRepository;
         }
 
-        // ✅ Lógica de Creación
         public override async Task<ExperienceDto> CreateAsync(CreateUpdateExperienceDto input)
         {
             var destinationExists = await _destinationRepository.AnyAsync(x => x.Id == input.DestinationId);
@@ -37,11 +36,9 @@ namespace GoPlaces.Experiences
             {
                 throw new UserFriendlyException("El destino especificado no existe.");
             }
-
             return await base.CreateAsync(input);
         }
 
-        // ✅ Lógica de Edición Segura
         public override async Task<ExperienceDto> UpdateAsync(Guid id, CreateUpdateExperienceDto input)
         {
             var experience = await Repository.GetAsync(id);
@@ -60,7 +57,6 @@ namespace GoPlaces.Experiences
             return await base.UpdateAsync(id, input);
         }
 
-        // ✅ Lógica de Eliminación Segura
         public override async Task DeleteAsync(Guid id)
         {
             var experience = await Repository.GetAsync(id);
@@ -73,19 +69,24 @@ namespace GoPlaces.Experiences
             await base.DeleteAsync(id);
         }
 
-        // ✅ NUEVA LÓGICA: Consultar experiencias de otros en un destino
         public async Task<ListResultDto<ExperienceDto>> GetOtherUsersExperiencesAsync(Guid destinationId)
         {
             var currentUserId = CurrentUser.Id;
-
-            // Obtenemos la lista filtrando por destino y excluyendo mis propias experiencias
             var experiences = await Repository.GetListAsync(x =>
                 x.DestinationId == destinationId &&
                 x.CreatorId != currentUserId);
 
-            // Mapeamos de Entidad a DTO para enviarlo al Front
             var experienceDtos = ObjectMapper.Map<List<Experience>, List<ExperienceDto>>(experiences);
+            return new ListResultDto<ExperienceDto>(experienceDtos);
+        }
 
+        // ✅ NUEVA LÓGICA: Filtrar por valoración (Positiva, Negativa, Neutra)
+        public async Task<ListResultDto<ExperienceDto>> GetExperiencesByRatingAsync(string rating)
+        {
+            // Buscamos ignorando mayúsculas/minúsculas para ser más flexibles
+            var experiences = await Repository.GetListAsync(x => x.Rating.ToLower() == rating.ToLower());
+
+            var experienceDtos = ObjectMapper.Map<List<Experience>, List<ExperienceDto>>(experiences);
             return new ListResultDto<ExperienceDto>(experienceDtos);
         }
     }

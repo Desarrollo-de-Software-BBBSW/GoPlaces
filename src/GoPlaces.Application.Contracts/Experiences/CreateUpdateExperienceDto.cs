@@ -6,7 +6,7 @@ namespace GoPlaces.Experiences
     public class CreateUpdateExperienceDto
     {
         [Required]
-        public Guid DestinationId { get; set; } // ¿A qué ciudad pertenece?
+        public Guid DestinationId { get; set; }
 
         [Required]
         [StringLength(128)]
@@ -21,5 +21,8 @@ namespace GoPlaces.Experiences
 
         [Required]
         public DateTime Date { get; set; }
+
+        [Required]
+        public string Rating { get; set; } // 👈 NUEVA PROPIEDAD REQUERIDA
     }
 }

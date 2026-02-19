@@ -52,13 +52,15 @@ namespace GoPlaces.Experiences
                 Title = "Tour de Sushi",
                 Description = "El mejor sushi",
                 Price = 150.00m,
-                Date = DateTime.Now.AddDays(5)
+                Date = DateTime.Now.AddDays(5),
+                Rating = "Positiva"
             };
 
             var result = await _experienceAppService.CreateAsync(input);
 
             result.ShouldNotBeNull();
             result.Title.ShouldBe("Tour de Sushi");
+            result.Rating.ShouldBe("Positiva");
         }
 
         [Fact]
@@ -73,7 +75,8 @@ namespace GoPlaces.Experiences
                     Title = "Experiencia Fantasma",
                     Description = "Test",
                     Price = 100,
-                    Date = DateTime.Now
+                    Date = DateTime.Now,
+                    Rating = "Positiva"
                 };
 
                 await Assert.ThrowsAsync<UserFriendlyException>(async () =>
@@ -95,7 +98,8 @@ namespace GoPlaces.Experiences
                 Title = "Visita al Coliseo",
                 Description = "Una visita guiada",
                 Price = 50,
-                Date = DateTime.Now
+                Date = DateTime.Now,
+                Rating = "Positiva"
             };
             await _experienceAppService.CreateAsync(input);
 
@@ -105,6 +109,7 @@ namespace GoPlaces.Experiences
             result.Items.ShouldContain(x => x.Title == "Visita al Coliseo");
         }
 
+        // 👇 CORREGIDO: UnitOfWork separado para evitar choques en SQLite
         [Fact]
         public async Task Should_Update_Experience_If_Owner()
         {
@@ -112,36 +117,45 @@ namespace GoPlaces.Experiences
             var destId = _guidGenerator.Create();
             await _destinationRepository.InsertAsync(new DestinationEntity(destId, "Paris", "France", 2000, new CoordinatesValue(0, 0), "img.jpg"));
 
-            Guid experienceId;
+            Guid experienceId = Guid.Empty;
 
-            using (CambiarUsuario(ownerId))
+            await WithUnitOfWorkAsync(async () =>
             {
-                var createInput = new CreateUpdateExperienceDto
+                using (CambiarUsuario(ownerId))
                 {
-                    DestinationId = destId,
-                    Title = "Titulo Original",
-                    Description = "Original",
-                    Price = 10,
-                    Date = DateTime.Now
-                };
-                var created = await _experienceAppService.CreateAsync(createInput);
-                experienceId = created.Id;
-            }
+                    var createInput = new CreateUpdateExperienceDto
+                    {
+                        DestinationId = destId,
+                        Title = "Titulo Original",
+                        Description = "Original",
+                        Price = 10,
+                        Date = DateTime.Now,
+                        Rating = "Positiva"
+                    };
+                    var created = await _experienceAppService.CreateAsync(createInput);
+                    experienceId = created.Id;
+                }
+            });
 
-            using (CambiarUsuario(ownerId))
+            await WithUnitOfWorkAsync(async () =>
             {
-                var updateInput = new CreateUpdateExperienceDto
+                using (CambiarUsuario(ownerId))
                 {
-                    DestinationId = destId,
-                    Title = "Titulo EDITADO",
-                    Description = "Original",
-                    Price = 20,
-                    Date = DateTime.Now
-                };
+                    var updateInput = new CreateUpdateExperienceDto
+                    {
+                        DestinationId = destId,
+                        Title = "Titulo EDITADO",
+                        Description = "Original",
+                        Price = 20,
+                        Date = DateTime.Now,
+                        Rating = "Neutra"
+                    };
 
-                var result = await _experienceAppService.UpdateAsync(experienceId, updateInput);
-                result.Title.ShouldBe("Titulo EDITADO");
-            }
+                    var result = await _experienceAppService.UpdateAsync(experienceId, updateInput);
+                    result.Title.ShouldBe("Titulo EDITADO");
+                    result.Rating.ShouldBe("Neutra");
+                }
+            });
         }
 
         [Fact]
@@ -154,7 +168,6 @@ namespace GoPlaces.Experiences
 
             Guid experienceId;
 
-            // DUEÑO CREA
             using (CambiarUsuario(ownerId))
             {
                 var created = await _experienceAppService.CreateAsync(new CreateUpdateExperienceDto
@@ -163,12 +176,12 @@ namespace GoPlaces.Experiences
                     Title = "My Precious",
                     Description = "Don't touch",
                     Price = 100,
-                    Date = DateTime.Now
+                    Date = DateTime.Now,
+                    Rating = "Positiva"
                 });
                 experienceId = created.Id;
             }
 
-            // HACKER INTENTA EDITAR
             using (CambiarUsuario(hackerId))
             {
                 var updateInput = new CreateUpdateExperienceDto
@@ -177,7 +190,8 @@ namespace GoPlaces.Experiences
                     Title = "HACKED!",
                     Description = "Stolen",
                     Price = 0,
-                    Date = DateTime.Now
+                    Date = DateTime.Now,
+                    Rating = "Negativa"
                 };
 
                 await WithUnitOfWorkAsync(async () =>
@@ -199,7 +213,6 @@ namespace GoPlaces.Experiences
 
             Guid experienceId;
 
-            // 1. DUEÑO CREA
             using (CambiarUsuario(ownerId))
             {
                 var created = await _experienceAppService.CreateAsync(new CreateUpdateExperienceDto
@@ -208,17 +221,16 @@ namespace GoPlaces.Experiences
                     Title = "Para Borrar",
                     Description = "Se va a eliminar",
                     Price = 10,
-                    Date = DateTime.Now
+                    Date = DateTime.Now,
+                    Rating = "Positiva"
                 });
                 experienceId = created.Id;
             }
 
-            // 2. DUEÑO ELIMINA
             using (CambiarUsuario(ownerId))
             {
                 await _experienceAppService.DeleteAsync(experienceId);
 
-                // 3. Verificamos que ya no está en la lista
                 var result = await _experienceAppService.GetListAsync(new Volo.Abp.Application.Dtos.PagedAndSortedResultRequestDto());
                 result.Items.ShouldNotContain(x => x.Id == experienceId);
             }
@@ -234,7 +246,6 @@ namespace GoPlaces.Experiences
 
             Guid experienceId;
 
-            // 1. DUEÑO CREA
             using (CambiarUsuario(ownerId))
             {
                 var created = await _experienceAppService.CreateAsync(new CreateUpdateExperienceDto
@@ -243,12 +254,12 @@ namespace GoPlaces.Experiences
                     Title = "No me borres",
                     Description = "Seguro",
                     Price = 100,
-                    Date = DateTime.Now
+                    Date = DateTime.Now,
+                    Rating = "Positiva"
                 });
                 experienceId = created.Id;
             }
 
-            // 2. HACKER INTENTA BORRAR
             using (CambiarUsuario(hackerId))
             {
                 await WithUnitOfWorkAsync(async () =>
@@ -261,8 +272,6 @@ namespace GoPlaces.Experiences
             }
         }
 
-        // 👇👇👇 NUEVA PRUEBA: Consultar experiencias de otros usuarios 👇👇👇
-
         [Fact]
         public async Task Should_Get_Other_Users_Experiences()
         {
@@ -272,7 +281,6 @@ namespace GoPlaces.Experiences
 
             await _destinationRepository.InsertAsync(new DestinationEntity(destId, "Lisbon", "Portugal", 5000, new CoordinatesValue(0, 0), "img.jpg"));
 
-            // 1. OTRO USUARIO crea una experiencia
             using (CambiarUsuario(otroUsuarioId))
             {
                 await _experienceAppService.CreateAsync(new CreateUpdateExperienceDto
@@ -281,11 +289,11 @@ namespace GoPlaces.Experiences
                     Title = "Experiencia de un Desconocido",
                     Description = "No es mía",
                     Price = 50,
-                    Date = DateTime.Now
+                    Date = DateTime.Now,
+                    Rating = "Positiva"
                 });
             }
 
-            // 2. YO creo mi propia experiencia
             using (CambiarUsuario(miUsuarioId))
             {
                 await _experienceAppService.CreateAsync(new CreateUpdateExperienceDto
@@ -294,19 +302,63 @@ namespace GoPlaces.Experiences
                     Title = "Mi Experiencia Secreta",
                     Description = "Esta no debería salir",
                     Price = 20,
-                    Date = DateTime.Now
+                    Date = DateTime.Now,
+                    Rating = "Negativa"
                 });
             }
 
-            // 3. YO consulto las experiencias "de otros"
             using (CambiarUsuario(miUsuarioId))
             {
                 var result = await _experienceAppService.GetOtherUsersExperiencesAsync(destId);
 
-                // ASSERT
                 result.Items.ShouldContain(x => x.Title == "Experiencia de un Desconocido");
                 result.Items.ShouldNotContain(x => x.Title == "Mi Experiencia Secreta");
             }
+        }
+
+        // 👇 CORREGIDO: Agregada la propiedad Description para cumplir el NOT NULL
+        [Fact]
+        public async Task Should_Filter_Experiences_By_Rating()
+        {
+            var destId = _guidGenerator.Create();
+            await _destinationRepository.InsertAsync(new DestinationEntity(destId, "Amsterdam", "Netherlands", 1000, new CoordinatesValue(0, 0), "img.jpg"));
+
+            // 1. Creamos 3 experiencias con distintas valoraciones
+            await _experienceAppService.CreateAsync(new CreateUpdateExperienceDto
+            {
+                DestinationId = destId,
+                Title = "Excelente Tour",
+                Description = "Descripción de prueba",
+                Price = 10,
+                Date = DateTime.Now,
+                Rating = "Positiva"
+            });
+            await _experienceAppService.CreateAsync(new CreateUpdateExperienceDto
+            {
+                DestinationId = destId,
+                Title = "Mala comida",
+                Description = "Descripción de prueba",
+                Price = 10,
+                Date = DateTime.Now,
+                Rating = "Negativa"
+            });
+            await _experienceAppService.CreateAsync(new CreateUpdateExperienceDto
+            {
+                DestinationId = destId,
+                Title = "Tour Normal",
+                Description = "Descripción de prueba",
+                Price = 10,
+                Date = DateTime.Now,
+                Rating = "Neutra"
+            });
+
+            // 2. Filtramos solo las positivas
+            var result = await _experienceAppService.GetExperiencesByRatingAsync("Positiva");
+
+            // 3. ASSERT
+            result.Items.ShouldContain(x => x.Title == "Excelente Tour");
+            result.Items.ShouldNotContain(x => x.Title == "Mala comida");
+            result.Items.ShouldNotContain(x => x.Title == "Tour Normal");
         }
     }
 }
