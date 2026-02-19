@@ -23,44 +23,52 @@ namespace GoPlaces.Tests.Cities
         [Fact]
         public async Task SearchCitiesAsync_devuelve_resultados_reales()
         {
-            // Verifica que haya una API Key configurada
-            (_config["RapidApi:ApiKey"] ?? string.Empty).ShouldNotBeNullOrWhiteSpace();
-
-            var req = new CitySearchRequestDto { PartialName = "Lon" };
-
-            // 🔁 Reintentos con backoff exponencial para evitar fallos por rate limit o latencia
-            var intento = 0;
-            var maxIntentos = 6;  // Total ~15s de espera máxima
-            var esperaMs = 500;
-            CitySearchResultDto? res = null;
-
-            while (intento < maxIntentos)
+            // 👇 Vacuna aplicada: Controlamos el Unit of Work manualmente
+            await WithUnitOfWorkAsync(async () =>
             {
-                res = await _service.SearchCitiesAsync(req);
+                // Verifica que haya una API Key configurada
+                (_config["RapidApi:ApiKey"] ?? string.Empty).ShouldNotBeNullOrWhiteSpace();
 
-                if (res?.Cities?.Count > 0)
-                    break;
+                var req = new CitySearchRequestDto { PartialName = "Lon" };
 
-                intento++;
-                await Task.Delay(esperaMs);
-                esperaMs *= 2; // 0.5s, 1s, 2s, 4s, 8s, 16s
-            }
+                // 🔁 Reintentos con backoff exponencial para evitar fallos por rate limit o latencia
+                var intento = 0;
+                var maxIntentos = 6;  // Total ~15s de espera máxima
+                var esperaMs = 500;
+                CitySearchResultDto? res = null;
 
-            res.ShouldNotBeNull();
-            res!.Cities.ShouldNotBeEmpty(
-                $"Sin resultados tras {intento + 1} intento(s). " +
-                "RapidAPI pudo rate-limitear o responder vacío temporalmente."
-            );
+                while (intento < maxIntentos)
+                {
+                    res = await _service.SearchCitiesAsync(req);
+
+                    if (res?.Cities?.Count > 0)
+                        break;
+
+                    intento++;
+                    await Task.Delay(esperaMs);
+                    esperaMs *= 2; // 0.5s, 1s, 2s, 4s, 8s, 16s
+                }
+
+                res.ShouldNotBeNull();
+                res!.Cities.ShouldNotBeEmpty(
+                    $"Sin resultados tras {intento + 1} intento(s). " +
+                    "RapidAPI pudo rate-limitear o responder vacío temporalmente."
+                );
+            });
         }
 
         [Fact]
         public async Task SearchCitiesAsync_maneja_busqueda_sin_resultados()
         {
-            var req = new CitySearchRequestDto { PartialName = "123xyz_nonexistent" };
-            var res = await _service.SearchCitiesAsync(req);
+            // 👇 Vacuna aplicada: Controlamos el Unit of Work manualmente
+            await WithUnitOfWorkAsync(async () =>
+            {
+                var req = new CitySearchRequestDto { PartialName = "123xyz_nonexistent" };
+                var res = await _service.SearchCitiesAsync(req);
 
-            res.ShouldNotBeNull();
-            res.Cities.ShouldBeEmpty();
+                res.ShouldNotBeNull();
+                res.Cities.ShouldBeEmpty();
+            });
         }
     }
 }

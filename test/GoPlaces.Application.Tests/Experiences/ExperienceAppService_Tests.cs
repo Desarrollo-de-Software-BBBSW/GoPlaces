@@ -109,7 +109,6 @@ namespace GoPlaces.Experiences
             result.Items.ShouldContain(x => x.Title == "Visita al Coliseo");
         }
 
-        // 👇 CORREGIDO: UnitOfWork separado para evitar choques en SQLite
         [Fact]
         public async Task Should_Update_Experience_If_Owner()
         {
@@ -158,6 +157,7 @@ namespace GoPlaces.Experiences
             });
         }
 
+        // 👇 CORREGIDO: UnitOfWork separado
         [Fact]
         public async Task Should_Fail_Update_If_Not_Owner()
         {
@@ -166,44 +166,48 @@ namespace GoPlaces.Experiences
             var destId = _guidGenerator.Create();
             await _destinationRepository.InsertAsync(new DestinationEntity(destId, "London", "UK", 2000, new CoordinatesValue(0, 0), "img.jpg"));
 
-            Guid experienceId;
+            Guid experienceId = Guid.Empty;
 
-            using (CambiarUsuario(ownerId))
+            await WithUnitOfWorkAsync(async () =>
             {
-                var created = await _experienceAppService.CreateAsync(new CreateUpdateExperienceDto
+                using (CambiarUsuario(ownerId))
                 {
-                    DestinationId = destId,
-                    Title = "My Precious",
-                    Description = "Don't touch",
-                    Price = 100,
-                    Date = DateTime.Now,
-                    Rating = "Positiva"
-                });
-                experienceId = created.Id;
-            }
+                    var created = await _experienceAppService.CreateAsync(new CreateUpdateExperienceDto
+                    {
+                        DestinationId = destId,
+                        Title = "My Precious",
+                        Description = "Don't touch",
+                        Price = 100,
+                        Date = DateTime.Now,
+                        Rating = "Positiva"
+                    });
+                    experienceId = created.Id;
+                }
+            });
 
-            using (CambiarUsuario(hackerId))
+            await WithUnitOfWorkAsync(async () =>
             {
-                var updateInput = new CreateUpdateExperienceDto
+                using (CambiarUsuario(hackerId))
                 {
-                    DestinationId = destId,
-                    Title = "HACKED!",
-                    Description = "Stolen",
-                    Price = 0,
-                    Date = DateTime.Now,
-                    Rating = "Negativa"
-                };
+                    var updateInput = new CreateUpdateExperienceDto
+                    {
+                        DestinationId = destId,
+                        Title = "HACKED!",
+                        Description = "Stolen",
+                        Price = 0,
+                        Date = DateTime.Now,
+                        Rating = "Negativa"
+                    };
 
-                await WithUnitOfWorkAsync(async () =>
-                {
                     await Assert.ThrowsAsync<AbpAuthorizationException>(async () =>
                     {
                         await _experienceAppService.UpdateAsync(experienceId, updateInput);
                     });
-                });
-            }
+                }
+            });
         }
 
+        // 👇 CORREGIDO: UnitOfWork separado
         [Fact]
         public async Task Should_Delete_Experience_If_Owner()
         {
@@ -211,31 +215,38 @@ namespace GoPlaces.Experiences
             var destId = _guidGenerator.Create();
             await _destinationRepository.InsertAsync(new DestinationEntity(destId, "Berlin", "Germany", 3000, new CoordinatesValue(0, 0), "img.jpg"));
 
-            Guid experienceId;
+            Guid experienceId = Guid.Empty;
 
-            using (CambiarUsuario(ownerId))
+            await WithUnitOfWorkAsync(async () =>
             {
-                var created = await _experienceAppService.CreateAsync(new CreateUpdateExperienceDto
+                using (CambiarUsuario(ownerId))
                 {
-                    DestinationId = destId,
-                    Title = "Para Borrar",
-                    Description = "Se va a eliminar",
-                    Price = 10,
-                    Date = DateTime.Now,
-                    Rating = "Positiva"
-                });
-                experienceId = created.Id;
-            }
+                    var created = await _experienceAppService.CreateAsync(new CreateUpdateExperienceDto
+                    {
+                        DestinationId = destId,
+                        Title = "Para Borrar",
+                        Description = "Se va a eliminar",
+                        Price = 10,
+                        Date = DateTime.Now,
+                        Rating = "Positiva"
+                    });
+                    experienceId = created.Id;
+                }
+            });
 
-            using (CambiarUsuario(ownerId))
+            await WithUnitOfWorkAsync(async () =>
             {
-                await _experienceAppService.DeleteAsync(experienceId);
+                using (CambiarUsuario(ownerId))
+                {
+                    await _experienceAppService.DeleteAsync(experienceId);
 
-                var result = await _experienceAppService.GetListAsync(new Volo.Abp.Application.Dtos.PagedAndSortedResultRequestDto());
-                result.Items.ShouldNotContain(x => x.Id == experienceId);
-            }
+                    var result = await _experienceAppService.GetListAsync(new Volo.Abp.Application.Dtos.PagedAndSortedResultRequestDto());
+                    result.Items.ShouldNotContain(x => x.Id == experienceId);
+                }
+            });
         }
 
+        // 👇 CORREGIDO: UnitOfWork separado
         [Fact]
         public async Task Should_Fail_Delete_If_Not_Owner()
         {
@@ -244,32 +255,35 @@ namespace GoPlaces.Experiences
             var destId = _guidGenerator.Create();
             await _destinationRepository.InsertAsync(new DestinationEntity(destId, "Madrid", "Spain", 3000, new CoordinatesValue(0, 0), "img.jpg"));
 
-            Guid experienceId;
+            Guid experienceId = Guid.Empty;
 
-            using (CambiarUsuario(ownerId))
+            await WithUnitOfWorkAsync(async () =>
             {
-                var created = await _experienceAppService.CreateAsync(new CreateUpdateExperienceDto
+                using (CambiarUsuario(ownerId))
                 {
-                    DestinationId = destId,
-                    Title = "No me borres",
-                    Description = "Seguro",
-                    Price = 100,
-                    Date = DateTime.Now,
-                    Rating = "Positiva"
-                });
-                experienceId = created.Id;
-            }
+                    var created = await _experienceAppService.CreateAsync(new CreateUpdateExperienceDto
+                    {
+                        DestinationId = destId,
+                        Title = "No me borres",
+                        Description = "Seguro",
+                        Price = 100,
+                        Date = DateTime.Now,
+                        Rating = "Positiva"
+                    });
+                    experienceId = created.Id;
+                }
+            });
 
-            using (CambiarUsuario(hackerId))
+            await WithUnitOfWorkAsync(async () =>
             {
-                await WithUnitOfWorkAsync(async () =>
+                using (CambiarUsuario(hackerId))
                 {
                     await Assert.ThrowsAsync<AbpAuthorizationException>(async () =>
                     {
                         await _experienceAppService.DeleteAsync(experienceId);
                     });
-                });
-            }
+                }
+            });
         }
 
         [Fact]
@@ -316,14 +330,12 @@ namespace GoPlaces.Experiences
             }
         }
 
-        // 👇 CORREGIDO: Agregada la propiedad Description para cumplir el NOT NULL
         [Fact]
         public async Task Should_Filter_Experiences_By_Rating()
         {
             var destId = _guidGenerator.Create();
             await _destinationRepository.InsertAsync(new DestinationEntity(destId, "Amsterdam", "Netherlands", 1000, new CoordinatesValue(0, 0), "img.jpg"));
 
-            // 1. Creamos 3 experiencias con distintas valoraciones
             await _experienceAppService.CreateAsync(new CreateUpdateExperienceDto
             {
                 DestinationId = destId,
@@ -352,13 +364,52 @@ namespace GoPlaces.Experiences
                 Rating = "Neutra"
             });
 
-            // 2. Filtramos solo las positivas
             var result = await _experienceAppService.GetExperiencesByRatingAsync("Positiva");
 
-            // 3. ASSERT
             result.Items.ShouldContain(x => x.Title == "Excelente Tour");
             result.Items.ShouldNotContain(x => x.Title == "Mala comida");
             result.Items.ShouldNotContain(x => x.Title == "Tour Normal");
+        }
+
+        [Fact]
+        public async Task Should_Search_Experiences_By_Keyword()
+        {
+            var destId = _guidGenerator.Create();
+            await _destinationRepository.InsertAsync(new DestinationEntity(destId, "Bogota", "Colombia", 8000000, new CoordinatesValue(0, 0), "img.jpg"));
+
+            await _experienceAppService.CreateAsync(new CreateUpdateExperienceDto
+            {
+                DestinationId = destId,
+                Title = "Tour de comida",
+                Description = "Recorrido local",
+                Price = 10,
+                Date = DateTime.Now,
+                Rating = "Positiva"
+            });
+            await _experienceAppService.CreateAsync(new CreateUpdateExperienceDto
+            {
+                DestinationId = destId,
+                Title = "Paseo nocturno",
+                Description = "Mucha comida rica",
+                Price = 10,
+                Date = DateTime.Now,
+                Rating = "Positiva"
+            });
+            await _experienceAppService.CreateAsync(new CreateUpdateExperienceDto
+            {
+                DestinationId = destId,
+                Title = "Museo de Oro",
+                Description = "Cosas antiguas",
+                Price = 10,
+                Date = DateTime.Now,
+                Rating = "Neutra"
+            });
+
+            var result = await _experienceAppService.SearchExperiencesByKeywordAsync("comida");
+
+            result.Items.ShouldContain(x => x.Title == "Tour de comida");
+            result.Items.ShouldContain(x => x.Title == "Paseo nocturno");
+            result.Items.ShouldNotContain(x => x.Title == "Museo de Oro");
         }
     }
 }
