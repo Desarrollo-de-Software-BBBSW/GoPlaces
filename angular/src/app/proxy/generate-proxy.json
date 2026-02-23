@@ -880,7 +880,31 @@
           "isIntegrationService": false,
           "apiVersion": null,
           "type": "GoPlaces.Cities.CityAppService",
-          "interfaces": [],
+          "interfaces": [
+            {
+              "type": "GoPlaces.Cities.ICityAppService",
+              "name": "ICityAppService",
+              "methods": [
+                {
+                  "name": "SearchCitiesAsync",
+                  "parametersOnMethod": [
+                    {
+                      "name": "request",
+                      "typeAsString": "GoPlaces.Cities.CitySearchRequestDto, GoPlaces.Application.Contracts",
+                      "type": "GoPlaces.Cities.CitySearchRequestDto",
+                      "typeSimple": "GoPlaces.Cities.CitySearchRequestDto",
+                      "isOptional": false,
+                      "defaultValue": null
+                    }
+                  ],
+                  "returnValue": {
+                    "type": "GoPlaces.Cities.CitySearchResultDto",
+                    "typeSimple": "GoPlaces.Cities.CitySearchResultDto"
+                  }
+                }
+              ]
+            }
+          ],
           "actions": {
             "SearchCitiesAsyncByRequest": {
               "uniqueName": "SearchCitiesAsyncByRequest",
@@ -917,7 +941,7 @@
                 "typeSimple": "GoPlaces.Cities.CitySearchResultDto"
               },
               "allowAnonymous": null,
-              "implementFrom": "GoPlaces.Cities.CityAppService"
+              "implementFrom": "GoPlaces.Cities.ICityAppService"
             },
             "GetAsyncById": {
               "uniqueName": "GetAsyncById",
@@ -928,9 +952,9 @@
               "parametersOnMethod": [
                 {
                   "name": "id",
-                  "typeAsString": "System.Int32, System.Private.CoreLib",
-                  "type": "System.Int32",
-                  "typeSimple": "number",
+                  "typeAsString": "System.Guid, System.Private.CoreLib",
+                  "type": "System.Guid",
+                  "typeSimple": "string",
                   "isOptional": false,
                   "defaultValue": null
                 }
@@ -940,8 +964,8 @@
                   "nameOnMethod": "id",
                   "name": "id",
                   "jsonName": null,
-                  "type": "System.Int32",
-                  "typeSimple": "number",
+                  "type": "System.Guid",
+                  "typeSimple": "string",
                   "isOptional": false,
                   "defaultValue": null,
                   "constraintTypes": [],
@@ -955,6 +979,147 @@
               },
               "allowAnonymous": null,
               "implementFrom": "GoPlaces.Cities.CityAppService"
+            },
+            "GetPopularCitiesAsync": {
+              "uniqueName": "GetPopularCitiesAsync",
+              "name": "GetPopularCitiesAsync",
+              "httpMethod": "GET",
+              "url": "api/app/city/popular-cities",
+              "supportedVersions": [],
+              "parametersOnMethod": [],
+              "parameters": [],
+              "returnValue": {
+                "type": "System.Collections.Generic.List<GoPlaces.Cities.CityDto>",
+                "typeSimple": "[GoPlaces.Cities.CityDto]"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "GoPlaces.Cities.CityAppService"
+            }
+          }
+        },
+        "GoPlaces.Cities.GeoDbCitySearchService": {
+          "controllerName": "GeoDbCitySearch",
+          "controllerGroupName": "GeoDbCitySearch",
+          "isRemoteService": true,
+          "isIntegrationService": false,
+          "apiVersion": null,
+          "type": "GoPlaces.Cities.GeoDbCitySearchService",
+          "interfaces": [
+            {
+              "type": "GoPlaces.Cities.ICitySearchService",
+              "name": "ICitySearchService",
+              "methods": [
+                {
+                  "name": "SearchCitiesAsync",
+                  "parametersOnMethod": [
+                    {
+                      "name": "request",
+                      "typeAsString": "GoPlaces.Cities.CitySearchRequestDto, GoPlaces.Application.Contracts",
+                      "type": "GoPlaces.Cities.CitySearchRequestDto",
+                      "typeSimple": "GoPlaces.Cities.CitySearchRequestDto",
+                      "isOptional": false,
+                      "defaultValue": null
+                    }
+                  ],
+                  "returnValue": {
+                    "type": "GoPlaces.Cities.CitySearchResultDto",
+                    "typeSimple": "GoPlaces.Cities.CitySearchResultDto"
+                  }
+                },
+                {
+                  "name": "GetByIdAsync",
+                  "parametersOnMethod": [
+                    {
+                      "name": "id",
+                      "typeAsString": "System.Guid, System.Private.CoreLib",
+                      "type": "System.Guid",
+                      "typeSimple": "string",
+                      "isOptional": false,
+                      "defaultValue": null
+                    }
+                  ],
+                  "returnValue": {
+                    "type": "GoPlaces.Cities.CityDto",
+                    "typeSimple": "GoPlaces.Cities.CityDto"
+                  }
+                }
+              ]
+            }
+          ],
+          "actions": {
+            "SearchCitiesAsyncByRequest": {
+              "uniqueName": "SearchCitiesAsyncByRequest",
+              "name": "SearchCitiesAsync",
+              "httpMethod": "POST",
+              "url": "api/app/geo-db-city-search/search-cities",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "request",
+                  "typeAsString": "GoPlaces.Cities.CitySearchRequestDto, GoPlaces.Application.Contracts",
+                  "type": "GoPlaces.Cities.CitySearchRequestDto",
+                  "typeSimple": "GoPlaces.Cities.CitySearchRequestDto",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "request",
+                  "name": "request",
+                  "jsonName": null,
+                  "type": "GoPlaces.Cities.CitySearchRequestDto",
+                  "typeSimple": "GoPlaces.Cities.CitySearchRequestDto",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "Body",
+                  "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "GoPlaces.Cities.CitySearchResultDto",
+                "typeSimple": "GoPlaces.Cities.CitySearchResultDto"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "GoPlaces.Cities.ICitySearchService"
+            },
+            "GetByIdAsyncById": {
+              "uniqueName": "GetByIdAsyncById",
+              "name": "GetByIdAsync",
+              "httpMethod": "GET",
+              "url": "api/app/geo-db-city-search/{id}/by-id",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "id",
+                  "typeAsString": "System.Guid, System.Private.CoreLib",
+                  "type": "System.Guid",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "id",
+                  "name": "id",
+                  "jsonName": null,
+                  "type": "System.Guid",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": [],
+                  "bindingSourceId": "Path",
+                  "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "GoPlaces.Cities.CityDto",
+                "typeSimple": "GoPlaces.Cities.CityDto"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "GoPlaces.Cities.ICitySearchService"
             }
           }
         },
@@ -1092,6 +1257,43 @@
             }
           ],
           "actions": {
+            "CreateAsyncByInput": {
+              "uniqueName": "CreateAsyncByInput",
+              "name": "CreateAsync",
+              "httpMethod": "POST",
+              "url": "api/app/destination",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "input",
+                  "typeAsString": "GoPlaces.Destinations.CreateUpdateDestinationDto, GoPlaces.Application.Contracts",
+                  "type": "GoPlaces.Destinations.CreateUpdateDestinationDto",
+                  "typeSimple": "GoPlaces.Destinations.CreateUpdateDestinationDto",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "input",
+                  "name": "input",
+                  "jsonName": null,
+                  "type": "GoPlaces.Destinations.CreateUpdateDestinationDto",
+                  "typeSimple": "GoPlaces.Destinations.CreateUpdateDestinationDto",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "Body",
+                  "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "GoPlaces.Destinations.DestinationDto",
+                "typeSimple": "GoPlaces.Destinations.DestinationDto"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "Volo.Abp.Application.Services.ICreateAppService<GoPlaces.Destinations.DestinationDto,GoPlaces.Destinations.CreateUpdateDestinationDto>"
+            },
             "CrearByInput": {
               "uniqueName": "CrearByInput",
               "name": "Crear",
@@ -1143,43 +1345,6 @@
               },
               "allowAnonymous": null,
               "implementFrom": "GoPlaces.Destinations.IDestinationAppService"
-            },
-            "CreateAsyncByInput": {
-              "uniqueName": "CreateAsyncByInput",
-              "name": "CreateAsync",
-              "httpMethod": "POST",
-              "url": "api/app/destination",
-              "supportedVersions": [],
-              "parametersOnMethod": [
-                {
-                  "name": "input",
-                  "typeAsString": "GoPlaces.Destinations.CreateUpdateDestinationDto, GoPlaces.Application.Contracts",
-                  "type": "GoPlaces.Destinations.CreateUpdateDestinationDto",
-                  "typeSimple": "GoPlaces.Destinations.CreateUpdateDestinationDto",
-                  "isOptional": false,
-                  "defaultValue": null
-                }
-              ],
-              "parameters": [
-                {
-                  "nameOnMethod": "input",
-                  "name": "input",
-                  "jsonName": null,
-                  "type": "GoPlaces.Destinations.CreateUpdateDestinationDto",
-                  "typeSimple": "GoPlaces.Destinations.CreateUpdateDestinationDto",
-                  "isOptional": false,
-                  "defaultValue": null,
-                  "constraintTypes": null,
-                  "bindingSourceId": "Body",
-                  "descriptorName": ""
-                }
-              ],
-              "returnValue": {
-                "type": "GoPlaces.Destinations.DestinationDto",
-                "typeSimple": "GoPlaces.Destinations.DestinationDto"
-              },
-              "allowAnonymous": null,
-              "implementFrom": "Volo.Abp.Application.Services.ICreateAppService<GoPlaces.Destinations.DestinationDto,GoPlaces.Destinations.CreateUpdateDestinationDto>"
             },
             "UpdateAsyncByIdAndInput": {
               "uniqueName": "UpdateAsyncByIdAndInput",
@@ -1375,6 +1540,508 @@
             }
           }
         },
+        "GoPlaces.Experiences.ExperienceAppService": {
+          "controllerName": "Experience",
+          "controllerGroupName": "Experience",
+          "isRemoteService": true,
+          "isIntegrationService": false,
+          "apiVersion": null,
+          "type": "GoPlaces.Experiences.ExperienceAppService",
+          "interfaces": [
+            {
+              "type": "GoPlaces.Experiences.IExperienceAppService",
+              "name": "IExperienceAppService",
+              "methods": [
+                {
+                  "name": "GetOtherUsersExperiencesAsync",
+                  "parametersOnMethod": [
+                    {
+                      "name": "destinationId",
+                      "typeAsString": "System.Guid, System.Private.CoreLib",
+                      "type": "System.Guid",
+                      "typeSimple": "string",
+                      "isOptional": false,
+                      "defaultValue": null
+                    }
+                  ],
+                  "returnValue": {
+                    "type": "Volo.Abp.Application.Dtos.ListResultDto<GoPlaces.Experiences.ExperienceDto>",
+                    "typeSimple": "Volo.Abp.Application.Dtos.ListResultDto<GoPlaces.Experiences.ExperienceDto>"
+                  }
+                },
+                {
+                  "name": "GetExperiencesByRatingAsync",
+                  "parametersOnMethod": [
+                    {
+                      "name": "rating",
+                      "typeAsString": "System.String, System.Private.CoreLib",
+                      "type": "System.String",
+                      "typeSimple": "string",
+                      "isOptional": false,
+                      "defaultValue": null
+                    }
+                  ],
+                  "returnValue": {
+                    "type": "Volo.Abp.Application.Dtos.ListResultDto<GoPlaces.Experiences.ExperienceDto>",
+                    "typeSimple": "Volo.Abp.Application.Dtos.ListResultDto<GoPlaces.Experiences.ExperienceDto>"
+                  }
+                },
+                {
+                  "name": "SearchExperiencesByKeywordAsync",
+                  "parametersOnMethod": [
+                    {
+                      "name": "keyword",
+                      "typeAsString": "System.String, System.Private.CoreLib",
+                      "type": "System.String",
+                      "typeSimple": "string",
+                      "isOptional": false,
+                      "defaultValue": null
+                    }
+                  ],
+                  "returnValue": {
+                    "type": "Volo.Abp.Application.Dtos.ListResultDto<GoPlaces.Experiences.ExperienceDto>",
+                    "typeSimple": "Volo.Abp.Application.Dtos.ListResultDto<GoPlaces.Experiences.ExperienceDto>"
+                  }
+                },
+                {
+                  "name": "GetAsync",
+                  "parametersOnMethod": [
+                    {
+                      "name": "id",
+                      "typeAsString": "System.Guid, System.Private.CoreLib",
+                      "type": "System.Guid",
+                      "typeSimple": "string",
+                      "isOptional": false,
+                      "defaultValue": null
+                    }
+                  ],
+                  "returnValue": {
+                    "type": "GoPlaces.Experiences.ExperienceDto",
+                    "typeSimple": "GoPlaces.Experiences.ExperienceDto"
+                  }
+                },
+                {
+                  "name": "GetListAsync",
+                  "parametersOnMethod": [
+                    {
+                      "name": "input",
+                      "typeAsString": "Volo.Abp.Application.Dtos.PagedAndSortedResultRequestDto, Volo.Abp.Ddd.Application.Contracts",
+                      "type": "Volo.Abp.Application.Dtos.PagedAndSortedResultRequestDto",
+                      "typeSimple": "Volo.Abp.Application.Dtos.PagedAndSortedResultRequestDto",
+                      "isOptional": false,
+                      "defaultValue": null
+                    }
+                  ],
+                  "returnValue": {
+                    "type": "Volo.Abp.Application.Dtos.PagedResultDto<GoPlaces.Experiences.ExperienceDto>",
+                    "typeSimple": "Volo.Abp.Application.Dtos.PagedResultDto<GoPlaces.Experiences.ExperienceDto>"
+                  }
+                },
+                {
+                  "name": "CreateAsync",
+                  "parametersOnMethod": [
+                    {
+                      "name": "input",
+                      "typeAsString": "GoPlaces.Experiences.CreateUpdateExperienceDto, GoPlaces.Application.Contracts",
+                      "type": "GoPlaces.Experiences.CreateUpdateExperienceDto",
+                      "typeSimple": "GoPlaces.Experiences.CreateUpdateExperienceDto",
+                      "isOptional": false,
+                      "defaultValue": null
+                    }
+                  ],
+                  "returnValue": {
+                    "type": "GoPlaces.Experiences.ExperienceDto",
+                    "typeSimple": "GoPlaces.Experiences.ExperienceDto"
+                  }
+                },
+                {
+                  "name": "UpdateAsync",
+                  "parametersOnMethod": [
+                    {
+                      "name": "id",
+                      "typeAsString": "System.Guid, System.Private.CoreLib",
+                      "type": "System.Guid",
+                      "typeSimple": "string",
+                      "isOptional": false,
+                      "defaultValue": null
+                    },
+                    {
+                      "name": "input",
+                      "typeAsString": "GoPlaces.Experiences.CreateUpdateExperienceDto, GoPlaces.Application.Contracts",
+                      "type": "GoPlaces.Experiences.CreateUpdateExperienceDto",
+                      "typeSimple": "GoPlaces.Experiences.CreateUpdateExperienceDto",
+                      "isOptional": false,
+                      "defaultValue": null
+                    }
+                  ],
+                  "returnValue": {
+                    "type": "GoPlaces.Experiences.ExperienceDto",
+                    "typeSimple": "GoPlaces.Experiences.ExperienceDto"
+                  }
+                },
+                {
+                  "name": "DeleteAsync",
+                  "parametersOnMethod": [
+                    {
+                      "name": "id",
+                      "typeAsString": "System.Guid, System.Private.CoreLib",
+                      "type": "System.Guid",
+                      "typeSimple": "string",
+                      "isOptional": false,
+                      "defaultValue": null
+                    }
+                  ],
+                  "returnValue": {
+                    "type": "System.Void",
+                    "typeSimple": "System.Void"
+                  }
+                }
+              ]
+            }
+          ],
+          "actions": {
+            "CreateAsyncByInput": {
+              "uniqueName": "CreateAsyncByInput",
+              "name": "CreateAsync",
+              "httpMethod": "POST",
+              "url": "api/app/experience",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "input",
+                  "typeAsString": "GoPlaces.Experiences.CreateUpdateExperienceDto, GoPlaces.Application.Contracts",
+                  "type": "GoPlaces.Experiences.CreateUpdateExperienceDto",
+                  "typeSimple": "GoPlaces.Experiences.CreateUpdateExperienceDto",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "input",
+                  "name": "input",
+                  "jsonName": null,
+                  "type": "GoPlaces.Experiences.CreateUpdateExperienceDto",
+                  "typeSimple": "GoPlaces.Experiences.CreateUpdateExperienceDto",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "Body",
+                  "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "GoPlaces.Experiences.ExperienceDto",
+                "typeSimple": "GoPlaces.Experiences.ExperienceDto"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "Volo.Abp.Application.Services.ICreateAppService<GoPlaces.Experiences.ExperienceDto,GoPlaces.Experiences.CreateUpdateExperienceDto>"
+            },
+            "UpdateAsyncByIdAndInput": {
+              "uniqueName": "UpdateAsyncByIdAndInput",
+              "name": "UpdateAsync",
+              "httpMethod": "PUT",
+              "url": "api/app/experience/{id}",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "id",
+                  "typeAsString": "System.Guid, System.Private.CoreLib",
+                  "type": "System.Guid",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null
+                },
+                {
+                  "name": "input",
+                  "typeAsString": "GoPlaces.Experiences.CreateUpdateExperienceDto, GoPlaces.Application.Contracts",
+                  "type": "GoPlaces.Experiences.CreateUpdateExperienceDto",
+                  "typeSimple": "GoPlaces.Experiences.CreateUpdateExperienceDto",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "id",
+                  "name": "id",
+                  "jsonName": null,
+                  "type": "System.Guid",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": [],
+                  "bindingSourceId": "Path",
+                  "descriptorName": ""
+                },
+                {
+                  "nameOnMethod": "input",
+                  "name": "input",
+                  "jsonName": null,
+                  "type": "GoPlaces.Experiences.CreateUpdateExperienceDto",
+                  "typeSimple": "GoPlaces.Experiences.CreateUpdateExperienceDto",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "Body",
+                  "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "GoPlaces.Experiences.ExperienceDto",
+                "typeSimple": "GoPlaces.Experiences.ExperienceDto"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "Volo.Abp.Application.Services.IUpdateAppService<GoPlaces.Experiences.ExperienceDto,System.Guid,GoPlaces.Experiences.CreateUpdateExperienceDto>"
+            },
+            "DeleteAsyncById": {
+              "uniqueName": "DeleteAsyncById",
+              "name": "DeleteAsync",
+              "httpMethod": "DELETE",
+              "url": "api/app/experience/{id}",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "id",
+                  "typeAsString": "System.Guid, System.Private.CoreLib",
+                  "type": "System.Guid",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "id",
+                  "name": "id",
+                  "jsonName": null,
+                  "type": "System.Guid",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": [],
+                  "bindingSourceId": "Path",
+                  "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "System.Void",
+                "typeSimple": "System.Void"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "Volo.Abp.Application.Services.IDeleteAppService<System.Guid>"
+            },
+            "GetOtherUsersExperiencesAsyncByDestinationId": {
+              "uniqueName": "GetOtherUsersExperiencesAsyncByDestinationId",
+              "name": "GetOtherUsersExperiencesAsync",
+              "httpMethod": "GET",
+              "url": "api/app/experience/other-users-experiences/{destinationId}",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "destinationId",
+                  "typeAsString": "System.Guid, System.Private.CoreLib",
+                  "type": "System.Guid",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "destinationId",
+                  "name": "destinationId",
+                  "jsonName": null,
+                  "type": "System.Guid",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": [],
+                  "bindingSourceId": "Path",
+                  "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "Volo.Abp.Application.Dtos.ListResultDto<GoPlaces.Experiences.ExperienceDto>",
+                "typeSimple": "Volo.Abp.Application.Dtos.ListResultDto<GoPlaces.Experiences.ExperienceDto>"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "GoPlaces.Experiences.IExperienceAppService"
+            },
+            "GetExperiencesByRatingAsyncByRating": {
+              "uniqueName": "GetExperiencesByRatingAsyncByRating",
+              "name": "GetExperiencesByRatingAsync",
+              "httpMethod": "GET",
+              "url": "api/app/experience/experiences-by-rating",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "rating",
+                  "typeAsString": "System.String, System.Private.CoreLib",
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "rating",
+                  "name": "rating",
+                  "jsonName": null,
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "Volo.Abp.Application.Dtos.ListResultDto<GoPlaces.Experiences.ExperienceDto>",
+                "typeSimple": "Volo.Abp.Application.Dtos.ListResultDto<GoPlaces.Experiences.ExperienceDto>"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "GoPlaces.Experiences.IExperienceAppService"
+            },
+            "SearchExperiencesByKeywordAsyncByKeyword": {
+              "uniqueName": "SearchExperiencesByKeywordAsyncByKeyword",
+              "name": "SearchExperiencesByKeywordAsync",
+              "httpMethod": "POST",
+              "url": "api/app/experience/search-experiences-by-keyword",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "keyword",
+                  "typeAsString": "System.String, System.Private.CoreLib",
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "keyword",
+                  "name": "keyword",
+                  "jsonName": null,
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "Volo.Abp.Application.Dtos.ListResultDto<GoPlaces.Experiences.ExperienceDto>",
+                "typeSimple": "Volo.Abp.Application.Dtos.ListResultDto<GoPlaces.Experiences.ExperienceDto>"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "GoPlaces.Experiences.IExperienceAppService"
+            },
+            "GetAsyncById": {
+              "uniqueName": "GetAsyncById",
+              "name": "GetAsync",
+              "httpMethod": "GET",
+              "url": "api/app/experience/{id}",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "id",
+                  "typeAsString": "System.Guid, System.Private.CoreLib",
+                  "type": "System.Guid",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "id",
+                  "name": "id",
+                  "jsonName": null,
+                  "type": "System.Guid",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": [],
+                  "bindingSourceId": "Path",
+                  "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "GoPlaces.Experiences.ExperienceDto",
+                "typeSimple": "GoPlaces.Experiences.ExperienceDto"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "Volo.Abp.Application.Services.IReadOnlyAppService<GoPlaces.Experiences.ExperienceDto,GoPlaces.Experiences.ExperienceDto,System.Guid,Volo.Abp.Application.Dtos.PagedAndSortedResultRequestDto>"
+            },
+            "GetListAsyncByInput": {
+              "uniqueName": "GetListAsyncByInput",
+              "name": "GetListAsync",
+              "httpMethod": "GET",
+              "url": "api/app/experience",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "input",
+                  "typeAsString": "Volo.Abp.Application.Dtos.PagedAndSortedResultRequestDto, Volo.Abp.Ddd.Application.Contracts",
+                  "type": "Volo.Abp.Application.Dtos.PagedAndSortedResultRequestDto",
+                  "typeSimple": "Volo.Abp.Application.Dtos.PagedAndSortedResultRequestDto",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "input",
+                  "name": "Sorting",
+                  "jsonName": null,
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": "input"
+                },
+                {
+                  "nameOnMethod": "input",
+                  "name": "SkipCount",
+                  "jsonName": null,
+                  "type": "System.Int32",
+                  "typeSimple": "number",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": "input"
+                },
+                {
+                  "nameOnMethod": "input",
+                  "name": "MaxResultCount",
+                  "jsonName": null,
+                  "type": "System.Int32",
+                  "typeSimple": "number",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": "input"
+                }
+              ],
+              "returnValue": {
+                "type": "Volo.Abp.Application.Dtos.PagedResultDto<GoPlaces.Experiences.ExperienceDto>",
+                "typeSimple": "Volo.Abp.Application.Dtos.PagedResultDto<GoPlaces.Experiences.ExperienceDto>"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "Volo.Abp.Application.Services.IReadOnlyAppService<GoPlaces.Experiences.ExperienceDto,GoPlaces.Experiences.ExperienceDto,System.Guid,Volo.Abp.Application.Dtos.PagedAndSortedResultRequestDto>"
+            }
+          }
+        },
         "GoPlaces.Ratings.RatingAppService": {
           "controllerName": "Rating",
           "controllerGroupName": "Rating",
@@ -1409,9 +2076,9 @@
                   "parametersOnMethod": [
                     {
                       "name": "destinationId",
-                      "typeAsString": "System.Int32, System.Private.CoreLib",
-                      "type": "System.Int32",
-                      "typeSimple": "number",
+                      "typeAsString": "System.Guid, System.Private.CoreLib",
+                      "type": "System.Guid",
+                      "typeSimple": "string",
                       "isOptional": false,
                       "defaultValue": null
                     }
@@ -1426,9 +2093,9 @@
                   "parametersOnMethod": [
                     {
                       "name": "destinationId",
-                      "typeAsString": "System.Int32, System.Private.CoreLib",
-                      "type": "System.Int32",
-                      "typeSimple": "number",
+                      "typeAsString": "System.Guid, System.Private.CoreLib",
+                      "type": "System.Guid",
+                      "typeSimple": "string",
                       "isOptional": false,
                       "defaultValue": null
                     }
@@ -1436,6 +2103,65 @@
                   "returnValue": {
                     "type": "GoPlaces.Ratings.RatingDto",
                     "typeSimple": "GoPlaces.Ratings.RatingDto"
+                  }
+                },
+                {
+                  "name": "GetAverageRatingAsync",
+                  "parametersOnMethod": [
+                    {
+                      "name": "destinationId",
+                      "typeAsString": "System.Guid, System.Private.CoreLib",
+                      "type": "System.Guid",
+                      "typeSimple": "string",
+                      "isOptional": false,
+                      "defaultValue": null
+                    }
+                  ],
+                  "returnValue": {
+                    "type": "System.Double",
+                    "typeSimple": "number"
+                  }
+                },
+                {
+                  "name": "UpdateAsync",
+                  "parametersOnMethod": [
+                    {
+                      "name": "id",
+                      "typeAsString": "System.Guid, System.Private.CoreLib",
+                      "type": "System.Guid",
+                      "typeSimple": "string",
+                      "isOptional": false,
+                      "defaultValue": null
+                    },
+                    {
+                      "name": "input",
+                      "typeAsString": "GoPlaces.Ratings.CreateRatingDto, GoPlaces.Application.Contracts",
+                      "type": "GoPlaces.Ratings.CreateRatingDto",
+                      "typeSimple": "GoPlaces.Ratings.CreateRatingDto",
+                      "isOptional": false,
+                      "defaultValue": null
+                    }
+                  ],
+                  "returnValue": {
+                    "type": "GoPlaces.Ratings.RatingDto",
+                    "typeSimple": "GoPlaces.Ratings.RatingDto"
+                  }
+                },
+                {
+                  "name": "DeleteAsync",
+                  "parametersOnMethod": [
+                    {
+                      "name": "id",
+                      "typeAsString": "System.Guid, System.Private.CoreLib",
+                      "type": "System.Guid",
+                      "typeSimple": "string",
+                      "isOptional": false,
+                      "defaultValue": null
+                    }
+                  ],
+                  "returnValue": {
+                    "type": "System.Void",
+                    "typeSimple": "System.Void"
                   }
                 }
               ]
@@ -1488,9 +2214,9 @@
               "parametersOnMethod": [
                 {
                   "name": "destinationId",
-                  "typeAsString": "System.Int32, System.Private.CoreLib",
-                  "type": "System.Int32",
-                  "typeSimple": "number",
+                  "typeAsString": "System.Guid, System.Private.CoreLib",
+                  "type": "System.Guid",
+                  "typeSimple": "string",
                   "isOptional": false,
                   "defaultValue": null
                 }
@@ -1500,8 +2226,8 @@
                   "nameOnMethod": "destinationId",
                   "name": "destinationId",
                   "jsonName": null,
-                  "type": "System.Int32",
-                  "typeSimple": "number",
+                  "type": "System.Guid",
+                  "typeSimple": "string",
                   "isOptional": false,
                   "defaultValue": null,
                   "constraintTypes": [],
@@ -1525,9 +2251,9 @@
               "parametersOnMethod": [
                 {
                   "name": "destinationId",
-                  "typeAsString": "System.Int32, System.Private.CoreLib",
-                  "type": "System.Int32",
-                  "typeSimple": "number",
+                  "typeAsString": "System.Guid, System.Private.CoreLib",
+                  "type": "System.Guid",
+                  "typeSimple": "string",
                   "isOptional": false,
                   "defaultValue": null
                 }
@@ -1537,8 +2263,8 @@
                   "nameOnMethod": "destinationId",
                   "name": "destinationId",
                   "jsonName": null,
-                  "type": "System.Int32",
-                  "typeSimple": "number",
+                  "type": "System.Guid",
+                  "typeSimple": "string",
                   "isOptional": false,
                   "defaultValue": null,
                   "constraintTypes": [],
@@ -1549,6 +2275,137 @@
               "returnValue": {
                 "type": "GoPlaces.Ratings.RatingDto",
                 "typeSimple": "GoPlaces.Ratings.RatingDto"
+              },
+              "allowAnonymous": false,
+              "implementFrom": "GoPlaces.Ratings.IRatingAppService"
+            },
+            "GetAverageRatingAsyncByDestinationId": {
+              "uniqueName": "GetAverageRatingAsyncByDestinationId",
+              "name": "GetAverageRatingAsync",
+              "httpMethod": "GET",
+              "url": "api/app/rating/average-rating/{destinationId}",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "destinationId",
+                  "typeAsString": "System.Guid, System.Private.CoreLib",
+                  "type": "System.Guid",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "destinationId",
+                  "name": "destinationId",
+                  "jsonName": null,
+                  "type": "System.Guid",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": [],
+                  "bindingSourceId": "Path",
+                  "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "System.Double",
+                "typeSimple": "number"
+              },
+              "allowAnonymous": false,
+              "implementFrom": "GoPlaces.Ratings.IRatingAppService"
+            },
+            "UpdateAsyncByIdAndInput": {
+              "uniqueName": "UpdateAsyncByIdAndInput",
+              "name": "UpdateAsync",
+              "httpMethod": "PUT",
+              "url": "api/app/rating/{id}",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "id",
+                  "typeAsString": "System.Guid, System.Private.CoreLib",
+                  "type": "System.Guid",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null
+                },
+                {
+                  "name": "input",
+                  "typeAsString": "GoPlaces.Ratings.CreateRatingDto, GoPlaces.Application.Contracts",
+                  "type": "GoPlaces.Ratings.CreateRatingDto",
+                  "typeSimple": "GoPlaces.Ratings.CreateRatingDto",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "id",
+                  "name": "id",
+                  "jsonName": null,
+                  "type": "System.Guid",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": [],
+                  "bindingSourceId": "Path",
+                  "descriptorName": ""
+                },
+                {
+                  "nameOnMethod": "input",
+                  "name": "input",
+                  "jsonName": null,
+                  "type": "GoPlaces.Ratings.CreateRatingDto",
+                  "typeSimple": "GoPlaces.Ratings.CreateRatingDto",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "Body",
+                  "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "GoPlaces.Ratings.RatingDto",
+                "typeSimple": "GoPlaces.Ratings.RatingDto"
+              },
+              "allowAnonymous": false,
+              "implementFrom": "GoPlaces.Ratings.IRatingAppService"
+            },
+            "DeleteAsyncById": {
+              "uniqueName": "DeleteAsyncById",
+              "name": "DeleteAsync",
+              "httpMethod": "DELETE",
+              "url": "api/app/rating/{id}",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "id",
+                  "typeAsString": "System.Guid, System.Private.CoreLib",
+                  "type": "System.Guid",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "id",
+                  "name": "id",
+                  "jsonName": null,
+                  "type": "System.Guid",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": [],
+                  "bindingSourceId": "Path",
+                  "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "System.Void",
+                "typeSimple": "System.Void"
               },
               "allowAnonymous": false,
               "implementFrom": "GoPlaces.Ratings.IRatingAppService"
@@ -1693,43 +2550,6 @@
             }
           ],
           "actions": {
-            "ChangePasswordAsyncByInput": {
-              "uniqueName": "ChangePasswordAsyncByInput",
-              "name": "ChangePasswordAsync",
-              "httpMethod": "POST",
-              "url": "api/app/my-profile/change-password",
-              "supportedVersions": [],
-              "parametersOnMethod": [
-                {
-                  "name": "input",
-                  "typeAsString": "GoPlaces.Users.ChangePasswordInputDto, GoPlaces.Application.Contracts",
-                  "type": "GoPlaces.Users.ChangePasswordInputDto",
-                  "typeSimple": "GoPlaces.Users.ChangePasswordInputDto",
-                  "isOptional": false,
-                  "defaultValue": null
-                }
-              ],
-              "parameters": [
-                {
-                  "nameOnMethod": "input",
-                  "name": "input",
-                  "jsonName": null,
-                  "type": "GoPlaces.Users.ChangePasswordInputDto",
-                  "typeSimple": "GoPlaces.Users.ChangePasswordInputDto",
-                  "isOptional": false,
-                  "defaultValue": null,
-                  "constraintTypes": null,
-                  "bindingSourceId": "Body",
-                  "descriptorName": ""
-                }
-              ],
-              "returnValue": {
-                "type": "System.Void",
-                "typeSimple": "System.Void"
-              },
-              "allowAnonymous": false,
-              "implementFrom": "GoPlaces.Users.IMyProfileAppService"
-            },
             "GetAsync": {
               "uniqueName": "GetAsync",
               "name": "GetAsync",
@@ -1782,6 +2602,43 @@
               "allowAnonymous": false,
               "implementFrom": "GoPlaces.Users.IMyProfileAppService"
             },
+            "ChangePasswordAsyncByInput": {
+              "uniqueName": "ChangePasswordAsyncByInput",
+              "name": "ChangePasswordAsync",
+              "httpMethod": "POST",
+              "url": "api/app/my-profile/change-password",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "input",
+                  "typeAsString": "GoPlaces.Users.ChangePasswordInputDto, GoPlaces.Application.Contracts",
+                  "type": "GoPlaces.Users.ChangePasswordInputDto",
+                  "typeSimple": "GoPlaces.Users.ChangePasswordInputDto",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "input",
+                  "name": "input",
+                  "jsonName": null,
+                  "type": "GoPlaces.Users.ChangePasswordInputDto",
+                  "typeSimple": "GoPlaces.Users.ChangePasswordInputDto",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "Body",
+                  "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "System.Void",
+                "typeSimple": "System.Void"
+              },
+              "allowAnonymous": false,
+              "implementFrom": "GoPlaces.Users.IMyProfileAppService"
+            },
             "DeleteAsync": {
               "uniqueName": "DeleteAsync",
               "name": "DeleteAsync",
@@ -1808,8 +2665,8 @@
           "type": "GoPlaces.Users.PublicUserAppService",
           "interfaces": [
             {
-              "type": "GoPlaces.Users.IPublicUserAppService",
-              "name": "IPublicUserAppService",
+              "type": "GoPlaces.Users.IPublicUserLookupAppService",
+              "name": "IPublicUserLookupAppService",
               "methods": [
                 {
                   "name": "GetByUserNameAsync",
@@ -1866,8 +2723,8 @@
                 "type": "GoPlaces.Users.PublicUserProfileDto",
                 "typeSimple": "GoPlaces.Users.PublicUserProfileDto"
               },
-              "allowAnonymous": false,
-              "implementFrom": "GoPlaces.Users.IPublicUserAppService"
+              "allowAnonymous": null,
+              "implementFrom": "GoPlaces.Users.IPublicUserLookupAppService"
             }
           }
         },
@@ -4151,24 +5008,12 @@
   },
   "types": {
     "GoPlaces.Cities.CityDto": {
-      "baseType": null,
+      "baseType": "Volo.Abp.Application.Dtos.EntityDto<System.Guid>",
       "isEnum": false,
       "enumNames": null,
       "enumValues": null,
       "genericArguments": null,
       "properties": [
-        {
-          "name": "Id",
-          "jsonName": null,
-          "type": "System.Int32",
-          "typeSimple": "number",
-          "isRequired": false,
-          "minLength": null,
-          "maxLength": null,
-          "minimum": null,
-          "maximum": null,
-          "regex": null
-        },
         {
           "name": "Name",
           "jsonName": null,
@@ -4186,6 +5031,18 @@
           "jsonName": null,
           "type": "System.String",
           "typeSimple": "string",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "Rating",
+          "jsonName": null,
+          "type": "System.Double",
+          "typeSimple": "number",
           "isRequired": false,
           "minLength": null,
           "maxLength": null,
@@ -4423,6 +5280,168 @@
         }
       ]
     },
+    "GoPlaces.Experiences.CreateUpdateExperienceDto": {
+      "baseType": null,
+      "isEnum": false,
+      "enumNames": null,
+      "enumValues": null,
+      "genericArguments": null,
+      "properties": [
+        {
+          "name": "DestinationId",
+          "jsonName": null,
+          "type": "System.Guid",
+          "typeSimple": "string",
+          "isRequired": true,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "Title",
+          "jsonName": null,
+          "type": "System.String",
+          "typeSimple": "string",
+          "isRequired": true,
+          "minLength": 0,
+          "maxLength": 128,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "Description",
+          "jsonName": null,
+          "type": "System.String",
+          "typeSimple": "string",
+          "isRequired": false,
+          "minLength": 0,
+          "maxLength": 2000,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "Price",
+          "jsonName": null,
+          "type": "System.Decimal",
+          "typeSimple": "number",
+          "isRequired": true,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": "0",
+          "maximum": "1.7976931348623157E+308",
+          "regex": null
+        },
+        {
+          "name": "Date",
+          "jsonName": null,
+          "type": "System.DateTime",
+          "typeSimple": "string",
+          "isRequired": true,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "Rating",
+          "jsonName": null,
+          "type": "System.String",
+          "typeSimple": "string",
+          "isRequired": true,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        }
+      ]
+    },
+    "GoPlaces.Experiences.ExperienceDto": {
+      "baseType": "Volo.Abp.Application.Dtos.AuditedEntityDto<System.Guid>",
+      "isEnum": false,
+      "enumNames": null,
+      "enumValues": null,
+      "genericArguments": null,
+      "properties": [
+        {
+          "name": "DestinationId",
+          "jsonName": null,
+          "type": "System.Guid",
+          "typeSimple": "string",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "Title",
+          "jsonName": null,
+          "type": "System.String",
+          "typeSimple": "string",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "Description",
+          "jsonName": null,
+          "type": "System.String",
+          "typeSimple": "string",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "Price",
+          "jsonName": null,
+          "type": "System.Decimal",
+          "typeSimple": "number",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "Date",
+          "jsonName": null,
+          "type": "System.DateTime",
+          "typeSimple": "string",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "Rating",
+          "jsonName": null,
+          "type": "System.String",
+          "typeSimple": "string",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        }
+      ]
+    },
     "GoPlaces.Ratings.CreateRatingDto": {
       "baseType": null,
       "isEnum": false,
@@ -4433,8 +5452,8 @@
         {
           "name": "DestinationId",
           "jsonName": null,
-          "type": "System.Int32",
-          "typeSimple": "number",
+          "type": "System.Guid",
+          "typeSimple": "string",
           "isRequired": true,
           "minLength": null,
           "maxLength": null,
@@ -4478,8 +5497,8 @@
         {
           "name": "DestinationId",
           "jsonName": null,
-          "type": "System.Int32",
-          "typeSimple": "number",
+          "type": "System.Guid",
+          "typeSimple": "string",
           "isRequired": false,
           "minLength": null,
           "maxLength": null,
@@ -4717,7 +5736,7 @@
           "jsonName": null,
           "type": "System.String",
           "typeSimple": "string",
-          "isRequired": true,
+          "isRequired": false,
           "minLength": null,
           "maxLength": null,
           "minimum": null,
@@ -4761,31 +5780,7 @@
           "regex": null
         },
         {
-          "name": "PhoneNumber",
-          "jsonName": null,
-          "type": "System.String",
-          "typeSimple": "string",
-          "isRequired": false,
-          "minLength": null,
-          "maxLength": null,
-          "minimum": null,
-          "maximum": null,
-          "regex": null
-        },
-        {
           "name": "PhotoUrl",
-          "jsonName": null,
-          "type": "System.String",
-          "typeSimple": "string",
-          "isRequired": false,
-          "minLength": null,
-          "maxLength": null,
-          "minimum": null,
-          "maximum": null,
-          "regex": null
-        },
-        {
-          "name": "Preferences",
           "jsonName": null,
           "type": "System.String",
           "typeSimple": "string",
@@ -5298,6 +6293,76 @@
           "jsonName": null,
           "type": "System.Boolean",
           "typeSimple": "boolean",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        }
+      ]
+    },
+    "Volo.Abp.Application.Dtos.AuditedEntityDto<T0>": {
+      "baseType": "Volo.Abp.Application.Dtos.CreationAuditedEntityDto<TPrimaryKey>",
+      "isEnum": false,
+      "enumNames": null,
+      "enumValues": null,
+      "genericArguments": [
+        "TPrimaryKey"
+      ],
+      "properties": [
+        {
+          "name": "LastModificationTime",
+          "jsonName": null,
+          "type": "System.DateTime?",
+          "typeSimple": "string?",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "LastModifierId",
+          "jsonName": null,
+          "type": "System.Guid?",
+          "typeSimple": "string?",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        }
+      ]
+    },
+    "Volo.Abp.Application.Dtos.CreationAuditedEntityDto<T0>": {
+      "baseType": "Volo.Abp.Application.Dtos.EntityDto<TPrimaryKey>",
+      "isEnum": false,
+      "enumNames": null,
+      "enumValues": null,
+      "genericArguments": [
+        "TPrimaryKey"
+      ],
+      "properties": [
+        {
+          "name": "CreationTime",
+          "jsonName": null,
+          "type": "System.DateTime",
+          "typeSimple": "string",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "CreatorId",
+          "jsonName": null,
+          "type": "System.Guid?",
+          "typeSimple": "string?",
           "isRequired": false,
           "minLength": null,
           "maxLength": null,

@@ -25,11 +25,9 @@ export interface RegisterInputDto {
 }
 
 export interface UserProfileDto extends EntityDto<string> {
-  userName: string;
+  userName?: string;
   email: string;
   name?: string;
   surname?: string;
-  phoneNumber?: string;
   photoUrl?: string;
-  preferences?: string;
 }

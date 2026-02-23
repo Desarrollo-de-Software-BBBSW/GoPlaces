@@ -5,22 +5,14 @@ import { Injectable } from '@angular/core';
 @Injectable({
   providedIn: 'root',
 })
-export class CityService {
+export class GeoDbCitySearchService {
   apiName = 'Default';
   
 
-  get = (id: string, config?: Partial<Rest.Config>) =>
+  getById = (id: string, config?: Partial<Rest.Config>) =>
     this.restService.request<any, CityDto>({
       method: 'GET',
-      url: `/api/app/city/${id}`,
-    },
-    { apiName: this.apiName,...config });
-  
-
-  getPopularCities = (config?: Partial<Rest.Config>) =>
-    this.restService.request<any, CityDto[]>({
-      method: 'GET',
-      url: '/api/app/city/popular-cities',
+      url: `/api/app/geo-db-city-search/${id}/by-id`,
     },
     { apiName: this.apiName,...config });
   
@@ -28,7 +20,7 @@ export class CityService {
   searchCities = (request: CitySearchRequestDto, config?: Partial<Rest.Config>) =>
     this.restService.request<any, CitySearchResultDto>({
       method: 'POST',
-      url: '/api/app/city/search-cities',
+      url: '/api/app/geo-db-city-search/search-cities',
       body: request,
     },
     { apiName: this.apiName,...config });

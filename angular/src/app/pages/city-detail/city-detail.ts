@@ -4,9 +4,9 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { CityService, CityDto } from 'src/app/proxy/cities';
 import { AuthService } from '@abp/ng.core';
-// ✅ Importamos ConfirmationService y Confirmation de ABP
 import { ToasterService, ConfirmationService, Confirmation } from '@abp/ng.theme.shared';
 
+// Asegúrate de que la ruta de tu servicio sea la correcta
 import { RatingService, RatingDto, CreateRatingDto } from '../../services/rating.service';
 
 @Component({
@@ -29,13 +29,16 @@ export class CityDetailComponent implements OnInit {
   isAuthenticated = false;             
   isEditing = false; 
 
+  // ✅ NUEVO: Variable para guardar el promedio
+  averageRating: number = 0;
+
   constructor(
     private route: ActivatedRoute,
     private cityService: CityService,
     private ratingService: RatingService, 
     private authService: AuthService,     
     private toaster: ToasterService,
-    private confirmation: ConfirmationService // ✅ Inyectamos el servicio de confirmación
+    private confirmation: ConfirmationService 
   ) {}
 
   ngOnInit(): void {
@@ -55,6 +58,10 @@ export class CityDetailComponent implements OnInit {
       next: (data) => {
         this.city = data;
         this.isLoading = false;
+        
+        // ✅ NUEVO: Cargamos el promedio global siempre
+        this.loadAverageRating(id);
+
         if (this.isAuthenticated) {
           this.checkUserRating(id);
         }
@@ -63,6 +70,19 @@ export class CityDetailComponent implements OnInit {
         console.error(err);
         this.errorMessage = 'No se pudo cargar la información de la ciudad.';
         this.isLoading = false;
+      }
+    });
+  }
+
+  // ✅ NUEVO: Método para consultar el promedio al backend
+  loadAverageRating(destinationId: string) {
+    // Nota: Si abp generate-proxy le puso otro nombre (ej: getAverageRatingAsync), cámbialo aquí.
+    this.ratingService.getAverageRating(destinationId).subscribe({
+      next: (average) => {
+        this.averageRating = average;
+      },
+      error: (err) => {
+        console.error('Error al cargar el promedio global:', err);
       }
     });
   }
@@ -96,6 +116,9 @@ export class CityDetailComponent implements OnInit {
           this.isEditing = false;
           this.toaster.success('¡Calificación actualizada!');
           this.isRatingSubmitting = false;
+          
+          // ✅ NUEVO: Refrescamos el promedio tras editar
+          this.loadAverageRating(this.city!.id);
         },
         error: (err) => {
           this.isRatingSubmitting = false;
@@ -109,6 +132,9 @@ export class CityDetailComponent implements OnInit {
           this.userRating = result; 
           this.toaster.success('¡Gracias por tu calificación!');
           this.isRatingSubmitting = false;
+          
+          // ✅ NUEVO: Refrescamos el promedio tras calificar
+          this.loadAverageRating(this.city!.id);
         },
         error: (err) => {
           this.isRatingSubmitting = false;
@@ -133,7 +159,6 @@ export class CityDetailComponent implements OnInit {
     this.ratingComment = '';
   }
 
-  // ✅ NUEVO: Usamos el ConfirmationService de ABP
   deleteRating() {
     if (!this.userRating) return;
 
@@ -141,7 +166,6 @@ export class CityDetailComponent implements OnInit {
       '¿Estás seguro de que deseas eliminar tu calificación?',
       'Eliminar Calificación'
     ).subscribe((status: Confirmation.Status) => {
-      // Si el usuario presiona "Confirmar"
       if (status === Confirmation.Status.confirm) {
         this.ratingService.delete(this.userRating!.id).subscribe({
           next: () => {
@@ -150,6 +174,9 @@ export class CityDetailComponent implements OnInit {
             this.selectedScore = 0;
             this.ratingComment = '';
             this.toaster.info('Calificación eliminada.');
+            
+            // ✅ NUEVO: Refrescamos el promedio tras borrar
+            this.loadAverageRating(this.city!.id);
           },
           error: (err) => {
             const msg = err.error?.error?.message || 'Error al eliminar calificación';
