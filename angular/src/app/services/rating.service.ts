@@ -25,7 +25,7 @@ export class RatingService {
 
   constructor(private restService: RestService) {}
 
-  // 1. CREATE: Este suele ir en el body, así que lo dejamos igual (pero revisa que la URL sea correcta en swagger)
+  // 1. CREATE
   create = (input: CreateRatingDto, config?: Partial<Rest.Config>) =>
     this.restService.request<any, RatingDto>({
       method: 'POST',
@@ -34,23 +34,36 @@ export class RatingService {
     },
     { apiName: this.apiName, ...config });
 
-  // 2. GET BY DESTINATION: Corregido para enviar ID en la RUTA
+  // 2. GET BY DESTINATION
   getByDestination = (destinationId: string, config?: Partial<Rest.Config>) =>
     this.restService.request<any, { items: RatingDto[] }>({
       method: 'GET',
-      // 👇 CAMBIO CLAVE: Ponemos el ID dentro de la URL
       url: `/api/app/rating/by-destination/${destinationId}`,
-      // params: { destinationId } 👈 BORRAMOS ESTO (ya no va como parámetro)
     },
     { apiName: this.apiName, ...config });
 
-  // 3. GET MY FOR DESTINATION: Corregido para enviar ID en la RUTA (El que te da error 404)
+  // 3. GET MY FOR DESTINATION
   getMyForDestination = (destinationId: string, config?: Partial<Rest.Config>) =>
     this.restService.request<any, RatingDto>({
       method: 'GET',
-      // 👇 CAMBIO CLAVE: Ponemos el ID dentro de la URL
       url: `/api/app/rating/my-for-destination/${destinationId}`, 
-      // params: { destinationId } 👈 BORRAMOS ESTO
+    },
+    { apiName: this.apiName, ...config });
+
+  // ✅ NUEVO: 4. UPDATE (Editar calificación)
+  update = (id: string, input: CreateRatingDto, config?: Partial<Rest.Config>) =>
+    this.restService.request<any, RatingDto>({
+      method: 'PUT',
+      url: `/api/app/rating/${id}`,
+      body: input,
+    },
+    { apiName: this.apiName, ...config });
+
+  // ✅ NUEVO: 5. DELETE (Eliminar calificación)
+  delete = (id: string, config?: Partial<Rest.Config>) =>
+    this.restService.request<any, void>({
+      method: 'DELETE',
+      url: `/api/app/rating/${id}`,
     },
     { apiName: this.apiName, ...config });
 }

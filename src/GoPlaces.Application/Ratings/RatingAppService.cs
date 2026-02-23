@@ -10,7 +10,7 @@ using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
 using Volo.Abp.Users;
 using Volo.Abp.Authorization;
-using GoPlaces.Destinations; // 👈 Necesario para Coordinates
+using GoPlaces.Destinations;
 using GoPlaces.Cities;
 
 namespace GoPlaces.Ratings
@@ -39,22 +39,19 @@ namespace GoPlaces.Ratings
 
             var userId = CurrentUser.Id.Value;
 
-            // 1. Verificamos si ya existe el destino localmente
             var destination = await _destinationRepository.FindAsync(input.DestinationId);
 
             if (destination == null)
             {
-                // 2. Si no existe, lo traemos de GeoDB e insertamos
                 var externalCity = await _citySearchService.GetByIdAsync(input.DestinationId);
                 if (externalCity != null)
                 {
-                    // ✅ CONSTRUCTOR CORREGIDO: Usamos population: 0 y Coordinates(0,0)
                     destination = new Destination(
                         externalCity.Id,
                         externalCity.Name,
                         externalCity.Country,
-                        0,                           // population
-                        new Coordinates(0, 0)        // coordinates
+                        0,
+                        new Coordinates(0, 0)
                     );
 
                     await _destinationRepository.InsertAsync(destination, autoSave: true);
@@ -65,13 +62,11 @@ namespace GoPlaces.Ratings
                 }
             }
 
-            // 3. Verificamos si ya calificó
             var exists = await (await _repo.GetQueryableAsync())
                 .AnyAsync(r => r.DestinationId == input.DestinationId && r.UserId == userId);
 
             if (exists) throw new UserFriendlyException("Ya has calificado este lugar.");
 
-            // 4. Guardamos Rating
             var rating = new Rating(GuidGenerator.Create(), input.DestinationId, input.Score, input.Comment, userId);
             await _repo.InsertAsync(rating, autoSave: true);
 
@@ -97,6 +92,42 @@ namespace GoPlaces.Ratings
                 .Where(r => r.DestinationId == destinationId && r.UserId == CurrentUser.Id.Value)
                 .SingleOrDefaultAsync();
             return entity == null ? null : ObjectMapper.Map<Rating, RatingDto>(entity);
+        }
+
+        // ✅ Lógica de Edición Protegida (Ahora usando rating.Update)
+        public async Task<RatingDto> UpdateAsync(Guid id, CreateRatingDto input)
+        {
+            var rating = await _repo.GetAsync(id);
+
+            // Verificación de seguridad: ¿Es el dueño?
+            if (rating.UserId != CurrentUser.Id)
+            {
+                throw new AbpAuthorizationException("No tienes permiso para editar esta calificación.");
+            }
+
+            if (input.Score < 1 || input.Score > 5)
+                throw new BusinessException("Rating.ScoreOutOfRange");
+
+            // 👇 USAMOS EL NUEVO MÉTODO DE LA ENTIDAD EN LUGAR DE ASIGNAR DIRECTO
+            rating.Update(input.Score, input.Comment);
+
+            await _repo.UpdateAsync(rating, autoSave: true);
+
+            return ObjectMapper.Map<Rating, RatingDto>(rating);
+        }
+
+        // ✅ Lógica de Eliminación Protegida
+        public async Task DeleteAsync(Guid id)
+        {
+            var rating = await _repo.GetAsync(id);
+
+            // Verificación de seguridad: ¿Es el dueño?
+            if (rating.UserId != CurrentUser.Id)
+            {
+                throw new AbpAuthorizationException("No tienes permiso para eliminar esta calificación.");
+            }
+
+            await _repo.DeleteAsync(id, autoSave: true);
         }
     }
 }

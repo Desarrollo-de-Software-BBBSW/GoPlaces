@@ -12,17 +12,13 @@ using Volo.Abp.Linq;
 namespace GoPlaces.Tests.Ratings;
 
 /// <summary>
-/// Implementación MUY sencilla de IRepository para tests.
+/// Implementación de IRepository para tests.
 /// Guarda los ratings en una lista en memoria.
 /// </summary>
 public class InMemoryRatingRepository : IRepository<Rating, Guid>
 {
     private readonly List<Rating> _items = new();
 
-    // ---------- MÉTODOS QUE REALMENTE USAMOS EN RatingAppService ----------
-
-    // CORRECCIÓN AQUÍ: Usamos .AsAsyncQueryable() en lugar de .AsQueryable()
-    // Esto permite que .AnyAsync() funcione sin errores.
     public Task<IQueryable<Rating>> GetQueryableAsync()
         => Task.FromResult(_items.AsAsyncQueryable());
 
@@ -42,21 +38,28 @@ public class InMemoryRatingRepository : IRepository<Rating, Guid>
         return Task.FromResult(_items.ToList());
     }
 
-    // ---------------------------------------------------------------------
-    // El resto de los miembros de IRepository los dejamos con throw
-    // ---------------------------------------------------------------------
-
+    // ✅ CORRECCIÓN: Implementamos GetAsync para que busque por ID
     public Task<Rating> GetAsync(
         Guid id,
         bool includeDetails = true,
         CancellationToken cancellationToken = default)
-        => throw new NotImplementedException();
+    {
+        var rating = _items.FirstOrDefault(x => x.Id == id);
+        if (rating == null)
+        {
+            throw new EntityNotFoundException(typeof(Rating), id);
+        }
+        return Task.FromResult(rating);
+    }
 
-    public Task<Rating> FindAsync(
+    // ✅ CORRECCIÓN: Implementamos FindAsync
+    public Task<Rating?> FindAsync(
         Guid id,
         bool includeDetails = true,
         CancellationToken cancellationToken = default)
-        => throw new NotImplementedException();
+    {
+        return Task.FromResult(_items.FirstOrDefault(x => x.Id == id));
+    }
 
     public Task<long> GetCountAsync(
         CancellationToken cancellationToken = default)
@@ -68,23 +71,47 @@ public class InMemoryRatingRepository : IRepository<Rating, Guid>
         CancellationToken cancellationToken = default)
         => Task.FromResult(_items.AsQueryable().Where(predicate).ToList());
 
+    // ✅ CORRECCIÓN: Implementamos UpdateAsync
     public Task<Rating> UpdateAsync(
         Rating entity,
         bool autoSave = false,
         CancellationToken cancellationToken = default)
-        => throw new NotImplementedException();
+    {
+        var index = _items.FindIndex(x => x.Id == entity.Id);
+        if (index != -1)
+        {
+            _items[index] = entity;
+        }
+        return Task.FromResult(entity);
+    }
 
+    // ✅ CORRECCIÓN: Implementamos DeleteAsync por Entidad
     public Task DeleteAsync(
         Rating entity,
         bool autoSave = false,
         CancellationToken cancellationToken = default)
-        => throw new NotImplementedException();
+    {
+        _items.Remove(entity);
+        return Task.CompletedTask;
+    }
 
+    // ✅ CORRECCIÓN: Implementamos DeleteAsync por ID
     public Task DeleteAsync(
         Guid id,
         bool autoSave = false,
         CancellationToken cancellationToken = default)
-        => throw new NotImplementedException();
+    {
+        var entity = _items.FirstOrDefault(x => x.Id == id);
+        if (entity != null)
+        {
+            _items.Remove(entity);
+        }
+        return Task.CompletedTask;
+    }
+
+    // ---------------------------------------------------------------------
+    // El resto de los miembros de IRepository los dejamos con throw
+    // ---------------------------------------------------------------------
 
     public Task DeleteAsync(
         Expression<Func<Rating, bool>> predicate,
