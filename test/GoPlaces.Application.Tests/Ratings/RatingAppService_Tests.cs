@@ -253,5 +253,66 @@ namespace GoPlaces.Ratings
                 }
             });
         }
+        // 👇👇👇 NUEVAS PRUEBAS DE PROMEDIO 👇👇👇
+
+        [Fact]
+        public async Task Should_Calculate_Average_Rating()
+        {
+            var destinationId = _guidGenerator.Create();
+            await _destinationRepo.InsertAsync(new DestinationEntity(destinationId, "Tokyo", "Japan", 1000, new CoordinatesValue(0, 0), "img.jpg", DateTime.UtcNow));
+
+            var user1Id = _guidGenerator.Create();
+            var user2Id = _guidGenerator.Create();
+
+            // 1. El Usuario 1 vota un 5
+            await WithUnitOfWorkAsync(async () =>
+            {
+                using (ChangeUserContext(user1Id, "user1"))
+                {
+                    var ratingService = CreateRatingService();
+                    await ratingService.CreateAsync(new CreateRatingDto { DestinationId = destinationId, Score = 5, Comment = "Excelente" });
+                }
+            });
+
+            // 2. El Usuario 2 vota un 4
+            await WithUnitOfWorkAsync(async () =>
+            {
+                using (ChangeUserContext(user2Id, "user2"))
+                {
+                    var ratingService = CreateRatingService();
+                    await ratingService.CreateAsync(new CreateRatingDto { DestinationId = destinationId, Score = 4, Comment = "Muy bueno" });
+                }
+            });
+
+            // 3. Calculamos el promedio (Debería ser 4.5)
+            await WithUnitOfWorkAsync(async () =>
+            {
+                using (ChangeUserContext(user1Id, "user1"))
+                {
+                    var ratingService = CreateRatingService();
+                    var average = await ratingService.GetAverageRatingAsync(destinationId);
+
+                    average.ShouldBe(4.5);
+                }
+            });
+        }
+
+        [Fact]
+        public async Task Should_Return_Zero_If_No_Ratings()
+        {
+            var destinationId = _guidGenerator.Create(); // Destino sin votos
+
+            await WithUnitOfWorkAsync(async () =>
+            {
+                using (ChangeUserContext(_guidGenerator.Create(), "randomuser"))
+                {
+                    var ratingService = CreateRatingService();
+                    var average = await ratingService.GetAverageRatingAsync(destinationId);
+
+                    // Al no tener votos, debe devolver 0 y no lanzar excepción
+                    average.ShouldBe(0);
+                }
+            });
+        }
     }
 }

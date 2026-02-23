@@ -66,4 +66,12 @@ export class RatingService {
       url: `/api/app/rating/${id}`,
     },
     { apiName: this.apiName, ...config });
+    
+    // ✅ NUEVO: 6. GET AVERAGE RATING (Promedio de calificación)
+  getAverageRating = (destinationId: string, config?: Partial<Rest.Config>) =>
+    this.restService.request<any, number>({
+      method: 'GET',
+      url: `/api/app/rating/average-rating/${destinationId}`,
+    },
+    { apiName: this.apiName, ...config });
 }

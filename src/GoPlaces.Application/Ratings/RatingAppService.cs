@@ -94,6 +94,23 @@ namespace GoPlaces.Ratings
             return entity == null ? null : ObjectMapper.Map<Rating, RatingDto>(entity);
         }
 
+        public async Task<double> GetAverageRatingAsync(Guid destinationId)
+        {
+            var query = await _repo.GetQueryableAsync();
+            var ratingsForDestination = query.Where(r => r.DestinationId == destinationId);
+
+            // Si nadie ha calificado aún, devolvemos 0 para evitar errores en EF Core
+            if (!await ratingsForDestination.AnyAsync())
+            {
+                return 0.0;
+            }
+
+            var average = await ratingsForDestination.AverageAsync(r => r.Score);
+
+            // Redondeamos a 1 decimal (ej: 4.5) para que sea amigable en el frontend
+            return Math.Round(average, 1);
+        }
+
         // ✅ Lógica de Edición Protegida (Ahora usando rating.Update)
         public async Task<RatingDto> UpdateAsync(Guid id, CreateRatingDto input)
         {

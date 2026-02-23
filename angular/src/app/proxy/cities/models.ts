@@ -1,9 +1,8 @@
+import type { EntityDto } from '@abp/ng.core';
 
-export interface CityDto {
-  // 👇 CAMBIO: Cambia 'number' por 'string'
-  id: string; 
-  name: string;
-  country: string;
+export interface CityDto extends EntityDto<string> {
+  name?: string;
+  country?: string;
   rating: number;
 }
 
