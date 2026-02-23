@@ -15,6 +15,8 @@ namespace GoPlaces.Ratings
         // ✅ Corregido: Ahora acepta Guid para el chequeo de "ya votó"
         Task<RatingDto?> GetMyForDestinationAsync(Guid destinationId);
 
+        Task<double> GetAverageRatingAsync(Guid destinationId);
+
         Task<RatingDto> UpdateAsync(Guid id, CreateRatingDto input);
         Task DeleteAsync(Guid id);
     }
