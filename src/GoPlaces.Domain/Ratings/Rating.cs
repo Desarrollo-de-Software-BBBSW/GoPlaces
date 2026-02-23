@@ -37,4 +37,11 @@ public class Rating : AuditedAggregateRoot<Guid>, IUserOwned
             throw new BusinessException("Rating.ScoreOutOfRange");
         Score = score;
     }
+
+    // ✅ NUEVO: Método para actualizar la calificación respetando DDD
+    public void Update(int score, string? comment)
+    {
+        SetScore(score);
+        Comment = string.IsNullOrWhiteSpace(comment) ? null : comment.Trim();
+    }
 }

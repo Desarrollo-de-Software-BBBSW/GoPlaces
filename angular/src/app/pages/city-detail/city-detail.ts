@@ -4,9 +4,9 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { CityService, CityDto } from 'src/app/proxy/cities';
 import { AuthService } from '@abp/ng.core';
-import { ToasterService } from '@abp/ng.theme.shared';
+// ✅ Importamos ConfirmationService y Confirmation de ABP
+import { ToasterService, ConfirmationService, Confirmation } from '@abp/ng.theme.shared';
 
-// Importamos el servicio de ratings
 import { RatingService, RatingDto, CreateRatingDto } from '../../services/rating.service';
 
 @Component({
@@ -27,24 +27,23 @@ export class CityDetailComponent implements OnInit {
   ratingComment = '';                  
   isRatingSubmitting = false;          
   isAuthenticated = false;             
+  isEditing = false; 
 
   constructor(
     private route: ActivatedRoute,
     private cityService: CityService,
     private ratingService: RatingService, 
     private authService: AuthService,     
-    private toaster: ToasterService       
+    private toaster: ToasterService,
+    private confirmation: ConfirmationService // ✅ Inyectamos el servicio de confirmación
   ) {}
 
   ngOnInit(): void {
     this.isAuthenticated = this.authService.isAuthenticated;
 
-    // 1. Capturamos el ID de la URL
     this.route.params.subscribe(params => {
       const id = params['id']; 
-      
       if (id) {
-        // ✅ Corregido: id se pasa como string (GUID), sin Number()
         this.loadCity(id); 
       }
     });
@@ -52,14 +51,10 @@ export class CityDetailComponent implements OnInit {
 
   loadCity(id: string) {
     this.isLoading = true;
-    
-    // Llamada al servicio de ciudades usando el GUID
     this.cityService.get(id).subscribe({
       next: (data) => {
         this.city = data;
         this.isLoading = false;
-
-        // Si está logueado, verificamos si ya calificó esta ciudad
         if (this.isAuthenticated) {
           this.checkUserRating(id);
         }
@@ -72,11 +67,9 @@ export class CityDetailComponent implements OnInit {
     });
   }
 
-  // ✅ Corregido: destinationId es string
   checkUserRating(destinationId: string) {
     this.ratingService.getMyForDestination(destinationId).subscribe({
       next: (result) => {
-        // Si result existe, el botón de votar se ocultará en el HTML
         this.userRating = result;
       },
       error: (err) => {
@@ -90,23 +83,79 @@ export class CityDetailComponent implements OnInit {
 
     this.isRatingSubmitting = true;
 
-    // ✅ Corregido: Preparamos el DTO con el GUID como string
     const input: CreateRatingDto = {
       destinationId: this.city.id, 
       score: this.selectedScore,
       comment: this.ratingComment
     };
 
-    this.ratingService.create(input).subscribe({
-      next: (result) => {
-        this.userRating = result; 
-        this.toaster.success('¡Gracias por tu calificación!');
-        this.isRatingSubmitting = false;
-      },
-      error: (err) => {
-        this.isRatingSubmitting = false;
-        const msg = err.error?.error?.message || 'Error al enviar calificación';
-        this.toaster.error(msg);
+    if (this.isEditing && this.userRating) {
+      this.ratingService.update(this.userRating.id, input).subscribe({
+        next: (result) => {
+          this.userRating = result; 
+          this.isEditing = false;
+          this.toaster.success('¡Calificación actualizada!');
+          this.isRatingSubmitting = false;
+        },
+        error: (err) => {
+          this.isRatingSubmitting = false;
+          const msg = err.error?.error?.message || 'Error al actualizar calificación';
+          this.toaster.error(msg);
+        }
+      });
+    } else {
+      this.ratingService.create(input).subscribe({
+        next: (result) => {
+          this.userRating = result; 
+          this.toaster.success('¡Gracias por tu calificación!');
+          this.isRatingSubmitting = false;
+        },
+        error: (err) => {
+          this.isRatingSubmitting = false;
+          const msg = err.error?.error?.message || 'Error al enviar calificación';
+          this.toaster.error(msg);
+        }
+      });
+    }
+  }
+
+  enableEdit() {
+    if (this.userRating) {
+      this.isEditing = true;
+      this.selectedScore = this.userRating.score;
+      this.ratingComment = this.userRating.comment || '';
+    }
+  }
+
+  cancelEdit() {
+    this.isEditing = false;
+    this.selectedScore = 0;
+    this.ratingComment = '';
+  }
+
+  // ✅ NUEVO: Usamos el ConfirmationService de ABP
+  deleteRating() {
+    if (!this.userRating) return;
+
+    this.confirmation.warn(
+      '¿Estás seguro de que deseas eliminar tu calificación?',
+      'Eliminar Calificación'
+    ).subscribe((status: Confirmation.Status) => {
+      // Si el usuario presiona "Confirmar"
+      if (status === Confirmation.Status.confirm) {
+        this.ratingService.delete(this.userRating!.id).subscribe({
+          next: () => {
+            this.userRating = null;
+            this.isEditing = false;
+            this.selectedScore = 0;
+            this.ratingComment = '';
+            this.toaster.info('Calificación eliminada.');
+          },
+          error: (err) => {
+            const msg = err.error?.error?.message || 'Error al eliminar calificación';
+            this.toaster.error(msg);
+          }
+        });
       }
     });
   }
