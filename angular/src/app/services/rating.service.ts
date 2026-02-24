@@ -9,6 +9,7 @@ export interface RatingDto {
   comment?: string;
   userId: string;
   creationTime?: string;
+  userName?: string;
 }
 
 export interface CreateRatingDto {

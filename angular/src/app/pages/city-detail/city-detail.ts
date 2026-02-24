@@ -31,6 +31,7 @@ export class CityDetailComponent implements OnInit {
 
   // ✅ NUEVO: Variable para guardar el promedio
   averageRating: number = 0;
+  comments: RatingDto[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -61,6 +62,7 @@ export class CityDetailComponent implements OnInit {
         
         // ✅ NUEVO: Cargamos el promedio global siempre
         this.loadAverageRating(id);
+        this.loadComments(id);
 
         if (this.isAuthenticated) {
           this.checkUserRating(id);
@@ -83,6 +85,19 @@ export class CityDetailComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error al cargar el promedio global:', err);
+      }
+    });
+  }
+
+  // ✅ NUEVO: Método para buscar todos los comentarios
+  loadComments(destinationId: string) {
+    this.ratingService.getByDestination(destinationId).subscribe({
+      next: (result) => {
+        // En ABP, los resultados de listas vienen dentro de la propiedad 'items'
+        this.comments = result.items || [];
+      },
+      error: (err) => {
+        console.error('Error al cargar los comentarios:', err);
       }
     });
   }
