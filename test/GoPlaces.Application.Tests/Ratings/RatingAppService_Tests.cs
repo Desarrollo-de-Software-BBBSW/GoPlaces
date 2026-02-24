@@ -12,6 +12,7 @@ using Volo.Abp.Domain.Repositories;
 using Volo.Abp.Authorization; // ✅ Necesario para AbpAuthorizationException
 using Xunit;
 using Microsoft.Extensions.DependencyInjection;
+using Volo.Abp.Identity;
 
 using DestinationEntity = GoPlaces.Destinations.Destination;
 using CoordinatesValue = GoPlaces.Destinations.Coordinates;
@@ -25,6 +26,7 @@ namespace GoPlaces.Ratings
         private readonly ICitySearchService _cityService;
         private readonly IGuidGenerator _guidGenerator;
         private readonly ICurrentPrincipalAccessor _currentPrincipalAccessor;
+        private readonly IRepository<IdentityUser, Guid> _userRepo;
 
         public RatingAppService_Tests()
         {
@@ -33,6 +35,7 @@ namespace GoPlaces.Ratings
             _cityService = GetRequiredService<ICitySearchService>();
             _guidGenerator = GetRequiredService<IGuidGenerator>();
             _currentPrincipalAccessor = GetRequiredService<ICurrentPrincipalAccessor>();
+            _userRepo = GetRequiredService<IRepository<IdentityUser, Guid>>();
         }
 
         // Método auxiliar para cambiar el usuario en contexto más limpio
@@ -49,7 +52,7 @@ namespace GoPlaces.Ratings
         // Método auxiliar para crear el servicio con el Dependency Injection correcto
         private RatingAppService CreateRatingService()
         {
-            var service = new RatingAppService(_ratingRepo, _destinationRepo, _cityService);
+            var service = new RatingAppService(_ratingRepo, _destinationRepo, _cityService, _userRepo);
             service.LazyServiceProvider = ServiceProvider.GetRequiredService<Volo.Abp.DependencyInjection.IAbpLazyServiceProvider>();
             return service;
         }
@@ -312,6 +315,48 @@ namespace GoPlaces.Ratings
                     // Al no tener votos, debe devolver 0 y no lanzar excepción
                     average.ShouldBe(0);
                 }
+            });
+        }
+        [Fact]
+        public async Task Should_Get_Ratings_By_Destination()
+        {
+            // 1. Arrange: Creamos un destino
+            var destinationId = _guidGenerator.Create();
+            await _destinationRepo.InsertAsync(new DestinationEntity(destinationId, "Kyoto", "Japan", 1000, new CoordinatesValue(0, 0), "img.jpg", DateTime.UtcNow));
+
+            // Creamos dos usuarios diferentes que van a comentar
+            var user1Id = _guidGenerator.Create();
+            var user2Id = _guidGenerator.Create();
+
+            // Insertamos 2 calificaciones con comentarios
+            await WithUnitOfWorkAsync(async () =>
+            {
+                using (ChangeUserContext(user1Id, "user1"))
+                {
+                    var ratingService = CreateRatingService();
+                    await ratingService.CreateAsync(new CreateRatingDto { DestinationId = destinationId, Score = 5, Comment = "¡Me encantó este lugar!" });
+                }
+            });
+
+            await WithUnitOfWorkAsync(async () =>
+            {
+                using (ChangeUserContext(user2Id, "user2"))
+                {
+                    var ratingService = CreateRatingService();
+                    await ratingService.CreateAsync(new CreateRatingDto { DestinationId = destinationId, Score = 4, Comment = "Muy bonito, pero mucha gente." });
+                }
+            });
+
+            // 2. Act: Llamamos al método que queremos probar
+            await WithUnitOfWorkAsync(async () =>
+            {
+                var ratingService = CreateRatingService();
+                var result = await ratingService.GetByDestinationAsync(destinationId);
+
+                // 3. Assert: Verificamos que traiga exactamente 2 elementos y contenga los comentarios
+                result.Items.Count.ShouldBe(2);
+                result.Items.ShouldContain(r => r.Comment == "¡Me encantó este lugar!");
+                result.Items.ShouldContain(r => r.Comment == "Muy bonito, pero mucha gente.");
             });
         }
     }

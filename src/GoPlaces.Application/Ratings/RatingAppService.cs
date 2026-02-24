@@ -12,6 +12,7 @@ using Volo.Abp.Users;
 using Volo.Abp.Authorization;
 using GoPlaces.Destinations;
 using GoPlaces.Cities;
+using Volo.Abp.Identity;
 
 namespace GoPlaces.Ratings
 {
@@ -21,15 +22,18 @@ namespace GoPlaces.Ratings
         private readonly IRepository<Rating, Guid> _repo;
         private readonly IRepository<Destination, Guid> _destinationRepository;
         private readonly ICitySearchService _citySearchService;
+        private readonly IRepository<IdentityUser, Guid> _userRepository;
 
         public RatingAppService(
             IRepository<Rating, Guid> repo,
             IRepository<Destination, Guid> destinationRepository,
-            ICitySearchService citySearchService)
+            ICitySearchService citySearchService,
+            IRepository<IdentityUser, Guid> userRepository)
         {
             _repo = repo;
             _destinationRepository = destinationRepository;
             _citySearchService = citySearchService;
+            _userRepository = userRepository;
         }
 
         public async Task<RatingDto> CreateAsync(CreateRatingDto input)
@@ -75,14 +79,40 @@ namespace GoPlaces.Ratings
 
         public async Task<ListResultDto<RatingDto>> GetByDestinationAsync(Guid destinationId)
         {
-            var list = await (await _repo.GetQueryableAsync())
+            // 1. Buscamos primero las calificaciones del destino
+            var ratings = await (await _repo.GetQueryableAsync())
                 .Where(r => r.DestinationId == destinationId)
                 .OrderByDescending(r => r.CreationTime)
                 .ToListAsync();
 
-            return new ListResultDto<RatingDto>(
-                ObjectMapper.Map<List<Rating>, List<RatingDto>>(list)
-            );
+            // Si no hay calificaciones, retornamos vacío de inmediato
+            if (!ratings.Any())
+            {
+                return new ListResultDto<RatingDto>(new List<RatingDto>());
+            }
+
+            // 2. Extraemos los IDs de los usuarios que comentaron (sin repetir)
+            var userIds = ratings.Select(r => r.UserId).Distinct().ToList();
+
+            // 3. Buscamos los nombres de esos usuarios
+            var users = await (await _userRepository.GetQueryableAsync())
+                .Where(u => userIds.Contains(u.Id))
+                .ToListAsync();
+
+            // Creamos un diccionario para buscar los nombres súper rápido
+            var userDictionary = users.ToDictionary(u => u.Id, u => u.UserName);
+
+            // 4. Armamos la respuesta final cruzando los datos en memoria
+            var dtos = new List<RatingDto>();
+            foreach (var rating in ratings)
+            {
+                var dto = ObjectMapper.Map<Rating, RatingDto>(rating);
+                // Si encontramos al usuario, le ponemos el nombre, si no, lo marcamos como Anónimo
+                dto.UserName = userDictionary.ContainsKey(rating.UserId) ? userDictionary[rating.UserId] : "Anónimo";
+                dtos.Add(dto);
+            }
+
+            return new ListResultDto<RatingDto>(dtos);
         }
 
         public async Task<RatingDto?> GetMyForDestinationAsync(Guid destinationId)
