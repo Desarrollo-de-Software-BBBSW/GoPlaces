@@ -11,4 +11,5 @@ export interface RatingDto extends EntityDto<string> {
   score: number;
   comment?: string;
   userId?: string;
+  userName?: string;
 }

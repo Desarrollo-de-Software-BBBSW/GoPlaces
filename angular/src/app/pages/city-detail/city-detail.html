@@ -99,6 +99,47 @@
 
       </div>
       
+<hr class="my-5">
+      <div class="comments-section text-start mb-4">
+        <h4 class="fw-bold mb-4 text-secondary">
+          <i class="fa fa-comments-o me-2 text-primary"></i> Opiniones de los viajeros
+        </h4>
+
+        <div *ngIf="comments.length === 0" class="text-center text-muted p-4 bg-light rounded border border-dashed">
+          <i class="fa fa-info-circle fs-3 mb-2 opacity-50"></i>
+          <p class="mb-0">Aún no hay opiniones sobre este destino. ¡Sé el primero en contar tu experiencia!</p>
+        </div>
+
+        <div class="row">
+          <div *ngFor="let item of comments" class="col-12 mb-3">
+            <div class="card border-0 shadow-sm" style="background-color: #f8f9fa;">
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                  <h6 class="card-subtitle fw-bold text-dark mb-0">
+                    <i class="fa fa-user-circle text-primary me-1"></i> {{ item.userName || 'Viajero Anónimo' }}
+                  </h6>
+                  <small class="text-muted" *ngIf="item.creationTime">
+                    {{ item.creationTime | date:'shortDate' }}
+                  </small>
+                </div>
+                
+                <div class="text-warning mb-2" style="font-size: 0.9rem;">
+                  <i *ngFor="let star of [1,2,3,4,5]" class="fa" 
+                     [ngClass]="item.score >= star ? 'fa-star' : 'fa-star-o'"></i>
+                </div>
+                
+                <p class="card-text text-secondary mb-0" *ngIf="item.comment">
+                  "{{ item.comment }}"
+                </p>
+                <p class="card-text text-muted mb-0 fst-italic" *ngIf="!item.comment">
+                  <small>Dejó una calificación sin comentario.</small>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="d-grid gap-2 d-sm-flex justify-content-sm-center mt-4">
         <button routerLink="/cities" class="btn btn-outline-secondary px-4">
           <i class="fa fa-arrow-left me-2"></i> Volver
