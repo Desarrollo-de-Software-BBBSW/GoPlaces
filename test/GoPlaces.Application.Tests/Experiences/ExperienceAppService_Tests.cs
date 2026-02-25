@@ -17,6 +17,7 @@ using GoPlaces.Destinations;
 
 namespace GoPlaces.Experiences
 {
+    [Collection(GoPlacesTestConsts.CollectionDefinitionName)]
     public class ExperienceAppService_Tests : GoPlacesApplicationTestBase<GoPlacesApplicationTestModule>
     {
         private readonly IExperienceAppService _experienceAppService;

@@ -19,6 +19,7 @@ using CoordinatesValue = GoPlaces.Destinations.Coordinates;
 
 namespace GoPlaces.Ratings
 {
+    [Collection(GoPlacesTestConsts.CollectionDefinitionName)]
     public class RatingAppService_Tests : GoPlacesApplicationTestBase<GoPlacesApplicationTestModule>
     {
         private readonly IRepository<DestinationEntity, Guid> _destinationRepo;
