@@ -54,7 +54,14 @@ public class GoPlacesApplicationTestModule : AbpModule
 
     public override void OnApplicationShutdown(ApplicationShutdownContext context)
     {
-        _sqliteConnection?.Dispose();
+        try
+        {
+            _sqliteConnection?.Dispose();
+        }
+        catch
+        {
+            // Ignoramos el error si Entity Framework ya destruyó la conexión de SQLite
+        }
     }
 
     private static SqliteConnection CreateDatabaseAndGetConnection()
