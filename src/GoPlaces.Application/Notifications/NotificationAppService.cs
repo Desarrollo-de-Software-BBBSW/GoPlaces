@@ -1,13 +1,17 @@
-﻿using GoPlaces.Follows; // Necesario para leer las listas de favoritos
+﻿using GoPlaces.Follows;
+using Microsoft.AspNetCore.Authorization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Volo.Abp; // Necesario para UserFriendlyException
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
 
 namespace GoPlaces.Notifications
+
 {
+    [Authorize]
     public class NotificationAppService : ApplicationService, INotificationAppService
     {
         private readonly IRepository<Notification, Guid> _notificationRepository;
@@ -45,7 +49,6 @@ namespace GoPlaces.Notifications
                 await _notificationRepository.InsertAsync(notification, autoSave: true);
             }
         }
-        // ... (manten lo anterior y agrega este método)
 
         public async Task<List<NotificationDto>> GetMyNotificationsAsync()
         {
@@ -66,6 +69,25 @@ namespace GoPlaces.Notifications
                     IsRead = n.IsRead,
                     CreationTime = n.CreationTime
                 }).ToList();
+        }
+
+        // 👇 NUEVO MÉTODO: Cambiar estado de lectura de la notificación
+        public async Task ChangeReadStateAsync(Guid id, bool isRead)
+        {
+            // 1. Buscamos la notificación
+            var notification = await _notificationRepository.GetAsync(id);
+
+            // 2. Seguridad: Verificamos que sea del usuario actual
+            if (notification.UserId != CurrentUser.Id.Value)
+            {
+                throw new UserFriendlyException("No tienes permiso para modificar esta notificación.");
+            }
+
+            // 3. Cambiamos el estado
+            notification.SetReadState(isRead);
+
+            // 4. Guardamos los cambios
+            await _notificationRepository.UpdateAsync(notification, autoSave: true);
         }
     }
 }

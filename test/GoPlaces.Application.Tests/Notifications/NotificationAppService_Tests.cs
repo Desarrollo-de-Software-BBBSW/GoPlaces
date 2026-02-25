@@ -42,12 +42,10 @@ namespace GoPlaces.Notifications
         [Fact]
         public async Task Should_Notify_Only_Users_Who_Follow_Destination()
         {
-            // Arrange
-            var userLucasId = _guidGenerator.Create(); // Fan del destino
-            var userMarcosId = _guidGenerator.Create(); // A Marcos no le interesa
+            var userLucasId = _guidGenerator.Create();
+            var userMarcosId = _guidGenerator.Create();
             var destinationId = _guidGenerator.Create();
 
-            // Lucas agrega el destino a favoritos
             await WithUnitOfWorkAsync(async () =>
             {
                 using (ChangeUserContext(userLucasId, "lucas"))
@@ -56,7 +54,6 @@ namespace GoPlaces.Notifications
                 }
             });
 
-            // Act: Disparamos la notificación de que hay un evento nuevo en ese destino
             await WithUnitOfWorkAsync(async () =>
             {
                 var input = new NotifyDestinationChangeInputDto
@@ -67,19 +64,74 @@ namespace GoPlaces.Notifications
                 await _notificationAppService.NotifyDestinationChangeAsync(input);
             });
 
-            // Assert: Verificamos quién recibió la notificación
             await WithUnitOfWorkAsync(async () =>
             {
                 var lucasNotifications = await _notificationRepository.GetListAsync(n => n.UserId == userLucasId);
                 var marcosNotifications = await _notificationRepository.GetListAsync(n => n.UserId == userMarcosId);
 
-                // Lucas debe tener 1 notificación con el texto correcto
                 lucasNotifications.Count.ShouldBe(1);
                 lucasNotifications[0].Message.ShouldContain("festival gastronómico");
                 lucasNotifications[0].IsRead.ShouldBeFalse();
 
-                // Marcos debe tener 0 notificaciones
                 marcosNotifications.Count.ShouldBe(0);
+            });
+        }
+
+        // 👇 NUEVA PRUEBA: Verifica el ciclo completo de lectura y no lectura
+        [Fact]
+        public async Task Should_Change_Notification_Read_State()
+        {
+            var userId = _guidGenerator.Create();
+            var destinationId = _guidGenerator.Create();
+            Guid notificationId = Guid.Empty;
+
+            // 1. Creamos una notificación (por defecto IsRead es false)
+            await WithUnitOfWorkAsync(async () =>
+            {
+                using (ChangeUserContext(userId, "traveler_lucas"))
+                {
+                    var notification = new Notification(
+                        _guidGenerator.Create(),
+                        userId,
+                        "Test Título",
+                        "Test Mensaje",
+                        destinationId
+                    );
+                    var inserted = await _notificationRepository.InsertAsync(notification, autoSave: true);
+                    notificationId = inserted.Id;
+                }
+            });
+
+            // 2. Act: El usuario la marca como LEÍDA (true)
+            await WithUnitOfWorkAsync(async () =>
+            {
+                using (ChangeUserContext(userId, "traveler_lucas"))
+                {
+                    await _notificationAppService.ChangeReadStateAsync(notificationId, true);
+                }
+            });
+
+            // 3. Assert: Verificamos que ahora sea true
+            await WithUnitOfWorkAsync(async () =>
+            {
+                var notification = await _notificationRepository.GetAsync(notificationId);
+                notification.IsRead.ShouldBeTrue();
+            });
+
+            // 4. Act: El usuario se arrepiente y la marca como NO LEÍDA (false)
+            await WithUnitOfWorkAsync(async () =>
+            {
+                using (ChangeUserContext(userId, "traveler_lucas"))
+                {
+                    await _notificationAppService.ChangeReadStateAsync(notificationId, false);
+                }
+            });
+
+            // 5. Assert: Verificamos que volvió a ser false
+            await WithUnitOfWorkAsync(async () =>
+            {
+                var notification = await _notificationRepository.GetAsync(notificationId);
+                notification.IsRead.ShouldBeFalse();
             });
         }
     }

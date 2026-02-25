@@ -24,10 +24,10 @@ namespace GoPlaces.Notifications
             DestinationId = destinationId;
         }
 
-        // Método para que el usuario la marque como leída
-        public void MarkAsRead()
+        // 👇 NUEVO: Método actualizado para permitir ambos estados (leída/no leída)
+        public void SetReadState(bool isRead)
         {
-            IsRead = true;
+            IsRead = isRead;
         }
     }
 }

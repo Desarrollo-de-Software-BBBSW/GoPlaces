@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Volo.Abp.Application.Services;
 
@@ -8,7 +9,10 @@ namespace GoPlaces.Notifications
     {
         Task NotifyDestinationChangeAsync(NotifyDestinationChangeInputDto input);
 
-        // 👇 NUEVO: Para que el usuario vea sus avisos
+        // Para que el usuario vea sus avisos
         Task<List<NotificationDto>> GetMyNotificationsAsync();
+
+        // 👇 NUEVO MÉTODO: Cambiar estado de lectura
+        Task ChangeReadStateAsync(Guid id, bool isRead);
     }
 }
