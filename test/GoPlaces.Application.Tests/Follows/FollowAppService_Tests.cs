@@ -16,8 +16,6 @@ namespace GoPlaces.Follows
         private readonly IFollowAppService _followAppService;
         private readonly IGuidGenerator _guidGenerator;
         private readonly ICurrentPrincipalAccessor _currentPrincipalAccessor;
-
-        // 👇 CORRECCIÓN: Usamos el repositorio especializado de tu amigo
         private readonly IFollowListRepository _followListRepo;
 
         public FollowAppService_Tests()
@@ -108,7 +106,6 @@ namespace GoPlaces.Follows
             // 3. Verificamos que realmente se haya borrado
             await WithUnitOfWorkAsync(async () =>
             {
-                // 👇 CORRECCIÓN: Usamos el método de tu amigo que carga los items correctamente
                 var list = await _followListRepo.FindDefaultByOwnerAsync(userId);
 
                 list.ShouldNotBeNull();
@@ -148,11 +145,44 @@ namespace GoPlaces.Follows
             // 3. Verificamos que el destino SIGUE estando a salvo
             await WithUnitOfWorkAsync(async () =>
             {
-                // 👇 CORRECCIÓN: Usamos el método de tu amigo que carga los items correctamente
                 var list = await _followListRepo.FindDefaultByOwnerAsync(ownerId);
 
                 list.ShouldNotBeNull();
-                list.HasDestination(destinationId).ShouldBeTrue(); // ¡Ahora sí dirá que True y pasará!
+                list.HasDestination(destinationId).ShouldBeTrue();
+            });
+        }
+
+        // 👇 NUEVA PRUEBA: Consultar la lista personal de favoritos
+        [Fact]
+        public async Task Should_Get_My_Favorites()
+        {
+            var userId = _guidGenerator.Create();
+            var destinationId1 = _guidGenerator.Create();
+            var destinationId2 = _guidGenerator.Create();
+
+            // 1. El usuario guarda DOS destinos diferentes
+            await WithUnitOfWorkAsync(async () =>
+            {
+                using (ChangeUserContext(userId, "traveler_lucas"))
+                {
+                    await _followAppService.SaveDestinationAsync(new SaveOrRemoveInputDto { DestinationId = destinationId1 });
+                    await _followAppService.SaveDestinationAsync(new SaveOrRemoveInputDto { DestinationId = destinationId2 });
+                }
+            });
+
+            // 2. El usuario consulta su lista
+            await WithUnitOfWorkAsync(async () =>
+            {
+                using (ChangeUserContext(userId, "traveler_lucas"))
+                {
+                    var result = await _followAppService.GetMyFavoritesAsync();
+
+                    // 3. Verificamos que traiga exactamente 2 y que sean los correctos
+                    result.ShouldNotBeNull();
+                    result.Count.ShouldBe(2);
+                    result.ShouldContain(x => x.DestinationId == destinationId1);
+                    result.ShouldContain(x => x.DestinationId == destinationId2);
+                }
             });
         }
     }

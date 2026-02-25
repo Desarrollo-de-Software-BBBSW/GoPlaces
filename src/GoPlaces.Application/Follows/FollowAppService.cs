@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Volo.Abp;
@@ -50,7 +52,7 @@ namespace GoPlaces.Follows
             };
         }
 
-        // 👇 NUEVO MÉTODO: Eliminar destino de favoritos
+        // Método: Eliminar destino de favoritos
         public async Task RemoveDestinationAsync(SaveOrRemoveInputDto input)
         {
             var userId = CurrentUser.Id.Value;
@@ -69,6 +71,29 @@ namespace GoPlaces.Follows
 
             // 4. Guardamos los cambios
             await _followListRepository.UpdateAsync(list, autoSave: true);
+        }
+
+        // 👇 NUEVO MÉTODO: Consultar lista personal
+        public async Task<List<SavedDestinationDto>> GetMyFavoritesAsync()
+        {
+            var userId = CurrentUser.Id.Value;
+
+            // 1. Buscamos la lista del usuario actual
+            var list = await _followListRepository.FindDefaultByOwnerAsync(userId);
+
+            // 2. Si no tiene lista o está vacía, devolvemos una lista vacía
+            if (list == null || !list.Items.Any())
+            {
+                return new List<SavedDestinationDto>();
+            }
+
+            // 3. Transformamos los items de la base de datos a DTOs
+            return list.Items.Select(item => new SavedDestinationDto
+            {
+                Id = item.Id,
+                DestinationId = item.DestinationId,
+                CreationTime = item.CreationTime
+            }).ToList();
         }
     }
 }
