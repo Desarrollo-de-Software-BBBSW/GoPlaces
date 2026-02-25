@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Volo.Abp.Application.Services;
 
 namespace GoPlaces.Follows
@@ -8,7 +9,10 @@ namespace GoPlaces.Follows
         // Método para agregar a favoritos
         Task<SavedDestinationDto> SaveDestinationAsync(SaveOrRemoveInputDto input);
 
-        // 👇 NUEVO MÉTODO: Eliminar destino de favoritos
+        // Método para eliminar destino de favoritos
         Task RemoveDestinationAsync(SaveOrRemoveInputDto input);
+
+        // 👇 NUEVO MÉTODO: Consultar lista personal
+        Task<List<SavedDestinationDto>> GetMyFavoritesAsync();
     }
 }
