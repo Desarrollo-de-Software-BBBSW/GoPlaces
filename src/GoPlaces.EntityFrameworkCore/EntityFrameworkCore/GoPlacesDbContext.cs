@@ -1,6 +1,7 @@
 ﻿using GoPlaces.Destinations;
-using GoPlaces.Ratings;
 using GoPlaces.Experiences; // 👈 AGREGADO: Importamos Experiences
+using GoPlaces.Notifications;
+using GoPlaces.Ratings;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
@@ -55,6 +56,7 @@ public class GoPlacesDbContext :
     {
     }
 
+    public DbSet<Notification> Notifications { get; set; }
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
@@ -141,6 +143,11 @@ public class GoPlacesDbContext :
                 .WithMany(x => (ICollection<GoPlaces.Follows.FollowListItem>)x.Items)
                 .HasForeignKey(x => x.FollowListId)
                 .OnDelete(DeleteBehavior.Cascade);
+        });
+        builder.Entity<Notification>(b =>
+        {
+            b.ToTable(GoPlacesConsts.DbTablePrefix + "Notifications", GoPlacesConsts.DbSchema);
+            b.ConfigureByConvention();
         });
     }
 }
