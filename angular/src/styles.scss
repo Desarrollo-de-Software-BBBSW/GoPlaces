@@ -1,39 +1,43 @@
-/* You can add global styles to this file, and also import other style files */
+/* 1. Importaciones */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700;800&display=swap');
 
-
+/* 2. Variables Globales del Tema Lepton-X */
 :root {
+  /* Fondos de login */
   --lpx-theme-light-bg: url('/assets/images/login/login-bg-img-light.svg');
   --lpx-theme-dim-bg: url('/assets/images/login/login-bg-img-dim.svg');
   --lpx-theme-dark-bg: url('/assets/images/login/login-bg-img-dark.svg');
 
-  --lpx-logo-url: var(--lpx-logo-icon, url('/assets/images/logo/icon.svg'));
-  --lpx-logo: var(--lpx-logo-icon)!important;
+  /* 👇 FORZAMOS LOS LOGOS (AQUÍ ESTABA EL PROBLEMA ANTES) */
+  --lpx-logo-url: url('/assets/images/logo/logo-light.png') !important;
+  --lpx-logo: url('/assets/images/logo/logo-light.png') !important;
+  --lpx-logo-icon: url('/assets/images/logo/icon.svg') !important;
 
-  .abp-logo {
-    background-repeat: no-repeat;
-  }
+  /* Color principal */
+  --lpx-brand: #0b2545;
+}
 
-  .abp-support {
-    width: 178px;
-    height: 30px;
-    background-image: url('/assets/images/getting-started/abp-support.svg');
-  }
+/* 3. Tipografía global: Forzamos la jerarquía agregando 'body' */
+body .lpx-topbar, 
+body .lpx-toolbar,
+body .lpx-nav-menu,
+body .lpx-sidebar,
+body .lpx-logo-container {
+  font-family: 'Poppins', sans-serif !important;
+}
 
-  .abp-community {
-    width: 215px;
-    height: 30px;
-    background-image: url('/assets/images/getting-started/abp-community.svg');
-  }
+/* 4. Forzamos el aspecto de los botones superiores (Login, Idioma) */
+body .lpx-topbar .lpx-toolbar .lpx-nav-item .lpx-nav-link,
+body .lpx-topbar .lpx-toolbar .lpx-nav-item .lpx-nav-link span {
+  font-size: 1rem !important; 
+  font-weight: 500 !important;
+  color: #133c55 !important; 
+  font-family: 'Poppins', sans-serif !important;
+  transition: all 0.3s ease !important;
+}
 
-  .abp-blog {
-    width: 142px;
-    height: 30px;
-    background-image: url('/assets/images/getting-started/abp-blog.svg');
-  }
-
-  .logo-x {
-    width: 20px;
-    height: 20px;
-    background-image: url('/assets/images/getting-started/x.svg');
-  }
+/* Efecto hover */
+body .lpx-topbar .lpx-toolbar .lpx-nav-item .lpx-nav-link:hover {
+  color: #0b2545 !important;
+  transform: scale(1.05);
 }

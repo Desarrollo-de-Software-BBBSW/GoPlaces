@@ -2,25 +2,26 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { finalize, switchMap, debounceTime, distinctUntilChanged, catchError, of } from 'rxjs';
 import { CommonModule } from '@angular/common'; 
+import { RouterModule } from '@angular/router'; // 👈 1. IMPORTA ESTO
 
 // Importación del Proxy de Ciudades
 import { CitySearchResultDto, CityService, CitySearchRequestDto, CityDto } from 'src/app/proxy/cities';
 import { DestinationService } from 'src/app/proxy/destinations/destination.service';
 import type { CreateUpdateDestinationDto } from 'src/app/proxy/destinations/models'; 
-
-// 👇 1. IMPORTAMOS EL SERVICIO DE TOASTER DE ABP
 import { ToasterService } from '@abp/ng.theme.shared';
 
 @Component({
   standalone: true, 
   imports: [
     CommonModule,             
-    ReactiveFormsModule      
+    ReactiveFormsModule,
+    RouterModule // 👈 2. AGRÉGALO AL ARREGLO
   ],
   selector: 'app-cities-search',
   templateUrl: './cities-search.html', 
   styleUrls: ['./cities-search.scss'], 
 })
+
 export class CitiesSearchComponent implements OnInit {
   
   searchControl = new FormControl(''); 

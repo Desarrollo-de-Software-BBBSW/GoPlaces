@@ -31,31 +31,42 @@
         <h5>Resultados Encontrados ({{ cities.length }})</h5>
         <hr>
         
-        <table class="table table-striped table-hover">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Nombre</th>
-              <th>País</th>
-              <th class="text-center" style="width: 150px;">Acción</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let city of cities">
-              <td>{{ city.id }}</td>
-              <td>{{ city.name }}</td>
-              <td>{{ city.country }}</td>
-              <td class="text-center">
-                <button 
-                  class="btn btn-success btn-sm" 
-                  (click)="saveCity(city)"
-                  title="Guardar en mis destinos">
-                  <span>💾 Guardar</span> 
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <div class="table-responsive shadow-sm" style="max-height: 220px; overflow-y: auto; border: 1px solid #dee2e6; border-radius: 5px;">
+          <table class="table table-striped table-hover mb-0">
+            <thead style="position: sticky; top: 0; background-color: #f8f9fa; z-index: 1; box-shadow: 0 2px 2px -1px rgba(0,0,0,0.1);">
+              <tr>
+                <th style="width: 10%;">ID</th>
+                <th style="width: 35%;">Nombre</th> <th style="width: 20%;">País</th>
+                <th class="text-center" style="width: 35%;">Acción</th> </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let city of cities">
+                <td class="align-middle">{{ city.id }}</td>
+                <td class="align-middle fw-bold">{{ city.name }}</td>
+                <td class="align-middle">{{ city.country }}</td>
+                <td class="text-center align-middle">
+                  
+                  <div class="d-flex justify-content-center gap-2">
+                    <button 
+                      class="btn btn-success btn-sm text-nowrap" 
+                      (click)="saveCity(city)"
+                      title="Guardar en mis destinos">
+                      <span>💾 Guardar</span> 
+                    </button>
+                    
+                    <a 
+                      class="btn btn-primary btn-sm text-nowrap" 
+                      [routerLink]="['/cities', city.id]"
+                      title="Ver detalles y opiniones">
+                      <span>👁️ Ir</span> 
+                    </a>
+                  </div>
+
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
 
       <div *ngIf="!cities.length && searchControl.value && !isLoading && !errorMessage" class="alert alert-info">
