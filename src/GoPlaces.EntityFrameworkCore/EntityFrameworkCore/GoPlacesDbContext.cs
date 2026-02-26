@@ -1,5 +1,6 @@
 ﻿using GoPlaces.Destinations;
 using GoPlaces.Experiences; // 👈 AGREGADO: Importamos Experiences
+using GoPlaces.ExternalApiMetrics;
 using GoPlaces.Notifications;
 using GoPlaces.Ratings;
 using Microsoft.EntityFrameworkCore;
@@ -55,6 +56,7 @@ public class GoPlacesDbContext :
         : base(options)
     {
     }
+    public DbSet<ExternalApiCall> ExternalApiCalls { get; set; }
 
     public DbSet<Notification> Notifications { get; set; }
     protected override void OnModelCreating(ModelBuilder builder)
