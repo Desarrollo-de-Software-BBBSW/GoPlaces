@@ -16,6 +16,10 @@ export const APP_ROUTES: Routes = [
     loadComponent: () => import('./home/home.component').then(m => m.HomeComponent),
   },
   {
+    path: 'account/manage',
+    redirectTo: 'my-profile'
+  },
+  {
     path: 'account',
     loadChildren: () => import('@abp/ng.account').then(m => m.AccountModule.forLazy()),
   },

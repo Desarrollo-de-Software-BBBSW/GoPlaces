@@ -1,4 +1,4 @@
-import { AuthService } from '@abp/ng.core';
+import { AuthService, LocalizationPipe } from '@abp/ng.core';
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ThemeSharedModule } from '@abp/ng.theme.shared';
@@ -12,7 +12,8 @@ import { CitiesSearchComponent } from '../pages/cities-search/cities-search';
     CommonModule,
     ThemeSharedModule,
     PopularDestinationsComponent,
-    CitiesSearchComponent
+    CitiesSearchComponent,
+    LocalizationPipe  // 👈 Agregá esto
   ],
   selector: 'app-home',
   templateUrl: './home.component.html',
