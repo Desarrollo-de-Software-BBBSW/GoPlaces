@@ -9,24 +9,23 @@ import { registerLocale } from '@abp/ng.core/locale';
 import { provideThemeLeptonX } from '@abp/ng.theme.lepton-x';
 import { provideSideMenuLayout } from '@abp/ng.theme.lepton-x/layouts';
 import { provideLogo, withEnvironmentOptions } from "@volo/ngx-lepton-x.core";
-import { ApplicationConfig } from '@angular/core';
+import { ApplicationConfig, APP_INITIALIZER } from '@angular/core'; // 👈 agregá APP_INITIALIZER
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
-import { provideHttpClient, withInterceptors } from '@angular/common/http'; // 👈 Importación Nueva
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { environment } from '../environments/environment';
 import { APP_ROUTES } from './app.routes';
 import { APP_ROUTE_PROVIDER } from './route.provider';
-import { authInterceptor } from './auth.interceptor'; // 👈 Importación Nueva
+import { authInterceptor } from './auth.interceptor';
+import { NavItemsService } from '@abp/ng.theme.shared'; // 👈 agregá esto
+import { UserSearchComponent } from './shared/user-search.component';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(APP_ROUTES),
     APP_ROUTE_PROVIDER,
     provideAnimations(),
-    
-    // 👇 AQUÍ ESTÁ LA CLAVE: Registramos el cliente HTTP con el interceptor de credenciales
     provideHttpClient(withInterceptors([authInterceptor])),
-
     provideAbpCore(
       withOptions({
         environment,
@@ -42,5 +41,21 @@ export const appConfig: ApplicationConfig = {
     provideLogo(withEnvironmentOptions(environment)),
     provideAccountConfig(),
     provideAbpThemeShared(),
+
+    // 👇 Agregá esto al final
+    {
+      provide: APP_INITIALIZER,
+      useFactory: (navItems: NavItemsService) => () => {
+        navItems.addItems([
+          {
+            id: 'user-search',
+            order: 1,
+            component: UserSearchComponent,
+          }
+        ]);
+      },
+      deps: [NavItemsService],
+      multi: true,
+    }
   ]
 };

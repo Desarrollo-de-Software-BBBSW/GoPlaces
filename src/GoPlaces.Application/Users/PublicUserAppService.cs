@@ -1,13 +1,14 @@
-﻿using System.Threading.Tasks;
+﻿using GoPlaces.Users;
+using System;
+using System.Threading.Tasks;
 using Volo.Abp;
-using Volo.Abp.Identity;
-using Volo.Abp.DependencyInjection;
 using Volo.Abp.Data; // 👈 NECESARIO para leer propiedades extra (PhotoUrl)
-using GoPlaces.Users;
+using Volo.Abp.DependencyInjection;
+using Volo.Abp.Identity;
 
 namespace GoPlaces.Users;
 
-[ExposeServices(typeof(IPublicUserLookupAppService))]
+
 public class PublicUserAppService : GoPlacesAppService, IPublicUserLookupAppService
 {
     protected IIdentityUserRepository UserRepository { get; }
@@ -19,22 +20,32 @@ public class PublicUserAppService : GoPlacesAppService, IPublicUserLookupAppServ
 
     public virtual async Task<PublicUserProfileDto> GetByUserNameAsync(string userName)
     {
-        // includeDetails: true asegura que traiga todo
-        var user = await UserRepository.FindByNormalizedUserNameAsync(userName.ToUpper(), includeDetails: true);
-
-        if (user == null)
+        try
         {
-            throw new UserFriendlyException($"No se encontró el usuario: {userName}");
+            if (string.IsNullOrWhiteSpace(userName))
+                throw new UserFriendlyException("El nombre de usuario no puede estar vacío.");
+
+            var user = await UserRepository.FindByNormalizedUserNameAsync(userName.ToUpper(), includeDetails: true);
+
+            if (user == null)
+                throw new UserFriendlyException($"No se encontró el usuario: {userName}");
+
+            return new PublicUserProfileDto
+            {
+                Id = user.Id,
+                UserName = user.UserName,
+                Name = user.Name ?? string.Empty,
+                Surname = user.Surname ?? string.Empty,
+                PhotoUrl = user.GetProperty<string>("PhotoUrl")
+            };
         }
-
-        return new PublicUserProfileDto
+        catch (UserFriendlyException)
         {
-            UserName = user.UserName,
-            Name = user.Name,
-            Surname = user.Surname, // Agregamos el apellido también por si acaso
-
-            // 👇 ESTA ES LA LÍNEA QUE FALTABA Y CAUSABA EL ERROR "but was null"
-            PhotoUrl = user.GetProperty<string>("PhotoUrl")
-        };
+            throw; // estas las dejamos pasar normal
+        }
+        catch (Exception ex)
+        {
+            throw new UserFriendlyException($"Error detallado: {ex.Message} | {ex.InnerException?.Message}");
+        }
     }
 }
