@@ -8,7 +8,7 @@ using Volo.Abp.Identity;
 
 namespace GoPlaces.Users;
 
-
+[ExposeServices(typeof(IPublicUserLookupAppService), typeof(PublicUserAppService))]
 public class PublicUserAppService : GoPlacesAppService, IPublicUserLookupAppService
 {
     protected IIdentityUserRepository UserRepository { get; }
