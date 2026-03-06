@@ -1,17 +1,19 @@
-import { AuthService } from '@abp/ng.core';
+import { AuthService, LocalizationPipe } from '@abp/ng.core';
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ThemeSharedModule } from '@abp/ng.theme.shared';
 
-// 👇 1. IMPORTAMOS EL COMPONENTE
 import { PopularDestinationsComponent } from './popular-destinations/popular-destinations';
+import { CitiesSearchComponent } from '../pages/cities-search/cities-search';
 
 @Component({
   standalone: true,
-  imports: [
+  imports: [ 
     CommonModule,
     ThemeSharedModule,
-    PopularDestinationsComponent // 👈 2. LO AGREGAMOS A LA LISTA
+    PopularDestinationsComponent,
+    CitiesSearchComponent,
+    LocalizationPipe  // 👈 Agregá esto
   ],
   selector: 'app-home',
   templateUrl: './home.component.html',
