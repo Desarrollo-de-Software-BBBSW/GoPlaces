@@ -151,5 +151,13 @@ public class GoPlacesDbContext :
             b.ToTable(GoPlacesConsts.DbTablePrefix + "Notifications", GoPlacesConsts.DbSchema);
             b.ConfigureByConvention();
         });
+
+        // 5. Configuración de EXTERNAL API CALLS
+        // La tabla se llama "ExternalApiCalls" sin prefijo, tal como la creó la migración inicial.
+        builder.Entity<ExternalApiCall>(b =>
+        {
+            b.ToTable("ExternalApiCalls");
+            b.ConfigureByConvention();
+        });
     }
 }

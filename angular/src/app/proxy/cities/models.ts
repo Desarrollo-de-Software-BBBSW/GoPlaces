@@ -8,6 +8,9 @@ export interface CityDto extends EntityDto<string> {
 
 export interface CitySearchRequestDto {
   partialName?: string;
+  countryCode?: string;
+  regionId?: string;
+  minPopulation?: number;
 }
 
 export interface CitySearchResultDto {

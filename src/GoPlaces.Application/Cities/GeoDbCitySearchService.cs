@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Text;
 using System.Threading.Tasks;
 using Volo.Abp;
 
@@ -38,7 +39,19 @@ namespace GoPlaces.Cities
             try
             {
                 var client = _httpClientFactory.CreateClient("GeoDB");
-                var url = $"cities?namePrefix={Uri.EscapeDataString(request.PartialName)}&limit=10";
+
+                var urlBuilder = new StringBuilder($"cities?namePrefix={Uri.EscapeDataString(query)}&limit=10");
+
+                if (!string.IsNullOrWhiteSpace(request.CountryCode))
+                    urlBuilder.Append($"&countryIds={Uri.EscapeDataString(request.CountryCode.Trim().ToUpperInvariant())}");
+
+                if (!string.IsNullOrWhiteSpace(request.RegionId))
+                    urlBuilder.Append($"&regionCode={Uri.EscapeDataString(request.RegionId.Trim())}");
+
+                if (request.MinPopulation.HasValue)
+                    urlBuilder.Append($"&minPopulation={request.MinPopulation.Value}");
+
+                var url = urlBuilder.ToString();
 
                 var response = await client.GetAsync(url);
                 response.EnsureSuccessStatusCode();
