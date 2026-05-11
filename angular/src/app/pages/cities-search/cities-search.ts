@@ -1,84 +1,80 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { finalize, switchMap, debounceTime, distinctUntilChanged, catchError, of } from 'rxjs';
-import { CommonModule } from '@angular/common'; 
-import { RouterModule } from '@angular/router'; // 👈 1. IMPORTA ESTO
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
-// Importación del Proxy de Ciudades
 import { CitySearchResultDto, CityService, CitySearchRequestDto, CityDto } from 'src/app/proxy/cities';
 import { DestinationService } from 'src/app/proxy/destinations/destination.service';
-import type { CreateUpdateDestinationDto } from 'src/app/proxy/destinations/models'; 
+import type { CreateUpdateDestinationDto } from 'src/app/proxy/destinations/models';
 import { ToasterService } from '@abp/ng.theme.shared';
 
 @Component({
-  standalone: true, 
+  standalone: true,
   imports: [
-    CommonModule,             
+    CommonModule,
     ReactiveFormsModule,
-    RouterModule // 👈 2. AGRÉGALO AL ARREGLO
+    RouterModule,
   ],
   selector: 'app-cities-search',
-  templateUrl: './cities-search.html', 
-  styleUrls: ['./cities-search.scss'], 
+  templateUrl: './cities-search.html',
+  styleUrls: ['./cities-search.scss'],
 })
-
 export class CitiesSearchComponent implements OnInit {
-  
-  searchControl = new FormControl(''); 
-  cities: CityDto[] = [];      
-  isLoading = false;           
-  errorMessage: string | null = null; 
+
+  searchForm: FormGroup;
+  cities: CityDto[] = [];
+  isLoading = false;
+  errorMessage: string | null = null;
 
   constructor(
-    private cityAppService: CityService,
+    private fb: FormBuilder,
+    private cityService: CityService,
     private destinationService: DestinationService,
-    private toaster: ToasterService // 👈 2. INYECTAMOS EL TOASTER AQUÍ
-  ) { }
-
-  ngOnInit(): void {
-    this.searchControl.valueChanges
-      .pipe(
-        debounceTime(300), 
-        distinctUntilChanged(), 
-        switchMap(searchTerm => {
-          const query = (searchTerm || '').trim();
-
-          if (query.length < 3) {
-            this.cities = [];
-            this.errorMessage = null;
-            return of(null);
-          }
-
-          this.isLoading = true;
-          this.errorMessage = null; 
-
-          const input: CitySearchRequestDto = {
-            partialName: query
-          };
-          
-          return this.cityAppService.searchCities(input).pipe(
-            finalize(() => this.isLoading = false), 
-            catchError(error => {
-              console.error(error); 
-              this.errorMessage = 'Ocurrió un error al buscar ciudades.';
-              this.cities = [];
-              return of(null); 
-            })
-          );
-        })
-      )
-      .subscribe(
-        (result: CitySearchResultDto | null) => {
-          if (result && result.cities) {
-            this.cities = result.cities;
-          } else {
-            this.cities = [];
-          }
-        }
-      );
+    private toaster: ToasterService,
+  ) {
+    this.searchForm = this.fb.group({
+      partialName: [''],
+      countryCode: [''],
+      regionId: [''],
+      minPopulation: [null],
+    });
   }
 
-  // 👇 3. FUNCIÓN ACTUALIZADA CON TOASTER
+  ngOnInit(): void {}
+
+  search(): void {
+    const { partialName, countryCode, regionId, minPopulation } = this.searchForm.value;
+
+    if (!partialName || partialName.trim().length < 3) {
+      this.errorMessage = 'Ingresa al menos 3 caracteres para el nombre de la ciudad.';
+      return;
+    }
+
+    this.isLoading = true;
+    this.errorMessage = null;
+    this.cities = [];
+
+    const request: CitySearchRequestDto = {
+      partialName: partialName.trim(),
+      countryCode: countryCode?.trim() || undefined,
+      regionId: regionId?.trim() || undefined,
+      minPopulation: minPopulation != null && minPopulation !== '' ? Number(minPopulation) : undefined,
+    };
+
+    this.cityService.searchCities(request).subscribe({
+      next: (result: CitySearchResultDto) => {
+        this.cities = result?.cities ?? [];
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error(err);
+        this.errorMessage = 'Ocurrió un error al buscar ciudades.';
+        this.cities = [];
+        this.isLoading = false;
+      },
+    });
+  }
+
   saveCity(city: CityDto): void {
     if (!city) return;
 
@@ -87,19 +83,17 @@ export class CitiesSearchComponent implements OnInit {
       country: city.country || '',
       population: 0,
       latitude: 0,
-      longitude: 0
+      longitude: 0,
     };
 
     this.destinationService.create(input).subscribe({
       next: (result) => {
-        // ✅ ÉXITO: Mensaje verde flotante
         this.toaster.success(`Has guardado ${result.name} en tus destinos`, '¡Guardado con éxito!');
       },
       error: (err) => {
         console.error(err);
-        // ❌ ERROR: Mensaje rojo flotante
         this.toaster.error('No se pudo guardar el destino. Quizás ya existe.', 'Error');
-      }
+      },
     });
   }
 }

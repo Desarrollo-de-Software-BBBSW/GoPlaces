@@ -33,5 +33,18 @@ export class CityService {
     },
     { apiName: this.apiName,...config });
 
+  getList = (request: CitySearchRequestDto, config?: Partial<Rest.Config>) =>
+    this.restService.request<any, CitySearchResultDto>({
+      method: 'GET',
+      url: '/api/app/city',
+      params: {
+        partialName: request.partialName,
+        countryCode: request.countryCode,
+        regionId: request.regionId,
+        minPopulation: request.minPopulation,
+      },
+    },
+    { apiName: this.apiName,...config });
+
   constructor(private restService: RestService) {}
 }

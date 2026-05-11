@@ -12,6 +12,9 @@ namespace GoPlaces.Cities
     public interface ICityAppService : IApplicationService
     {
         Task<CitySearchResultDto> SearchCitiesAsync(CitySearchRequestDto request);
+
+        /// <summary>Busca ciudades aplicando los filtros de país, región y población mínima.</summary>
+        Task<CitySearchResultDto> GetListAsync(CitySearchRequestDto request);
     }
 
 }

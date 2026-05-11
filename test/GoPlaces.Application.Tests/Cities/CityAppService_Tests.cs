@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using GoPlaces.Cities;
+using GoPlaces.ExternalApiMetrics;
 using GoPlaces.Ratings;
 using Moq;
 using Shouldly;
@@ -18,17 +20,25 @@ namespace GoPlaces.Tests.Cities
         private readonly Mock<ICitySearchService> _mockCitySearchService;
         private readonly Mock<IRepository<GoPlaces.Destinations.Destination, Guid>> _mockDestinationRepository;
         private readonly Mock<IRepository<Rating, Guid>> _mockRatingRepository;
+        private readonly Mock<IRepository<ExternalApiCall, Guid>> _mockExternalApiCallRepository;
 
         public CityAppService_Tests()
         {
             _mockCitySearchService = new Mock<ICitySearchService>();
             _mockDestinationRepository = new Mock<IRepository<GoPlaces.Destinations.Destination, Guid>>();
             _mockRatingRepository = new Mock<IRepository<Rating, Guid>>();
+            _mockExternalApiCallRepository = new Mock<IRepository<ExternalApiCall, Guid>>();
+
+            _mockExternalApiCallRepository
+                .Setup(r => r.InsertAsync(It.IsAny<ExternalApiCall>(), It.IsAny<bool>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync((ExternalApiCall e, bool _, CancellationToken __) => e);
 
             _cityAppService = new CityAppService(
                 _mockCitySearchService.Object,
                 _mockDestinationRepository.Object,
-                _mockRatingRepository.Object
+                _mockRatingRepository.Object,
+                _mockExternalApiCallRepository.Object,
+                new CitySearchDomainService()
             );
         }
 
@@ -80,7 +90,6 @@ namespace GoPlaces.Tests.Cities
             result.Name.ShouldBe("Paris");
         }
 
-        // 👇👇👇 PRUEBA NUEVA AGREGADA AQUÍ 👇👇👇
         [Fact]
         public async Task SearchCitiesAsync_Should_Return_Empty_List_When_No_Results()
         {
@@ -89,7 +98,7 @@ namespace GoPlaces.Tests.Cities
                 .Setup(s => s.SearchCitiesAsync(It.Is<CitySearchRequestDto>(r => r.PartialName == "XYZ")))
                 .ReturnsAsync(new CitySearchResultDto
                 {
-                    Cities = new List<CityDto>() // Lista vacía
+                    Cities = new List<CityDto>()
                 });
 
             // ACT
@@ -98,6 +107,69 @@ namespace GoPlaces.Tests.Cities
             // ASSERT
             result.ShouldNotBeNull();
             result.Cities.ShouldBeEmpty();
+        }
+
+        [Fact]
+        public async Task GetListAsync_envia_filtros_correctamente_al_servicio_de_busqueda()
+        {
+            // ARRANGE
+            var request = new CitySearchRequestDto
+            {
+                PartialName = "Bue",
+                CountryCode = "AR",
+                RegionId = "BA",
+                MinPopulation = 500000
+            };
+
+            _mockCitySearchService
+                .Setup(s => s.SearchCitiesAsync(It.Is<CitySearchRequestDto>(r =>
+                    r.PartialName == "Bue" &&
+                    r.CountryCode == "AR" &&
+                    r.RegionId == "BA" &&
+                    r.MinPopulation == 500000)))
+                .ReturnsAsync(new CitySearchResultDto
+                {
+                    Cities = new List<CityDto>
+                    {
+                        new() { Id = Guid.NewGuid(), Name = "Buenos Aires", Country = "Argentina" }
+                    }
+                });
+
+            // ACT
+            var result = await _cityAppService.GetListAsync(request);
+
+            // ASSERT
+            result.ShouldNotBeNull();
+            result.Cities.Count.ShouldBe(1);
+            result.Cities[0].Name.ShouldBe("Buenos Aires");
+
+            // Verificar que se llamó al servicio externo con los filtros correctos
+            _mockCitySearchService.Verify(
+                s => s.SearchCitiesAsync(It.Is<CitySearchRequestDto>(r =>
+                    r.CountryCode == "AR" &&
+                    r.RegionId == "BA" &&
+                    r.MinPopulation == 500000)),
+                Times.Once);
+
+            // Verificar que se registró la métrica de la llamada a la API
+            _mockExternalApiCallRepository.Verify(
+                r => r.InsertAsync(It.IsAny<ExternalApiCall>(), It.IsAny<bool>(), It.IsAny<CancellationToken>()),
+                Times.Once);
+        }
+
+        [Fact]
+        public async Task GetListAsync_lanza_excepcion_si_minPopulation_es_negativa()
+        {
+            // ARRANGE
+            var request = new CitySearchRequestDto
+            {
+                PartialName = "Buenos",
+                MinPopulation = -1
+            };
+
+            // ACT & ASSERT
+            await Should.ThrowAsync<Volo.Abp.UserFriendlyException>(
+                () => _cityAppService.GetListAsync(request));
         }
     }
 }

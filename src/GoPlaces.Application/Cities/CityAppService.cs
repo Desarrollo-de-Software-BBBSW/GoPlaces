@@ -1,10 +1,15 @@
 ﻿using GoPlaces.Ratings;
 using GoPlaces.Destinations;
+using GoPlaces.ExternalApiMetrics;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using Volo.Abp;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
 
@@ -12,25 +17,67 @@ namespace GoPlaces.Cities
 {
     public class CityAppService : ApplicationService, ICityAppService
     {
-        // 1. Declaración de variables (Repositorios)
         private readonly ICitySearchService _citySearchService;
-        private readonly IRepository<Destination, Guid> _destinationRepository; // ✅ Nombre estandarizado
+        private readonly IRepository<Destination, Guid> _destinationRepository;
         private readonly IRepository<Rating, Guid> _ratingRepository;
+        private readonly IRepository<ExternalApiCall, Guid> _externalApiCallRepository;
+        private readonly CitySearchDomainService _citySearchDomainService;
 
-        // 2. Constructor (Inyección de dependencias)
         public CityAppService(
             ICitySearchService citySearchService,
-            IRepository<Destination, Guid> destinationRepository, // ✅ Coincide con la variable
-            IRepository<Rating, Guid> ratingRepository)
+            IRepository<Destination, Guid> destinationRepository,
+            IRepository<Rating, Guid> ratingRepository,
+            IRepository<ExternalApiCall, Guid> externalApiCallRepository,
+            CitySearchDomainService citySearchDomainService)
         {
             _citySearchService = citySearchService;
-            _destinationRepository = destinationRepository; // ✅ Asignación correcta
+            _destinationRepository = destinationRepository;
             _ratingRepository = ratingRepository;
+            _externalApiCallRepository = externalApiCallRepository;
+            _citySearchDomainService = citySearchDomainService;
         }
 
-        public async Task<CitySearchResultDto> SearchCitiesAsync(CitySearchRequestDto request)
+        public Task<CitySearchResultDto> SearchCitiesAsync(CitySearchRequestDto request)
         {
-            return await _citySearchService.SearchCitiesAsync(request);
+            return GetListAsync(request);
+        }
+
+        public async Task<CitySearchResultDto> GetListAsync(CitySearchRequestDto request)
+        {
+            // Validación de lógica de negocio en la capa de dominio
+            _citySearchDomainService.ValidateFilters(request?.MinPopulation);
+
+            var endpointBuilder = new StringBuilder($"cities?namePrefix={request?.PartialName}");
+            if (!string.IsNullOrWhiteSpace(request?.CountryCode))
+                endpointBuilder.Append($"&countryIds={request.CountryCode}");
+            if (!string.IsNullOrWhiteSpace(request?.RegionId))
+                endpointBuilder.Append($"&regionCode={request.RegionId}");
+            if (request?.MinPopulation.HasValue == true)
+                endpointBuilder.Append($"&minPopulation={request.MinPopulation}");
+
+            var endpoint = endpointBuilder.ToString();
+            var stopwatch = Stopwatch.StartNew();
+            var isSuccess = false;
+
+            try
+            {
+                var result = await _citySearchService.SearchCitiesAsync(request);
+                isSuccess = true;
+                return result;
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex, "Error al buscar ciudades con filtros avanzados.");
+                throw new UserFriendlyException("Ocurrió un error al consultar la API de ciudades. Intenta nuevamente más tarde.");
+            }
+            finally
+            {
+                stopwatch.Stop();
+                await _externalApiCallRepository.InsertAsync(
+                    new ExternalApiCall(Guid.NewGuid(), "GeoDB", endpoint, (int)stopwatch.ElapsedMilliseconds, isSuccess),
+                    autoSave: true
+                );
+            }
         }
 
         public async Task<CityDto> GetAsync(Guid id)
