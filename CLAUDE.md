@@ -44,7 +44,7 @@ El proyecto es desarrollado por un equipo de al menos 3 personas (Agustin Benede
 
 ### APIs externas
 - **GeoDB Cities** (via RapidAPI): búsqueda de ciudades por nombre, país, región, población
-- **TicketMaster** (via RapidAPI): eventos en destinos
+- **TicketMaster Discovery API** (oficial, directa — **no** vía RapidAPI): eventos en destinos. A diferencia de GeoDB, esto fue una decisión consciente: no se encontró un wrapper de RapidAPI confiable/estable para TicketMaster, así que se integra contra `app.ticketmaster.com/discovery/v2` con su propia API key (`TicketMaster:ApiKey`, separada de `RapidApi:ApiKey`)
 
 ---
 
@@ -112,6 +112,7 @@ GoPlaces/
 | `Notifications/` | `Notification` | Alerta de cambio en destino favorito |
 | `Follow/` | `FollowList`, `FollowListItem` | Lista personal de favoritos |
 | `ExternalApiMetrics/` | `ExternalApiCall` | Tracking de llamadas a APIs externas |
+| `Events/` | `Event` | Evento de TicketMaster asociado a un `Destination` (nombre, fecha, venue, `TicketMasterId` para evitar duplicados al sincronizar) |
 
 ---
 
@@ -217,7 +218,17 @@ public async Task SearchCitiesAsync_devuelve_resultados_del_servicio()
 }
 ```
 
-**Cobertura actual:** Application Services (Cities, Destinations, Experiences, Ratings, Notifications, Follow, ExternalApiMetrics) y Domain Services.
+**Cobertura actual:** Application Services (Cities, Destinations, Experiences, Ratings, Notifications, Follow, ExternalApiMetrics, Events) y Domain Services.
+
+**Tests de integración vs. unitarios:** los tests que pegan contra una API externa real (no mockeada) se marcan con `[Trait("Category", "Integration")]` — convención introducida en `feature/ticketmaster-integration` (ver `TicketMasterEventSearchService_IntegrationTests`, y el precedente `CitySearchService_IntegrationTests` que ya llamaba a GeoDB real aunque sin el Trait). Para excluirlos de la corrida normal:
+```bash
+dotnet test --filter "Category!=Integration"
+```
+Para correr solo los de integración:
+```bash
+dotnet test --filter "Category=Integration"
+```
+Los tests de integración de TicketMaster requieren una `TicketMaster:ApiKey` real configurada localmente (`appsettings.secrets.json` del proyecto de tests); si no está configurada, esos casos se omiten silenciosamente (no fallan) en vez de requerir la key.
 
 ### Frontend
 **Framework:** Jasmine + Karma
@@ -320,6 +331,10 @@ npm run lint
   "RapidApi": {
     "ApiKey": "<tu-key-de-rapidapi>"
   },
+  "TicketMaster": {
+    "BaseUrl": "https://app.ticketmaster.com/discovery/v2/",
+    "ApiKey": "<tu-key-de-ticketmaster-discovery-api>"
+  },
   "AuthServer": {
     "Authority": "https://localhost:44300"
   }
@@ -328,7 +343,8 @@ npm run lint
 
 Valores que hay que configurar localmente (no están en el repo):
 - `ConnectionStrings:Default` — cadena de conexión a SQL Server local
-- `RapidApi:ApiKey` — key de RapidAPI para GeoDB y TicketMaster
+- `RapidApi:ApiKey` — key de RapidAPI, usada solo por GeoDB
+- `TicketMaster:ApiKey` — key **separada** de `RapidApi:ApiKey`, obtenida en el TicketMaster Developer Portal (no en RapidAPI)
 - Certificado para OpenIddict (configurado en `appsettings.json` bajo `OpenIddict`)
 
 ### Frontend — `angular/src/environments/environment.ts`
@@ -377,6 +393,10 @@ Para producción, usar `environment.prod.ts` con las URLs reales del servidor.
    dotnet ef migrations add <NombreMigracion>
    ```
    Y luego correr el DbMigrator para aplicarlas.
+
+9. **Upsert de `Event` por `TicketMasterId`:** al sincronizar eventos, si ya existe un registro con el mismo `TicketMasterId` (de una sync previa sin destino, o disparada desde otra búsqueda) hay que actualizar explícitamente su `DestinationId` si viene uno nuevo — si el código solo hace `continue` al encontrar el existente (como pasó en un bug real de esta rama), el evento queda huérfano para siempre y `GET /events-by-destination/{id}` nunca lo va a encontrar. Test de regresión: `EventAppService_Tests.SearchEventsByCityAsync_vincula_el_DestinationId_a_un_evento_que_ya_existia_sin_destino`.
+
+10. **Dos endpoints de `Event` con propósitos distintos:** `search-events-by-city` dispara la sincronización real contra TicketMaster (llama a la API externa y hace upsert en la base); `events-by-destination/{id}` solo lee lo que ya está sincronizado en la tabla `AppEvents`. Si `events-by-destination` "no trae nada", no es necesariamente un bug — probablemente nadie ejecutó todavía un `search-events-by-city` para ese destino.
 
 ---
 

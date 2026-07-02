@@ -1,4 +1,5 @@
 ﻿using GoPlaces.Destinations;
+using GoPlaces.Events;
 using GoPlaces.Experiences; // 👈 AGREGADO: Importamos Experiences
 using GoPlaces.ExternalApiMetrics;
 using GoPlaces.Notifications;
@@ -59,6 +60,8 @@ public class GoPlacesDbContext :
     public DbSet<ExternalApiCall> ExternalApiCalls { get; set; }
 
     public DbSet<Notification> Notifications { get; set; }
+
+    public DbSet<Event> Events { get; set; }
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
@@ -158,6 +161,21 @@ public class GoPlacesDbContext :
         {
             b.ToTable("ExternalApiCalls");
             b.ConfigureByConvention();
+        });
+
+        // 6. Configuración de EVENTS (TicketMaster)
+        builder.Entity<Event>(b =>
+        {
+            b.ToTable(GoPlacesConsts.DbTablePrefix + "Events", GoPlacesConsts.DbSchema);
+            b.ConfigureByConvention();
+            b.Property(x => x.Name).IsRequired().HasMaxLength(Event.NameMaxLength);
+            b.Property(x => x.Venue).IsRequired().HasMaxLength(Event.VenueMaxLength);
+            b.Property(x => x.City).IsRequired().HasMaxLength(Event.CityMaxLength);
+            b.Property(x => x.Url).HasMaxLength(Event.UrlMaxLength);
+            b.Property(x => x.TicketMasterId).IsRequired().HasMaxLength(Event.TicketMasterIdMaxLength);
+            b.HasIndex(x => x.TicketMasterId).IsUnique();
+            b.HasIndex(x => x.City);
+            b.HasIndex(x => x.DestinationId);
         });
     }
 }
