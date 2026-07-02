@@ -1,7 +1,11 @@
 {
   "permissions": {
     "allow": [
-      "Bash(dotnet test:*)"
+      "Bash(dotnet test:*)",
+      "WebFetch(domain:rapidapi.com)",
+      "WebSearch",
+      "Bash(dotnet build *)",
+      "Bash(dotnet ef *)"
     ]
   }
 }

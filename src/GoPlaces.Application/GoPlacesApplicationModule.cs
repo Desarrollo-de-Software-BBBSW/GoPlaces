@@ -1,4 +1,5 @@
 ﻿using GoPlaces.Cities;
+using GoPlaces.Events;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -58,6 +59,20 @@ namespace GoPlaces
                 {
                     client.DefaultRequestHeaders.Add("X-RapidAPI-Key", apiKey);
                 }
+            });
+
+            // 3️⃣ Registra el servicio de búsqueda de eventos
+            context.Services.AddScoped<ITicketMasterEventSearchService, TicketMasterEventSearchService>();
+
+            // 4️⃣ Configura el HttpClient nombrado "TicketMaster"
+            // Usa la Discovery API oficial de TicketMaster (app.ticketmaster.com), no RapidAPI:
+            // esa API requiere su propia key (query param "apikey"), distinta de RapidApi:ApiKey.
+            context.Services.AddHttpClient("TicketMaster", (sp, client) =>
+            {
+                var configuration = sp.GetRequiredService<IConfiguration>();
+                var baseUrl = configuration["TicketMaster:BaseUrl"] ?? "https://app.ticketmaster.com/discovery/v2/";
+
+                client.BaseAddress = new Uri(baseUrl);
             });
         }
     }
