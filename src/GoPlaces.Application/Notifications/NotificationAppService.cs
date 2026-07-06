@@ -1,5 +1,4 @@
-﻿using GoPlaces.Follows;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,39 +14,19 @@ namespace GoPlaces.Notifications
     public class NotificationAppService : ApplicationService, INotificationAppService
     {
         private readonly IRepository<Notification, Guid> _notificationRepository;
-        private readonly IRepository<FollowList, Guid> _followListRepository;
+        private readonly DestinationNotificationDomainService _destinationNotificationDomainService;
 
         public NotificationAppService(
             IRepository<Notification, Guid> notificationRepository,
-            IRepository<FollowList, Guid> followListRepository)
+            DestinationNotificationDomainService destinationNotificationDomainService)
         {
             _notificationRepository = notificationRepository;
-            _followListRepository = followListRepository;
+            _destinationNotificationDomainService = destinationNotificationDomainService;
         }
 
         public async Task NotifyDestinationChangeAsync(NotifyDestinationChangeInputDto input)
         {
-            // 1. Traemos TODAS las listas de favoritos de todos los usuarios (incluyendo sus items adentro)
-            var queryable = await _followListRepository.WithDetailsAsync(x => x.Items);
-
-            // 2. Filtramos solo las listas que tengan guardado este destino en particular
-            var affectedLists = queryable
-                .Where(list => list.Items.Any(item => item.DestinationId == input.DestinationId))
-                .ToList();
-
-            // 3. Le creamos y guardamos una notificación a cada dueño de esas listas
-            foreach (var list in affectedLists)
-            {
-                var notification = new Notification(
-                    GuidGenerator.Create(),
-                    list.OwnerUserId,
-                    "¡Actualización en tu destino favorito!", // Título estándar
-                    input.ChangeDescription, // El mensaje que nos mandaron
-                    input.DestinationId
-                );
-
-                await _notificationRepository.InsertAsync(notification, autoSave: true);
-            }
+            await _destinationNotificationDomainService.NotifyDestinationChangeAsync(input.DestinationId, input.ChangeDescription);
         }
 
         public async Task<List<NotificationDto>> GetMyNotificationsAsync()
