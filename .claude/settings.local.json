@@ -5,7 +5,8 @@
       "WebFetch(domain:rapidapi.com)",
       "WebSearch",
       "Bash(dotnet build *)",
-      "Bash(dotnet ef *)"
+      "Bash(dotnet ef *)",
+      "WebFetch(domain:abp.io)"
     ]
   }
 }

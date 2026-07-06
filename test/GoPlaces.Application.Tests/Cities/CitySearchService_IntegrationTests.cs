@@ -7,6 +7,10 @@ using Xunit;
 
 namespace GoPlaces.Tests.Cities
 {
+    // Test de integración: llama a la API REAL de GeoDB (RapidAPI), no usa mocks.
+    // Para excluirlo de la corrida normal:
+    //   dotnet test --filter "Category!=Integration"
+    [Trait("Category", "Integration")]
     [Collection(GoPlacesTestConsts.CollectionDefinitionName)]
     public class CitySearchService_IntegrationTests
         : GoPlacesApplicationTestBase<GoPlacesApplicationTestModule>

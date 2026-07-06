@@ -61,6 +61,7 @@ GoPlaces/
 │   ├── GoPlaces.Domain.Shared/         # Constantes, enums, localizaciones compartidas
 │   ├── GoPlaces.Application.Contracts/ # Interfaces de servicios (IXxxAppService), DTOs
 │   ├── GoPlaces.Application/           # Implementación de servicios de aplicación
+│   │   └── BackgroundWorkers/          # Workers periódicos de ABP (ej: EventSyncBackgroundWorker)
 │   ├── GoPlaces.EntityFrameworkCore/   # DbContext, migraciones, configuración EF Core
 │   ├── GoPlaces.HttpApi/               # Controller base (GoPlacesController)
 │   ├── GoPlaces.HttpApi.Host/          # Host principal: Program.cs, appsettings, Swagger
@@ -109,7 +110,7 @@ GoPlaces/
 | `Cities/` | — | Domain service de búsqueda y validación de filtros |
 | `Ratings/` | `Rating` | Calificación 1-5 con comentario |
 | `Experiences/` | `Experience` | Experiencia en un destino (título, precio, fecha, sentimiento) |
-| `Notifications/` | `Notification` | Alerta de cambio en destino favorito |
+| `Notifications/` | `Notification` | Alerta de cambio en destino favorito. Incluye `DestinationNotificationDomainService`, un Domain Service (sin `[Authorize]`) que contiene la lógica real de notificar a los seguidores de un destino, separado de `NotificationAppService` porque este último tiene `[Authorize]` de clase y no puede ser invocado desde código sin usuario autenticado (ej: un Background Worker) |
 | `Follow/` | `FollowList`, `FollowListItem` | Lista personal de favoritos |
 | `ExternalApiMetrics/` | `ExternalApiCall` | Tracking de llamadas a APIs externas |
 | `Events/` | `Event` | Evento de TicketMaster asociado a un `Destination` (nombre, fecha, venue, `TicketMasterId` para evitar duplicados al sincronizar) |
@@ -125,6 +126,7 @@ GoPlaces/
 - **Tests:** Nombre en español descriptivo del escenario, separados por guiones bajos (ej: `SearchCitiesAsync_devuelve_resultados_del_servicio`)
 - **Entidades:** Heredan de `FullAuditedAggregateRoot<Guid>` (ABP), propiedades `private set`, setters explícitos con validación mediante `Check.NotNullOrWhiteSpace`
 - **Migraciones EF:** Nombre en inglés descriptivo (ej: `Added_Experience_Entity`, `Added_Rating_To_Experience`)
+- **Background Workers:** Viven en `GoPlaces.Application/BackgroundWorkers/`, heredan de `AsyncPeriodicBackgroundWorkerBase` (ABP). La lógica real va en un método público separado de `DoWorkAsync` (ej: `SyncFollowedDestinationsAsync`), que recibe el `IServiceProvider` como parámetro — así se puede invocar directo desde los tests sin depender del timer real. **Importante:** a diferencia de los Application Services, los Background Workers **no** tienen Unit of Work ambiente automático. Cualquier acceso a repositorios dentro de un worker necesita un `IUnitOfWorkManager.Begin()` explícito — si no, tirás `ObjectDisposedException` en runtime (el DbContext efímero de una llamada se cierra antes de que otra llamada materialice su query), y los tests con mocks de Moq no lo detectan porque un `IQueryable` mockeado es LINQ-to-Objects puro, sin ningún concepto de contexto disponible/disponible.
 
 ### Frontend (Angular/TypeScript)
 - **Componentes:** PascalCase para clase, kebab-case para selector y archivo (ej: `CitiesSearchComponent`, archivo `cities-search.ts`)
@@ -177,6 +179,8 @@ ASP.NET Core HttpApi.Host (puerto 44300)
 
 6. **Sin multi-tenancy activo:** El módulo de tenant-management está comentado en `app.routes.ts`.
 
+7. **Sincronización periódica de eventos (`EventSyncBackgroundWorker`):** un Background Worker de ABP corre cada X tiempo (configurable, default 12hs — ver sección 10) y, para cada `Destination` que tenga al menos un usuario siguiéndolo, sincroniza sus eventos de TicketMaster (reusando `EventAppService.SearchEventsByCityAsync`) y dispara notificaciones si aparecen eventos nuevos. La lógica de notificar vive en `DestinationNotificationDomainService` (Domain Service), **no** en `NotificationAppService` (Application Service): este último tiene `[Authorize]` de clase, y el worker corre sin ningún usuario autenticado en el scope — invocar un método `[Authorize]` desde ahí tira `AbpAuthorizationException`. El Domain Service no tiene ese problema porque los Domain Services de ABP no llevan autorización HTTP por diseño.
+
 ---
 
 ## 6. Sistema de diseño / UI
@@ -220,7 +224,7 @@ public async Task SearchCitiesAsync_devuelve_resultados_del_servicio()
 
 **Cobertura actual:** Application Services (Cities, Destinations, Experiences, Ratings, Notifications, Follow, ExternalApiMetrics, Events) y Domain Services.
 
-**Tests de integración vs. unitarios:** los tests que pegan contra una API externa real (no mockeada) se marcan con `[Trait("Category", "Integration")]` — convención introducida en `feature/ticketmaster-integration` (ver `TicketMasterEventSearchService_IntegrationTests`, y el precedente `CitySearchService_IntegrationTests` que ya llamaba a GeoDB real aunque sin el Trait). Para excluirlos de la corrida normal:
+**Tests de integración vs. unitarios:** los tests que pegan contra una API externa real (no mockeada) se marcan con `[Trait("Category", "Integration")]` — convención introducida en `feature/ticketmaster-integration` (ver `TicketMasterEventSearchService_IntegrationTests`). `CitySearchService_IntegrationTests` (que llama a GeoDB real) le faltaba este Trait y corría siempre, incluso con el filtro `Category!=Integration`; esto se corrigió en `feature/events-background-worker` porque sus reintentos con backoff contra GeoDB podían tardar varios minutos y hacían parecer colgada a la corrida completa de la suite. Ahora está taggeado igual que el resto. Para excluirlos de la corrida normal:
 ```bash
 dotnet test --filter "Category!=Integration"
 ```
@@ -229,6 +233,8 @@ Para correr solo los de integración:
 dotnet test --filter "Category=Integration"
 ```
 Los tests de integración de TicketMaster requieren una `TicketMaster:ApiKey` real configurada localmente (`appsettings.secrets.json` del proyecto de tests); si no está configurada, esos casos se omiten silenciosamente (no fallan) en vez de requerir la key.
+
+**Tests contra un DbContext real (SQLite in-memory):** además de los tests con Moq (repos/servicios mockeados), hay precedente de tests que resuelven el contenedor de DI real de `GoPlacesApplicationTestModule` (el mismo Sqlite in-memory que usan `FollowAppService_Tests`/`NotificationAppService_Tests`) para ejercitar código contra un `DbContext` de verdad — ver `EventSyncBackgroundWorker_RealDbContextTests.cs`. Son más lentos que los tests con Moq, pero son los únicos que detectan bugs de lifetime de EF Core (ej: `ObjectDisposedException` por falta de Unit of Work — ver gotcha 12) que un `IQueryable` mockeado nunca va a reproducir.
 
 ### Frontend
 **Framework:** Jasmine + Karma
@@ -337,6 +343,9 @@ npm run lint
   },
   "AuthServer": {
     "Authority": "https://localhost:44300"
+  },
+  "EventSyncWorker": {
+    "IntervalHours": 12
   }
 }
 ```
@@ -346,6 +355,10 @@ Valores que hay que configurar localmente (no están en el repo):
 - `RapidApi:ApiKey` — key de RapidAPI, usada solo por GeoDB
 - `TicketMaster:ApiKey` — key **separada** de `RapidApi:ApiKey`, obtenida en el TicketMaster Developer Portal (no en RapidAPI)
 - Certificado para OpenIddict (configurado en `appsettings.json` bajo `OpenIddict`)
+
+**`EventSyncWorker` (intervalo de `EventSyncBackgroundWorker`):**
+- `EventSyncWorker:IntervalHours` — cada cuántas horas corre el worker en producción. Default `12` si no está presente (fallback hardcodeado en el worker, no hace falta setearlo).
+- `EventSyncWorker:IntervalMinutes` — override en minutos para desarrollo/testing local, **tiene prioridad sobre `IntervalHours` si está presente** (permite probar el worker sin esperar horas reales). Va en `appsettings.Development.json`, **no debe commitearse con valores de producción** en el `appsettings.json` base.
 
 ### Frontend — `angular/src/environments/environment.ts`
 
@@ -397,6 +410,10 @@ Para producción, usar `environment.prod.ts` con las URLs reales del servidor.
 9. **Upsert de `Event` por `TicketMasterId`:** al sincronizar eventos, si ya existe un registro con el mismo `TicketMasterId` (de una sync previa sin destino, o disparada desde otra búsqueda) hay que actualizar explícitamente su `DestinationId` si viene uno nuevo — si el código solo hace `continue` al encontrar el existente (como pasó en un bug real de esta rama), el evento queda huérfano para siempre y `GET /events-by-destination/{id}` nunca lo va a encontrar. Test de regresión: `EventAppService_Tests.SearchEventsByCityAsync_vincula_el_DestinationId_a_un_evento_que_ya_existia_sin_destino`.
 
 10. **Dos endpoints de `Event` con propósitos distintos:** `search-events-by-city` dispara la sincronización real contra TicketMaster (llama a la API externa y hace upsert en la base); `events-by-destination/{id}` solo lee lo que ya está sincronizado en la tabla `AppEvents`. Si `events-by-destination` "no trae nada", no es necesariamente un bug — probablemente nadie ejecutó todavía un `search-events-by-city` para ese destino.
+
+11. **401 "The specified token doesn't contain any audience" al llamar un endpoint `[Authorize]` real desde Swagger:** el síntoma es un 401 con `error="invalid_token", error_description="The specified token doesn't contain any audience."` justo después de autenticarse correctamente por el botón "Authorize" de Swagger (flujo `authorization_code`, marcado como "Authorized"). Se investigó a fondo en `feature/events-background-worker` y se descartaron el scope `GoPlaces` (tiene `Resources = ["GoPlaces"]` bien poblado en `OpenIddictScopes`) y los permisos del cliente (`GoPlaces_Swagger` tiene `scp:GoPlaces` en `OpenIddictApplications.Permissions`) — ambos estaban correctos en la base. La causa raíz, confirmada con los logs de Serilog (`src/GoPlaces.HttpApi.Host/Logs/logs.txt`, comparando requests a `/connect/authorize` con y sin `scope=GoPlaces` en la URL): el checkbox del scope `GoPlaces` en el modal de "Authorize" de Swagger no venía pre-tildado por default, así que si no se tildaba a mano antes de confirmar, el request de autorización salía sin `scope=GoPlaces` y el token emitido no traía ni el claim `scope` ni `aud`. Se corrigió agregando `options.OAuthScopes("GoPlaces")` en el bloque `UseAbpSwaggerUI` de `GoPlacesHttpApiHostModule.cs` (pre-tilda el scope automáticamente). Si después de este fix el checkbox sigue sin aparecer tildado, puede hacer falta agregar `options.EnablePersistAuthorization()` (para que Swagger recuerde el estado entre reloads) o simplemente limpiar la caché del navegador / recargar sin caché, ya que Swagger UI puede servir una versión vieja del `index.html` cacheada.
+
+12. **Background Workers sin Unit of Work ambiente → `ObjectDisposedException` en runtime:** a diferencia de los Application Services (que ABP envuelve automáticamente en un Unit of Work), un `AsyncPeriodicBackgroundWorkerBase` no tiene UOW ambiente. Bug real encontrado en `feature/events-background-worker`: `EventSyncBackgroundWorker.GetFollowedDestinationIdsAsync` hacía `await followListRepository.WithDetailsAsync(...)` y materializaba el resultado con `.ToList()` en la línea siguiente — sin UOW explícito, cada llamada a repositorio abre y cierra su propio `DbContext` efímero, así que para cuando corría el `.ToList()` el `DbContext` de la llamada anterior ya estaba disposed. Se manifestó recién corriendo el worker de verdad (`dotnet run`), no en los tests unitarios (que mockean todo). Se solucionó envolviendo el acceso a repositorios en `unitOfWorkManager.Begin(new AbpUnitOfWorkOptions(...), requiresNew: true)` explícito dentro del worker. Ver también el gotcha de convención en sección 4 y el test de regresión `EventSyncBackgroundWorker_RealDbContextTests` (sección 7), que reproduce el error contra un DbContext real.
 
 ---
 

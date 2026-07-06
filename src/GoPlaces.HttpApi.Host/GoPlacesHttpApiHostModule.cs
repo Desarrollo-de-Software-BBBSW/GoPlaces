@@ -141,7 +141,7 @@ public class GoPlacesHttpApiHostModule : AbpModule
         ConfigureSwagger(context, configuration);
         ConfigureVirtualFileSystem(context);
         ConfigureCors(context, configuration);
-        // Mapeo de códigos HTTP para excepciones de negocio
+        // Mapeo de cï¿½digos HTTP para excepciones de negocio
         context.Services.Replace(
             ServiceDescriptor.Singleton<IHttpExceptionStatusCodeFinder, MyHttpStatusCodeFinder>()
         );
@@ -310,6 +310,9 @@ public class GoPlacesHttpApiHostModule : AbpModule
 
             var configuration = context.ServiceProvider.GetRequiredService<IConfiguration>();
             options.OAuthClientId(configuration["AuthServer:SwaggerClientId"]);
+            // Pre-tilda el scope "GoPlaces" en el modal de Authorize para que el token emitido
+            // siempre incluya el claim de audience, sin depender de que alguien lo tilde a mano.
+            options.OAuthScopes("GoPlaces");
         });
         app.UseAuditing();
         app.UseAbpSerilogEnrichers();

@@ -1,11 +1,15 @@
-﻿using GoPlaces.Cities;
+﻿using GoPlaces.BackgroundWorkers;
+using GoPlaces.Cities;
 using GoPlaces.Events;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Threading.Tasks;
+using Volo.Abp;
 using Volo.Abp.Account;
 using Volo.Abp.Application;
 using Volo.Abp.AutoMapper;
+using Volo.Abp.BackgroundWorkers;
 using Volo.Abp.FeatureManagement;
 using Volo.Abp.Identity;
 using Volo.Abp.Modularity;
@@ -21,9 +25,10 @@ namespace GoPlaces
         typeof(AbpFeatureManagementApplicationModule),
         typeof(AbpIdentityApplicationModule),
         typeof(AbpAccountApplicationModule),
-        typeof(AbpSettingManagementApplicationModule),    
+        typeof(AbpSettingManagementApplicationModule),
         typeof(AbpDddApplicationModule),
         typeof(AbpAutoMapperModule),            // 👈 necesario
+        typeof(AbpBackgroundWorkersModule),
         typeof(GoPlacesApplicationContractsModule)
     )]
     public class GoPlacesApplicationModule : AbpModule
@@ -74,6 +79,11 @@ namespace GoPlaces
 
                 client.BaseAddress = new Uri(baseUrl);
             });
+        }
+
+        public override async Task OnApplicationInitializationAsync(ApplicationInitializationContext context)
+        {
+            await context.AddBackgroundWorkerAsync<EventSyncBackgroundWorker>();
         }
     }
 }
