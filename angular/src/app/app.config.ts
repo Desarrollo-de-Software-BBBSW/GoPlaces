@@ -19,6 +19,7 @@ import { APP_ROUTE_PROVIDER } from './route.provider';
 import { authInterceptor } from './auth.interceptor';
 import { NavItemsService } from '@abp/ng.theme.shared'; // 👈 agregá esto
 import { UserSearchComponent } from './shared/user-search.component';
+import { NotificationBellComponent } from './shared/notification-bell/notification-bell.component';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -51,6 +52,11 @@ export const appConfig: ApplicationConfig = {
             id: 'user-search',
             order: 1,
             component: UserSearchComponent,
+          },
+          {
+            id: 'notification-bell',
+            order: 2,
+            component: NotificationBellComponent,
           }
         ]);
       },

@@ -1,0 +1,50 @@
+<div class="notification-bell">
+  <button
+    type="button"
+    class="btn btn-link notification-bell__toggle"
+    (click)="toggle()"
+    title="Notificaciones"
+  >
+    <i class="fa fa-bell"></i>
+    <span class="badge rounded-pill bg-danger notification-bell__badge" *ngIf="unreadCount > 0">
+      {{ unreadCount > 99 ? '99+' : unreadCount }}
+    </span>
+  </button>
+
+  <div class="notification-bell__panel" *ngIf="isOpen">
+    <div class="notification-bell__header">
+      <span>Notificaciones</span>
+    </div>
+
+    <div class="notification-bell__list">
+      <div class="notification-bell__empty" *ngIf="!isLoading && visibleNotifications.length === 0">
+        No tenés notificaciones.
+      </div>
+
+      <div
+        *ngFor="let notification of visibleNotifications"
+        class="notification-bell__item"
+        [class.notification-bell__item--unread]="!notification.isRead"
+        (click)="markAsRead(notification)"
+      >
+        <div class="notification-bell__item-dot" [class.notification-bell__item-dot--unread]="!notification.isRead"></div>
+        <div class="notification-bell__item-content">
+          <div class="notification-bell__item-title">{{ notification.title }}</div>
+          <div class="notification-bell__item-message">{{ notification.message }}</div>
+          <div class="notification-bell__item-time">{{ notification.creationTime | relativeTime }}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="notification-bell__footer">
+      <button
+        type="button"
+        class="btn btn-sm btn-link"
+        [disabled]="unreadCount === 0"
+        (click)="markAllAsRead()"
+      >
+        Marcar todas como leídas
+      </button>
+    </div>
+  </div>
+</div>

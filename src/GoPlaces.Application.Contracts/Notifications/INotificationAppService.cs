@@ -14,5 +14,8 @@ namespace GoPlaces.Notifications
 
         // 👇 NUEVO MÉTODO: Cambiar estado de lectura
         Task ChangeReadStateAsync(Guid id, bool isRead);
+
+        // Marca todas las notificaciones del usuario actual como leídas
+        Task MarkAllAsReadAsync();
     }
 }

@@ -1,6 +1,10 @@
 import * as Cities from './cities';
 import * as Destinations from './destinations';
+import * as Events from './events';
 import * as Experiences from './experiences';
+import * as ExternalApiMetrics from './external-api-metrics';
+import * as Follows from './follows';
+import * as Notifications from './notifications';
 import * as Ratings from './ratings';
 import * as Users from './users';
-export { Cities, Destinations, Experiences, Ratings, Users };
+export { Cities, Destinations, Events, Experiences, ExternalApiMetrics, Follows, Notifications, Ratings, Users };

@@ -68,5 +68,21 @@ namespace GoPlaces.Notifications
             // 4. Guardamos los cambios
             await _notificationRepository.UpdateAsync(notification, autoSave: true);
         }
+
+        public async Task MarkAllAsReadAsync()
+        {
+            var userId = CurrentUser.Id.Value;
+
+            var unreadNotifications = await _notificationRepository.GetListAsync(
+                n => n.UserId == userId && !n.IsRead
+            );
+
+            foreach (var notification in unreadNotifications)
+            {
+                notification.SetReadState(true);
+            }
+
+            await _notificationRepository.UpdateManyAsync(unreadNotifications, autoSave: true);
+        }
     }
 }
