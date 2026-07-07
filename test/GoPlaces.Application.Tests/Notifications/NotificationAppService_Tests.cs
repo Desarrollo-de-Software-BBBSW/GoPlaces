@@ -134,5 +134,51 @@ namespace GoPlaces.Notifications
                 notification.IsRead.ShouldBeFalse();
             });
         }
+
+        [Fact]
+        public async Task MarkAllAsReadAsync_marca_todas_las_notificaciones_del_usuario_como_leidas()
+        {
+            var userId = _guidGenerator.Create();
+            var otherUserId = _guidGenerator.Create();
+            var destinationId = _guidGenerator.Create();
+
+            Guid notification1Id = Guid.Empty;
+            Guid notification2Id = Guid.Empty;
+            Guid otherUserNotificationId = Guid.Empty;
+
+            await WithUnitOfWorkAsync(async () =>
+            {
+                var notification1 = new Notification(_guidGenerator.Create(), userId, "Título 1", "Mensaje 1", destinationId);
+                var notification2 = new Notification(_guidGenerator.Create(), userId, "Título 2", "Mensaje 2", destinationId);
+                var otherUserNotification = new Notification(_guidGenerator.Create(), otherUserId, "Título 3", "Mensaje 3", destinationId);
+
+                var inserted1 = await _notificationRepository.InsertAsync(notification1, autoSave: true);
+                var inserted2 = await _notificationRepository.InsertAsync(notification2, autoSave: true);
+                var insertedOther = await _notificationRepository.InsertAsync(otherUserNotification, autoSave: true);
+
+                notification1Id = inserted1.Id;
+                notification2Id = inserted2.Id;
+                otherUserNotificationId = insertedOther.Id;
+            });
+
+            await WithUnitOfWorkAsync(async () =>
+            {
+                using (ChangeUserContext(userId, "traveler_lucas"))
+                {
+                    await _notificationAppService.MarkAllAsReadAsync();
+                }
+            });
+
+            await WithUnitOfWorkAsync(async () =>
+            {
+                var notification1 = await _notificationRepository.GetAsync(notification1Id);
+                var notification2 = await _notificationRepository.GetAsync(notification2Id);
+                var otherUserNotification = await _notificationRepository.GetAsync(otherUserNotificationId);
+
+                notification1.IsRead.ShouldBeTrue();
+                notification2.IsRead.ShouldBeTrue();
+                otherUserNotification.IsRead.ShouldBeFalse();
+            });
+        }
     }
 }

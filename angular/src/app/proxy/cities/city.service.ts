@@ -17,6 +17,15 @@ export class CityService {
     { apiName: this.apiName,...config });
   
 
+  getList = (request: CitySearchRequestDto, config?: Partial<Rest.Config>) =>
+    this.restService.request<any, CitySearchResultDto>({
+      method: 'GET',
+      url: '/api/app/city',
+      params: { partialName: request.partialName, countryCode: request.countryCode, regionId: request.regionId, minPopulation: request.minPopulation },
+    },
+    { apiName: this.apiName,...config });
+  
+
   getPopularCities = (config?: Partial<Rest.Config>) =>
     this.restService.request<any, CityDto[]>({
       method: 'GET',
@@ -30,19 +39,6 @@ export class CityService {
       method: 'POST',
       url: '/api/app/city/search-cities',
       body: request,
-    },
-    { apiName: this.apiName,...config });
-
-  getList = (request: CitySearchRequestDto, config?: Partial<Rest.Config>) =>
-    this.restService.request<any, CitySearchResultDto>({
-      method: 'GET',
-      url: '/api/app/city',
-      params: {
-        partialName: request.partialName,
-        countryCode: request.countryCode,
-        regionId: request.regionId,
-        minPopulation: request.minPopulation,
-      },
     },
     { apiName: this.apiName,...config });
 

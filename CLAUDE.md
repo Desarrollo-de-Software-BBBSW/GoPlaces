@@ -90,10 +90,13 @@ GoPlaces/
         │   │   ├── cities/
         │   │   ├── destinations/
         │   │   ├── experiences/
+        │   │   ├── notifications/
         │   │   ├── ratings/
         │   │   └── users/
         │   ├── services/               # Servicios Angular custom (no generados)
         │   ├── shared/                 # Componentes reutilizables
+        │   │   ├── notification-bell/      # Campana de notificaciones (dropdown, badge, polling)
+        │   │   └── relative-time.pipe.ts   # Pipe de fecha relativa ("hace 2 horas")
         │   ├── app.routes.ts           # Routing principal
         │   ├── app.config.ts
         │   └── auth.interceptor.ts     # Interceptor OAuth2
@@ -135,6 +138,7 @@ GoPlaces/
 - **Formularios:** Reactive Forms de Angular (`FormBuilder`, `FormGroup`)
 - **HTTP async:** RxJS Observables con `.subscribe({ next, error })`
 - **Guards:** `AuthGuard` y `PermissionGuard` de ABP para rutas protegidas
+- **Polling con RxJS (`interval` + `switchMap` + `.subscribe()`):** patrón usado en `NotificationBellComponent` para refrescar el contador de no leídas cada 45s. Los componentes raíz de Lepton-X Lite (`lpx-layout`, `lpx-toolbar`) usan `ChangeDetectionStrategy.OnPush`, así que cualquier componente propio insertado en esa barra (vía `NavItemsService`) que actualice su estado desde un origen async que **no** sea un `@Input` que cambia ni un evento DOM disparado dentro de ese mismo árbol (polling, websockets, etc.) necesita llamar `ChangeDetectorRef.markForCheck()` explícitamente en el callback del `.subscribe()` — si no, la vista no se repinta sola hasta que ocurra otro evento DOM en ese árbol (ver gotcha 13).
 
 ### Commits
 - Sin formato convencional estricto (no hay Conventional Commits)
@@ -181,6 +185,8 @@ ASP.NET Core HttpApi.Host (puerto 44300)
 
 7. **Sincronización periódica de eventos (`EventSyncBackgroundWorker`):** un Background Worker de ABP corre cada X tiempo (configurable, default 12hs — ver sección 10) y, para cada `Destination` que tenga al menos un usuario siguiéndolo, sincroniza sus eventos de TicketMaster (reusando `EventAppService.SearchEventsByCityAsync`) y dispara notificaciones si aparecen eventos nuevos. La lógica de notificar vive en `DestinationNotificationDomainService` (Domain Service), **no** en `NotificationAppService` (Application Service): este último tiene `[Authorize]` de clase, y el worker corre sin ningún usuario autenticado en el scope — invocar un método `[Authorize]` desde ahí tira `AbpAuthorizationException`. El Domain Service no tiene ese problema porque los Domain Services de ABP no llevan autorización HTTP por diseño.
 
+8. **Marcar todas las notificaciones como leídas (`MarkAllAsReadAsync`):** agregado a `INotificationAppService`/`NotificationAppService` en `feature/notifications-frontend` — no existía antes de esta rama (antes solo se podía marcar de a una vía `ChangeReadStateAsync`). Busca las notificaciones no leídas del usuario actual y las actualiza con `UpdateManyAsync`. Se agregó junto con el frontend de notificaciones porque el dropdown necesitaba un botón de "marcar todas como leídas".
+
 ---
 
 ## 6. Sistema de diseño / UI
@@ -192,6 +198,7 @@ ASP.NET Core HttpApi.Host (puerto 44300)
 - **Formularios:** Angular Reactive Forms + clases de Lepton-X para inputs y feedback visual
 - **Toaster:** ABP Toaster service para mensajes de error/éxito (`this.toaster.error(...)`, `this.toaster.success(...)`)
 - **No hay design system custom** documentado; se usan las clases de Lepton-X directamente
+- **Notificaciones (campana + dropdown):** `NotificationBellComponent` (`angular/src/app/shared/notification-bell/`), registrado en la barra superior vía `NavItemsService` (mismo mecanismo que ya usaba `UserSearchComponent`). Usa clases de Bootstrap/Lepton-X ya presentes en el proyecto (`btn`, `badge`, etc.), sin introducir estilos custom nuevos.
 
 ---
 
@@ -414,6 +421,8 @@ Para producción, usar `environment.prod.ts` con las URLs reales del servidor.
 11. **401 "The specified token doesn't contain any audience" al llamar un endpoint `[Authorize]` real desde Swagger:** el síntoma es un 401 con `error="invalid_token", error_description="The specified token doesn't contain any audience."` justo después de autenticarse correctamente por el botón "Authorize" de Swagger (flujo `authorization_code`, marcado como "Authorized"). Se investigó a fondo en `feature/events-background-worker` y se descartaron el scope `GoPlaces` (tiene `Resources = ["GoPlaces"]` bien poblado en `OpenIddictScopes`) y los permisos del cliente (`GoPlaces_Swagger` tiene `scp:GoPlaces` en `OpenIddictApplications.Permissions`) — ambos estaban correctos en la base. La causa raíz, confirmada con los logs de Serilog (`src/GoPlaces.HttpApi.Host/Logs/logs.txt`, comparando requests a `/connect/authorize` con y sin `scope=GoPlaces` en la URL): el checkbox del scope `GoPlaces` en el modal de "Authorize" de Swagger no venía pre-tildado por default, así que si no se tildaba a mano antes de confirmar, el request de autorización salía sin `scope=GoPlaces` y el token emitido no traía ni el claim `scope` ni `aud`. Se corrigió agregando `options.OAuthScopes("GoPlaces")` en el bloque `UseAbpSwaggerUI` de `GoPlacesHttpApiHostModule.cs` (pre-tilda el scope automáticamente). Si después de este fix el checkbox sigue sin aparecer tildado, puede hacer falta agregar `options.EnablePersistAuthorization()` (para que Swagger recuerde el estado entre reloads) o simplemente limpiar la caché del navegador / recargar sin caché, ya que Swagger UI puede servir una versión vieja del `index.html` cacheada.
 
 12. **Background Workers sin Unit of Work ambiente → `ObjectDisposedException` en runtime:** a diferencia de los Application Services (que ABP envuelve automáticamente en un Unit of Work), un `AsyncPeriodicBackgroundWorkerBase` no tiene UOW ambiente. Bug real encontrado en `feature/events-background-worker`: `EventSyncBackgroundWorker.GetFollowedDestinationIdsAsync` hacía `await followListRepository.WithDetailsAsync(...)` y materializaba el resultado con `.ToList()` en la línea siguiente — sin UOW explícito, cada llamada a repositorio abre y cierra su propio `DbContext` efímero, así que para cuando corría el `.ToList()` el `DbContext` de la llamada anterior ya estaba disposed. Se manifestó recién corriendo el worker de verdad (`dotnet run`), no en los tests unitarios (que mockean todo). Se solucionó envolviendo el acceso a repositorios en `unitOfWorkManager.Begin(new AbpUnitOfWorkOptions(...), requiresNew: true)` explícito dentro del worker. Ver también el gotcha de convención en sección 4 y el test de regresión `EventSyncBackgroundWorker_RealDbContextTests` (sección 7), que reproduce el error contra un DbContext real.
+
+13. **Componentes hijos de Lepton-X Lite y `ChangeDetectionStrategy.OnPush` → la vista no se repinta sola tras un update async:** `lpx-layout` (`SideMenuLayoutComponent`) y `lpx-toolbar` (`ToolbarComponent`), ambos de `@volo/ngx-lepton-x.lite`/`.core`, están declarados con `ChangeDetectionStrategy.OnPush`. Cualquier componente propio insertado en la barra superior vía `NavItemsService` (como `NotificationBellComponent`) es descendiente de esos dos. Bug real encontrado en `feature/notifications-frontend`: el polling de `NotificationBellComponent` (`RxJS interval` + `.subscribe()`) actualizaba `unreadCount` correctamente cada 45s — el dato ya estaba bien en memoria — pero la vista no se repintaba sola. Como el update se origina puramente dentro del componente (sin que cambie ningún `@Input` ni se dispare un evento DOM sobre `lpx-layout`/`lpx-toolbar`), esos ancestros OnPush nunca quedan marcados "dirty" y el tick global de Angular se detiene ahí, sin llegar a la campana. Se confirmaba con un síntoma engañoso: el contador aparecía actualizado apenas se hacía click en cualquier otro ítem de la misma barra (ej. el ícono de perfil), porque ese click sí dispara un evento DOM dentro de ese árbol OnPush y fuerza el repintado de todo el subárbol, incluida la campana. Se solucionó inyectando `ChangeDetectorRef` y llamando `markForCheck()` en el callback `next`/`error` del `.subscribe()` del polling. Si se agrega otro componente en la barra superior con actualización async que no sea un `@Input` o evento DOM (websockets, otro polling, etc.), va a necesitar el mismo `markForCheck()` — ver también la convención de sección 4.
 
 ---
 

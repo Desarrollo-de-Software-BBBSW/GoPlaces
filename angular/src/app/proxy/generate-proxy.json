@@ -901,6 +901,23 @@
                     "type": "GoPlaces.Cities.CitySearchResultDto",
                     "typeSimple": "GoPlaces.Cities.CitySearchResultDto"
                   }
+                },
+                {
+                  "name": "GetListAsync",
+                  "parametersOnMethod": [
+                    {
+                      "name": "request",
+                      "typeAsString": "GoPlaces.Cities.CitySearchRequestDto, GoPlaces.Application.Contracts",
+                      "type": "GoPlaces.Cities.CitySearchRequestDto",
+                      "typeSimple": "GoPlaces.Cities.CitySearchRequestDto",
+                      "isOptional": false,
+                      "defaultValue": null
+                    }
+                  ],
+                  "returnValue": {
+                    "type": "GoPlaces.Cities.CitySearchResultDto",
+                    "typeSimple": "GoPlaces.Cities.CitySearchResultDto"
+                  }
                 }
               ]
             }
@@ -934,6 +951,79 @@
                   "constraintTypes": null,
                   "bindingSourceId": "Body",
                   "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "GoPlaces.Cities.CitySearchResultDto",
+                "typeSimple": "GoPlaces.Cities.CitySearchResultDto"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "GoPlaces.Cities.ICityAppService"
+            },
+            "GetListAsyncByRequest": {
+              "uniqueName": "GetListAsyncByRequest",
+              "name": "GetListAsync",
+              "httpMethod": "GET",
+              "url": "api/app/city",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "request",
+                  "typeAsString": "GoPlaces.Cities.CitySearchRequestDto, GoPlaces.Application.Contracts",
+                  "type": "GoPlaces.Cities.CitySearchRequestDto",
+                  "typeSimple": "GoPlaces.Cities.CitySearchRequestDto",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "request",
+                  "name": "PartialName",
+                  "jsonName": null,
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": "request"
+                },
+                {
+                  "nameOnMethod": "request",
+                  "name": "CountryCode",
+                  "jsonName": null,
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": "request"
+                },
+                {
+                  "nameOnMethod": "request",
+                  "name": "RegionId",
+                  "jsonName": null,
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": "request"
+                },
+                {
+                  "nameOnMethod": "request",
+                  "name": "MinPopulation",
+                  "jsonName": null,
+                  "type": "System.Int32?",
+                  "typeSimple": "number?",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": "request"
                 }
               ],
               "returnValue": {
@@ -1540,6 +1630,132 @@
             }
           }
         },
+        "GoPlaces.Events.EventAppService": {
+          "controllerName": "Event",
+          "controllerGroupName": "Event",
+          "isRemoteService": true,
+          "isIntegrationService": false,
+          "apiVersion": null,
+          "type": "GoPlaces.Events.EventAppService",
+          "interfaces": [
+            {
+              "type": "GoPlaces.Events.IEventAppService",
+              "name": "IEventAppService",
+              "methods": [
+                {
+                  "name": "SearchEventsByCityAsync",
+                  "parametersOnMethod": [
+                    {
+                      "name": "request",
+                      "typeAsString": "GoPlaces.Events.EventSearchRequestDto, GoPlaces.Application.Contracts",
+                      "type": "GoPlaces.Events.EventSearchRequestDto",
+                      "typeSimple": "GoPlaces.Events.EventSearchRequestDto",
+                      "isOptional": false,
+                      "defaultValue": null
+                    }
+                  ],
+                  "returnValue": {
+                    "type": "GoPlaces.Events.EventSearchResultDto",
+                    "typeSimple": "GoPlaces.Events.EventSearchResultDto"
+                  }
+                },
+                {
+                  "name": "GetEventsByDestinationAsync",
+                  "parametersOnMethod": [
+                    {
+                      "name": "destinationId",
+                      "typeAsString": "System.Guid, System.Private.CoreLib",
+                      "type": "System.Guid",
+                      "typeSimple": "string",
+                      "isOptional": false,
+                      "defaultValue": null
+                    }
+                  ],
+                  "returnValue": {
+                    "type": "System.Collections.Generic.List<GoPlaces.Events.EventDto>",
+                    "typeSimple": "[GoPlaces.Events.EventDto]"
+                  }
+                }
+              ]
+            }
+          ],
+          "actions": {
+            "SearchEventsByCityAsyncByRequest": {
+              "uniqueName": "SearchEventsByCityAsyncByRequest",
+              "name": "SearchEventsByCityAsync",
+              "httpMethod": "POST",
+              "url": "api/app/event/search-events-by-city",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "request",
+                  "typeAsString": "GoPlaces.Events.EventSearchRequestDto, GoPlaces.Application.Contracts",
+                  "type": "GoPlaces.Events.EventSearchRequestDto",
+                  "typeSimple": "GoPlaces.Events.EventSearchRequestDto",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "request",
+                  "name": "request",
+                  "jsonName": null,
+                  "type": "GoPlaces.Events.EventSearchRequestDto",
+                  "typeSimple": "GoPlaces.Events.EventSearchRequestDto",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "Body",
+                  "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "GoPlaces.Events.EventSearchResultDto",
+                "typeSimple": "GoPlaces.Events.EventSearchResultDto"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "GoPlaces.Events.IEventAppService"
+            },
+            "GetEventsByDestinationAsyncByDestinationId": {
+              "uniqueName": "GetEventsByDestinationAsyncByDestinationId",
+              "name": "GetEventsByDestinationAsync",
+              "httpMethod": "GET",
+              "url": "api/app/event/events-by-destination/{destinationId}",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "destinationId",
+                  "typeAsString": "System.Guid, System.Private.CoreLib",
+                  "type": "System.Guid",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "destinationId",
+                  "name": "destinationId",
+                  "jsonName": null,
+                  "type": "System.Guid",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": [],
+                  "bindingSourceId": "Path",
+                  "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "System.Collections.Generic.List<GoPlaces.Events.EventDto>",
+                "typeSimple": "[GoPlaces.Events.EventDto]"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "GoPlaces.Events.IEventAppService"
+            }
+          }
+        },
         "GoPlaces.Experiences.ExperienceAppService": {
           "controllerName": "Experience",
           "controllerGroupName": "Experience",
@@ -2039,6 +2255,534 @@
               },
               "allowAnonymous": null,
               "implementFrom": "Volo.Abp.Application.Services.IReadOnlyAppService<GoPlaces.Experiences.ExperienceDto,GoPlaces.Experiences.ExperienceDto,System.Guid,Volo.Abp.Application.Dtos.PagedAndSortedResultRequestDto>"
+            }
+          }
+        },
+        "GoPlaces.ExternalApiMetrics.ExternalApiMetricAppService": {
+          "controllerName": "ExternalApiMetric",
+          "controllerGroupName": "ExternalApiMetric",
+          "isRemoteService": true,
+          "isIntegrationService": false,
+          "apiVersion": null,
+          "type": "GoPlaces.ExternalApiMetrics.ExternalApiMetricAppService",
+          "interfaces": [
+            {
+              "type": "GoPlaces.ExternalApiMetrics.IExternalApiMetricAppService",
+              "name": "IExternalApiMetricAppService",
+              "methods": [
+                {
+                  "name": "GetMetricsAsync",
+                  "parametersOnMethod": [],
+                  "returnValue": {
+                    "type": "System.Collections.Generic.List<GoPlaces.ExternalApiMetrics.ApiUsageMetricDto>",
+                    "typeSimple": "[GoPlaces.ExternalApiMetrics.ApiUsageMetricDto]"
+                  }
+                },
+                {
+                  "name": "LogCallAsync",
+                  "parametersOnMethod": [
+                    {
+                      "name": "apiName",
+                      "typeAsString": "System.String, System.Private.CoreLib",
+                      "type": "System.String",
+                      "typeSimple": "string",
+                      "isOptional": false,
+                      "defaultValue": null
+                    },
+                    {
+                      "name": "endpoint",
+                      "typeAsString": "System.String, System.Private.CoreLib",
+                      "type": "System.String",
+                      "typeSimple": "string",
+                      "isOptional": false,
+                      "defaultValue": null
+                    },
+                    {
+                      "name": "durationMs",
+                      "typeAsString": "System.Int32, System.Private.CoreLib",
+                      "type": "System.Int32",
+                      "typeSimple": "number",
+                      "isOptional": false,
+                      "defaultValue": null
+                    },
+                    {
+                      "name": "isSuccess",
+                      "typeAsString": "System.Boolean, System.Private.CoreLib",
+                      "type": "System.Boolean",
+                      "typeSimple": "boolean",
+                      "isOptional": false,
+                      "defaultValue": null
+                    }
+                  ],
+                  "returnValue": {
+                    "type": "System.Void",
+                    "typeSimple": "System.Void"
+                  }
+                }
+              ]
+            }
+          ],
+          "actions": {
+            "GetMetricsAsync": {
+              "uniqueName": "GetMetricsAsync",
+              "name": "GetMetricsAsync",
+              "httpMethod": "GET",
+              "url": "api/app/external-api-metric/metrics",
+              "supportedVersions": [],
+              "parametersOnMethod": [],
+              "parameters": [],
+              "returnValue": {
+                "type": "System.Collections.Generic.List<GoPlaces.ExternalApiMetrics.ApiUsageMetricDto>",
+                "typeSimple": "[GoPlaces.ExternalApiMetrics.ApiUsageMetricDto]"
+              },
+              "allowAnonymous": false,
+              "implementFrom": "GoPlaces.ExternalApiMetrics.IExternalApiMetricAppService"
+            },
+            "LogCallAsyncByApiNameAndEndpointAndDurationMsAndIsSuccess": {
+              "uniqueName": "LogCallAsyncByApiNameAndEndpointAndDurationMsAndIsSuccess",
+              "name": "LogCallAsync",
+              "httpMethod": "POST",
+              "url": "api/app/external-api-metric/log-call",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "apiName",
+                  "typeAsString": "System.String, System.Private.CoreLib",
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null
+                },
+                {
+                  "name": "endpoint",
+                  "typeAsString": "System.String, System.Private.CoreLib",
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null
+                },
+                {
+                  "name": "durationMs",
+                  "typeAsString": "System.Int32, System.Private.CoreLib",
+                  "type": "System.Int32",
+                  "typeSimple": "number",
+                  "isOptional": false,
+                  "defaultValue": null
+                },
+                {
+                  "name": "isSuccess",
+                  "typeAsString": "System.Boolean, System.Private.CoreLib",
+                  "type": "System.Boolean",
+                  "typeSimple": "boolean",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "apiName",
+                  "name": "apiName",
+                  "jsonName": null,
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": ""
+                },
+                {
+                  "nameOnMethod": "endpoint",
+                  "name": "endpoint",
+                  "jsonName": null,
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": ""
+                },
+                {
+                  "nameOnMethod": "durationMs",
+                  "name": "durationMs",
+                  "jsonName": null,
+                  "type": "System.Int32",
+                  "typeSimple": "number",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": ""
+                },
+                {
+                  "nameOnMethod": "isSuccess",
+                  "name": "isSuccess",
+                  "jsonName": null,
+                  "type": "System.Boolean",
+                  "typeSimple": "boolean",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "System.Void",
+                "typeSimple": "System.Void"
+              },
+              "allowAnonymous": true,
+              "implementFrom": "GoPlaces.ExternalApiMetrics.IExternalApiMetricAppService"
+            }
+          }
+        },
+        "GoPlaces.Follows.FollowAppService": {
+          "controllerName": "Follow",
+          "controllerGroupName": "Follow",
+          "isRemoteService": true,
+          "isIntegrationService": false,
+          "apiVersion": null,
+          "type": "GoPlaces.Follows.FollowAppService",
+          "interfaces": [
+            {
+              "type": "GoPlaces.Follows.IFollowAppService",
+              "name": "IFollowAppService",
+              "methods": [
+                {
+                  "name": "SaveDestinationAsync",
+                  "parametersOnMethod": [
+                    {
+                      "name": "input",
+                      "typeAsString": "GoPlaces.Follows.SaveOrRemoveInputDto, GoPlaces.Application.Contracts",
+                      "type": "GoPlaces.Follows.SaveOrRemoveInputDto",
+                      "typeSimple": "GoPlaces.Follows.SaveOrRemoveInputDto",
+                      "isOptional": false,
+                      "defaultValue": null
+                    }
+                  ],
+                  "returnValue": {
+                    "type": "GoPlaces.Follows.SavedDestinationDto",
+                    "typeSimple": "GoPlaces.Follows.SavedDestinationDto"
+                  }
+                },
+                {
+                  "name": "RemoveDestinationAsync",
+                  "parametersOnMethod": [
+                    {
+                      "name": "input",
+                      "typeAsString": "GoPlaces.Follows.SaveOrRemoveInputDto, GoPlaces.Application.Contracts",
+                      "type": "GoPlaces.Follows.SaveOrRemoveInputDto",
+                      "typeSimple": "GoPlaces.Follows.SaveOrRemoveInputDto",
+                      "isOptional": false,
+                      "defaultValue": null
+                    }
+                  ],
+                  "returnValue": {
+                    "type": "System.Void",
+                    "typeSimple": "System.Void"
+                  }
+                },
+                {
+                  "name": "GetMyFavoritesAsync",
+                  "parametersOnMethod": [],
+                  "returnValue": {
+                    "type": "System.Collections.Generic.List<GoPlaces.Follows.SavedDestinationDto>",
+                    "typeSimple": "[GoPlaces.Follows.SavedDestinationDto]"
+                  }
+                }
+              ]
+            }
+          ],
+          "actions": {
+            "SaveDestinationAsyncByInput": {
+              "uniqueName": "SaveDestinationAsyncByInput",
+              "name": "SaveDestinationAsync",
+              "httpMethod": "POST",
+              "url": "api/app/follow/save-destination",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "input",
+                  "typeAsString": "GoPlaces.Follows.SaveOrRemoveInputDto, GoPlaces.Application.Contracts",
+                  "type": "GoPlaces.Follows.SaveOrRemoveInputDto",
+                  "typeSimple": "GoPlaces.Follows.SaveOrRemoveInputDto",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "input",
+                  "name": "input",
+                  "jsonName": null,
+                  "type": "GoPlaces.Follows.SaveOrRemoveInputDto",
+                  "typeSimple": "GoPlaces.Follows.SaveOrRemoveInputDto",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "Body",
+                  "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "GoPlaces.Follows.SavedDestinationDto",
+                "typeSimple": "GoPlaces.Follows.SavedDestinationDto"
+              },
+              "allowAnonymous": false,
+              "implementFrom": "GoPlaces.Follows.IFollowAppService"
+            },
+            "RemoveDestinationAsyncByInput": {
+              "uniqueName": "RemoveDestinationAsyncByInput",
+              "name": "RemoveDestinationAsync",
+              "httpMethod": "DELETE",
+              "url": "api/app/follow/destination",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "input",
+                  "typeAsString": "GoPlaces.Follows.SaveOrRemoveInputDto, GoPlaces.Application.Contracts",
+                  "type": "GoPlaces.Follows.SaveOrRemoveInputDto",
+                  "typeSimple": "GoPlaces.Follows.SaveOrRemoveInputDto",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "input",
+                  "name": "DestinationId",
+                  "jsonName": null,
+                  "type": "System.Guid",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": "input"
+                }
+              ],
+              "returnValue": {
+                "type": "System.Void",
+                "typeSimple": "System.Void"
+              },
+              "allowAnonymous": false,
+              "implementFrom": "GoPlaces.Follows.IFollowAppService"
+            },
+            "GetMyFavoritesAsync": {
+              "uniqueName": "GetMyFavoritesAsync",
+              "name": "GetMyFavoritesAsync",
+              "httpMethod": "GET",
+              "url": "api/app/follow/my-favorites",
+              "supportedVersions": [],
+              "parametersOnMethod": [],
+              "parameters": [],
+              "returnValue": {
+                "type": "System.Collections.Generic.List<GoPlaces.Follows.SavedDestinationDto>",
+                "typeSimple": "[GoPlaces.Follows.SavedDestinationDto]"
+              },
+              "allowAnonymous": false,
+              "implementFrom": "GoPlaces.Follows.IFollowAppService"
+            }
+          }
+        },
+        "GoPlaces.Notifications.NotificationAppService": {
+          "controllerName": "Notification",
+          "controllerGroupName": "Notification",
+          "isRemoteService": true,
+          "isIntegrationService": false,
+          "apiVersion": null,
+          "type": "GoPlaces.Notifications.NotificationAppService",
+          "interfaces": [
+            {
+              "type": "GoPlaces.Notifications.INotificationAppService",
+              "name": "INotificationAppService",
+              "methods": [
+                {
+                  "name": "NotifyDestinationChangeAsync",
+                  "parametersOnMethod": [
+                    {
+                      "name": "input",
+                      "typeAsString": "GoPlaces.Notifications.NotifyDestinationChangeInputDto, GoPlaces.Application.Contracts",
+                      "type": "GoPlaces.Notifications.NotifyDestinationChangeInputDto",
+                      "typeSimple": "GoPlaces.Notifications.NotifyDestinationChangeInputDto",
+                      "isOptional": false,
+                      "defaultValue": null
+                    }
+                  ],
+                  "returnValue": {
+                    "type": "System.Void",
+                    "typeSimple": "System.Void"
+                  }
+                },
+                {
+                  "name": "GetMyNotificationsAsync",
+                  "parametersOnMethod": [],
+                  "returnValue": {
+                    "type": "System.Collections.Generic.List<GoPlaces.Notifications.NotificationDto>",
+                    "typeSimple": "[GoPlaces.Notifications.NotificationDto]"
+                  }
+                },
+                {
+                  "name": "ChangeReadStateAsync",
+                  "parametersOnMethod": [
+                    {
+                      "name": "id",
+                      "typeAsString": "System.Guid, System.Private.CoreLib",
+                      "type": "System.Guid",
+                      "typeSimple": "string",
+                      "isOptional": false,
+                      "defaultValue": null
+                    },
+                    {
+                      "name": "isRead",
+                      "typeAsString": "System.Boolean, System.Private.CoreLib",
+                      "type": "System.Boolean",
+                      "typeSimple": "boolean",
+                      "isOptional": false,
+                      "defaultValue": null
+                    }
+                  ],
+                  "returnValue": {
+                    "type": "System.Void",
+                    "typeSimple": "System.Void"
+                  }
+                },
+                {
+                  "name": "MarkAllAsReadAsync",
+                  "parametersOnMethod": [],
+                  "returnValue": {
+                    "type": "System.Void",
+                    "typeSimple": "System.Void"
+                  }
+                }
+              ]
+            }
+          ],
+          "actions": {
+            "NotifyDestinationChangeAsyncByInput": {
+              "uniqueName": "NotifyDestinationChangeAsyncByInput",
+              "name": "NotifyDestinationChangeAsync",
+              "httpMethod": "POST",
+              "url": "api/app/notification/notify-destination-change",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "input",
+                  "typeAsString": "GoPlaces.Notifications.NotifyDestinationChangeInputDto, GoPlaces.Application.Contracts",
+                  "type": "GoPlaces.Notifications.NotifyDestinationChangeInputDto",
+                  "typeSimple": "GoPlaces.Notifications.NotifyDestinationChangeInputDto",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "input",
+                  "name": "input",
+                  "jsonName": null,
+                  "type": "GoPlaces.Notifications.NotifyDestinationChangeInputDto",
+                  "typeSimple": "GoPlaces.Notifications.NotifyDestinationChangeInputDto",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "Body",
+                  "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "System.Void",
+                "typeSimple": "System.Void"
+              },
+              "allowAnonymous": false,
+              "implementFrom": "GoPlaces.Notifications.INotificationAppService"
+            },
+            "GetMyNotificationsAsync": {
+              "uniqueName": "GetMyNotificationsAsync",
+              "name": "GetMyNotificationsAsync",
+              "httpMethod": "GET",
+              "url": "api/app/notification/my-notifications",
+              "supportedVersions": [],
+              "parametersOnMethod": [],
+              "parameters": [],
+              "returnValue": {
+                "type": "System.Collections.Generic.List<GoPlaces.Notifications.NotificationDto>",
+                "typeSimple": "[GoPlaces.Notifications.NotificationDto]"
+              },
+              "allowAnonymous": false,
+              "implementFrom": "GoPlaces.Notifications.INotificationAppService"
+            },
+            "ChangeReadStateAsyncByIdAndIsRead": {
+              "uniqueName": "ChangeReadStateAsyncByIdAndIsRead",
+              "name": "ChangeReadStateAsync",
+              "httpMethod": "POST",
+              "url": "api/app/notification/{id}/change-read-state",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "id",
+                  "typeAsString": "System.Guid, System.Private.CoreLib",
+                  "type": "System.Guid",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null
+                },
+                {
+                  "name": "isRead",
+                  "typeAsString": "System.Boolean, System.Private.CoreLib",
+                  "type": "System.Boolean",
+                  "typeSimple": "boolean",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "id",
+                  "name": "id",
+                  "jsonName": null,
+                  "type": "System.Guid",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": [],
+                  "bindingSourceId": "Path",
+                  "descriptorName": ""
+                },
+                {
+                  "nameOnMethod": "isRead",
+                  "name": "isRead",
+                  "jsonName": null,
+                  "type": "System.Boolean",
+                  "typeSimple": "boolean",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "System.Void",
+                "typeSimple": "System.Void"
+              },
+              "allowAnonymous": false,
+              "implementFrom": "GoPlaces.Notifications.INotificationAppService"
+            },
+            "MarkAllAsReadAsync": {
+              "uniqueName": "MarkAllAsReadAsync",
+              "name": "MarkAllAsReadAsync",
+              "httpMethod": "POST",
+              "url": "api/app/notification/mark-all-as-read",
+              "supportedVersions": [],
+              "parametersOnMethod": [],
+              "parameters": [],
+              "returnValue": {
+                "type": "System.Void",
+                "typeSimple": "System.Void"
+              },
+              "allowAnonymous": false,
+              "implementFrom": "GoPlaces.Notifications.INotificationAppService"
             }
           }
         },
@@ -5070,6 +5814,42 @@
           "minimum": null,
           "maximum": null,
           "regex": null
+        },
+        {
+          "name": "CountryCode",
+          "jsonName": null,
+          "type": "System.String",
+          "typeSimple": "string",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "RegionId",
+          "jsonName": null,
+          "type": "System.String",
+          "typeSimple": "string",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "MinPopulation",
+          "jsonName": null,
+          "type": "System.Int32?",
+          "typeSimple": "number?",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
         }
       ]
     },
@@ -5280,6 +6060,189 @@
         }
       ]
     },
+    "GoPlaces.Events.EventDto": {
+      "baseType": "Volo.Abp.Application.Dtos.EntityDto<System.Guid>",
+      "isEnum": false,
+      "enumNames": null,
+      "enumValues": null,
+      "genericArguments": null,
+      "properties": [
+        {
+          "name": "Name",
+          "jsonName": null,
+          "type": "System.String",
+          "typeSimple": "string",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "Description",
+          "jsonName": null,
+          "type": "System.String",
+          "typeSimple": "string",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "StartDate",
+          "jsonName": null,
+          "type": "System.DateTime",
+          "typeSimple": "string",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "Venue",
+          "jsonName": null,
+          "type": "System.String",
+          "typeSimple": "string",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "City",
+          "jsonName": null,
+          "type": "System.String",
+          "typeSimple": "string",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "Url",
+          "jsonName": null,
+          "type": "System.String",
+          "typeSimple": "string",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "TicketMasterId",
+          "jsonName": null,
+          "type": "System.String",
+          "typeSimple": "string",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "DestinationId",
+          "jsonName": null,
+          "type": "System.Guid?",
+          "typeSimple": "string?",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        }
+      ]
+    },
+    "GoPlaces.Events.EventSearchRequestDto": {
+      "baseType": null,
+      "isEnum": false,
+      "enumNames": null,
+      "enumValues": null,
+      "genericArguments": null,
+      "properties": [
+        {
+          "name": "City",
+          "jsonName": null,
+          "type": "System.String",
+          "typeSimple": "string",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "StartDateFrom",
+          "jsonName": null,
+          "type": "System.DateTime?",
+          "typeSimple": "string?",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "StartDateTo",
+          "jsonName": null,
+          "type": "System.DateTime?",
+          "typeSimple": "string?",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "DestinationId",
+          "jsonName": null,
+          "type": "System.Guid?",
+          "typeSimple": "string?",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        }
+      ]
+    },
+    "GoPlaces.Events.EventSearchResultDto": {
+      "baseType": null,
+      "isEnum": false,
+      "enumNames": null,
+      "enumValues": null,
+      "genericArguments": null,
+      "properties": [
+        {
+          "name": "Events",
+          "jsonName": null,
+          "type": "[GoPlaces.Events.EventDto]",
+          "typeSimple": "[GoPlaces.Events.EventDto]",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        }
+      ]
+    },
     "GoPlaces.Experiences.CreateUpdateExperienceDto": {
       "baseType": null,
       "isEnum": false,
@@ -5430,6 +6393,231 @@
         },
         {
           "name": "Rating",
+          "jsonName": null,
+          "type": "System.String",
+          "typeSimple": "string",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        }
+      ]
+    },
+    "GoPlaces.ExternalApiMetrics.ApiUsageMetricDto": {
+      "baseType": null,
+      "isEnum": false,
+      "enumNames": null,
+      "enumValues": null,
+      "genericArguments": null,
+      "properties": [
+        {
+          "name": "ApiName",
+          "jsonName": null,
+          "type": "System.String",
+          "typeSimple": "string",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "TotalCalls",
+          "jsonName": null,
+          "type": "System.Int32",
+          "typeSimple": "number",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "SuccessfulCalls",
+          "jsonName": null,
+          "type": "System.Int32",
+          "typeSimple": "number",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "FailedCalls",
+          "jsonName": null,
+          "type": "System.Int32",
+          "typeSimple": "number",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "AverageDurationMs",
+          "jsonName": null,
+          "type": "System.Double",
+          "typeSimple": "number",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        }
+      ]
+    },
+    "GoPlaces.Follows.SavedDestinationDto": {
+      "baseType": "Volo.Abp.Application.Dtos.EntityDto<System.Guid>",
+      "isEnum": false,
+      "enumNames": null,
+      "enumValues": null,
+      "genericArguments": null,
+      "properties": [
+        {
+          "name": "DestinationId",
+          "jsonName": null,
+          "type": "System.Guid",
+          "typeSimple": "string",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "CreationTime",
+          "jsonName": null,
+          "type": "System.DateTime",
+          "typeSimple": "string",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        }
+      ]
+    },
+    "GoPlaces.Follows.SaveOrRemoveInputDto": {
+      "baseType": null,
+      "isEnum": false,
+      "enumNames": null,
+      "enumValues": null,
+      "genericArguments": null,
+      "properties": [
+        {
+          "name": "DestinationId",
+          "jsonName": null,
+          "type": "System.Guid",
+          "typeSimple": "string",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        }
+      ]
+    },
+    "GoPlaces.Notifications.NotificationDto": {
+      "baseType": null,
+      "isEnum": false,
+      "enumNames": null,
+      "enumValues": null,
+      "genericArguments": null,
+      "properties": [
+        {
+          "name": "Id",
+          "jsonName": null,
+          "type": "System.Guid",
+          "typeSimple": "string",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "Title",
+          "jsonName": null,
+          "type": "System.String",
+          "typeSimple": "string",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "Message",
+          "jsonName": null,
+          "type": "System.String",
+          "typeSimple": "string",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "IsRead",
+          "jsonName": null,
+          "type": "System.Boolean",
+          "typeSimple": "boolean",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "CreationTime",
+          "jsonName": null,
+          "type": "System.DateTime",
+          "typeSimple": "string",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        }
+      ]
+    },
+    "GoPlaces.Notifications.NotifyDestinationChangeInputDto": {
+      "baseType": null,
+      "isEnum": false,
+      "enumNames": null,
+      "enumValues": null,
+      "genericArguments": null,
+      "properties": [
+        {
+          "name": "DestinationId",
+          "jsonName": null,
+          "type": "System.Guid",
+          "typeSimple": "string",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "ChangeDescription",
           "jsonName": null,
           "type": "System.String",
           "typeSimple": "string",
